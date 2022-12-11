@@ -12,7 +12,7 @@ application configuration, deployment, testing, and planning.
 For information about the project such as feature planning, the roadmap, and milestones, then please see the
 [Project Information](./wiki/project) section of the wiki.
 
-### Contributing
+### [Contributing](./wiki/contributing)
 
 If you're interested in participating in the project design discussions, or you want to actively submit work to the
 project then you should check out the [Contribution Guide](./wiki/contributing)!
