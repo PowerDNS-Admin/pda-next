@@ -12,6 +12,11 @@ application configuration, deployment, testing, and planning.
 For information about the project such as feature planning, the roadmap, and milestones, then please see the
 [Project Information](./wiki/project) section of the wiki.
 
+### Contributing
+
+If you're interested in participating in the project design discussions, or you want to actively submit work to the
+project then you should check out the [Contribution Guide](./wiki/contributing)!
+
 ### [Application Configuration](./wiki/configuration)
 
 For information about all the ways this application can be configured and what each setting does, please visit the
