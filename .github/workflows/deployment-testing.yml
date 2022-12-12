@@ -3,7 +3,7 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - main-off
 jobs:
   deployment_test_ubuntu_linux_2204:
     runs-on: [self-hosted, linux, x64]
