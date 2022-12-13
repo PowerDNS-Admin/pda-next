@@ -70,7 +70,7 @@ In practice, here is what some PDARNs would look like:
 This reference targets the tenant account with an ID of "4321" and references the creation, read, update, and delete
 permissions for this entity.
 
-> pdarn:4321:c:r:u:d
+> pdarn:4321:c,r,u,d
 
 **Tenant Settings Reference**
 
