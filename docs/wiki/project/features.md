@@ -5,6 +5,16 @@
 The purpose of this document is to provide some explanation about key platform features that really drive the value of
 the product.
 
+### Table of Contents
+
+- [Microservice Architecture](microservice-architecture)
+  - [API Server](#api-server)
+  - [CLI Application](#cli-application)
+  - [Web Application](#web-application)
+- [Authentication](#authentication)
+- [Role Based Access Control (RBAC)](#role-based-access-control--rbac-)
+  - [Examples](#examples)
+
 ### Microservice Architecture
 
 The next-gen PDA application makes use of microservice architecture by splitting the project into multiple components
