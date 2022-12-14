@@ -7,7 +7,7 @@ the product.
 
 ### Table of Contents
 
-- [Microservice Architecture](microservice-architecture)
+- [Microservice Architecture](#microservice-architecture)
   - [API Server](#api-server)
   - [CLI Application](#cli-application)
   - [Web Application](#web-application)
