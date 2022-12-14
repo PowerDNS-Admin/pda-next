@@ -12,7 +12,7 @@ the product.
   - [CLI Application](#cli-application)
   - [Web Application](#web-application)
 - [Authentication](#authentication)
-- [Role Based Access Control (RBAC)](#role-based-access-control--rbac-)
+- [Role Based Access Control (RBAC)](#role-based-access-control-rbac)
   - [Examples](#examples)
 
 ### Microservice Architecture
