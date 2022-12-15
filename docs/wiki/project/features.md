@@ -12,6 +12,12 @@ the product.
   - [CLI Application](#cli-application)
   - [Web Application](#web-application)
 - [Authentication](#authentication)
+  - [Local](#local)
+  - [LDAP](#ldap)
+  - [OAuth](#oauth)
+  - [SAML](#saml)
+  - [SMS / Voice](#sms-voice)
+  - [OTP](#otp)
 - [Role Based Access Control (RBAC)](#role-based-access-control-rbac)
   - [Examples](#examples)
 
