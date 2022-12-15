@@ -16,7 +16,7 @@ the product.
   - [LDAP](#ldap)
   - [OAuth](#oauth)
   - [SAML](#saml)
-  - [SMS / Voice](#sms-voice)
+  - [SMS / Voice](#sms--voice)
   - [OTP](#otp)
 - [Role Based Access Control (RBAC)](#role-based-access-control-rbac)
   - [Examples](#examples)
