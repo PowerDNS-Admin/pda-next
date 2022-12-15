@@ -46,7 +46,74 @@ application that can be served up by any choice of web server solution.
 
 ### Authentication
 
-Coming soon!
+The API server will ultimately support numerous authentication mechanisms to adhere to the new key mission driver of
+reducing barrier to entry. One key enhancement that will be provided is the ability to configure required combinations
+of mechanisms in order to gain access to application features. A common example of this would be a credential based
+authentication mechanism paired with an SMS or OTP generator option. The purpose of this feature is to allow
+administrators to easily construct their own 2nd factor authentication scheme based on the mechanisms supported
+internally.
+
+Another key design goal will be to implement a form of pluggable interfaces to each of the service provider based
+mechanisms listed below. The purpose of this approach would be to ultimately provide a basic framework for
+implementing future service providers in a proficient manner.
+
+Below, you will find a brief explanation of each authentication mechanism which support is
+being planned for at some point.
+
+#### Local
+
+As is typical for most applications, local authentication will be provided as the default mechanism unless configured
+otherwise.
+
+#### LDAP
+
+There really isn't much to be said here since this space has not seemingly changed in quite some time.
+
+Supported Providers:
+- Microsoft Active Directory
+- OpenLDAP
+
+#### OAuth
+
+To get things started by achieving feature parity to the legacy project, the list of service providers below will be
+initially supported.
+
+Supported Providers:
+- Google
+- Github
+- Microsoft
+- OpenID Connect
+
+#### SAML
+
+Some level of focused integration will be provided to the SAML IdP service providers listed below.
+
+Supported Providers:
+- AWS IAM
+- Microsoft Azure AD
+- Google Cloud Identity
+
+#### SMS / Voice
+
+At least a few SMS / Voice providers will be supported to get things started. The general capabilities a provider
+must support to be included are programmable SMS and voice capabilities.
+
+Supported Providers:
+- AWS
+- Twilio
+- Telnyx
+
+#### OTP
+
+At least a few options will ultimately be provided to support the use of token generator hardware devices as a method
+of authentication to the API. Typically, it goes without saying that this feature will be consumed directly through
+API server clients but is ultimately supported by the API server.
+
+Supported Providers:
+- SafeID?
+- Yubico OTP
+- OATH-HOTP
+- OATH-TOTP
 
 ### Role Based Access Control (RBAC)
 
