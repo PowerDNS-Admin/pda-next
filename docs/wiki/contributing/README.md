@@ -91,6 +91,7 @@ Below is a list of all labels currently used on the project for organizing issue
 | bug / security-vulnerability | Security vulnerability identified with the application               |
 | docs / discussion            | Documentation change proposals                                       |
 | docs / request               | Documentation change request                                         |
+| feature / dependency         | Existing feature dependency                                          |
 | feature / discussion         | New or existing feature discussion                                   |
 | feature / request            | New feature or enhancement request                                   |
 | help / deployment            | Questions regarding application deployment                           |
@@ -104,7 +105,9 @@ Below is a list of all labels currently used on the project for organizing issue
 | mod / help-wanted            | Extra attention is needed                                            |
 | mod / invalid                | This doesn't seem right                                              |
 | mod / rejected               | This request has been rejected                                       |
+| mod / reviewed               | This request has been reviewed                                       |
 | mod / reviewing              | This request is being reviewed                                       |
 | mod / stale                  | This request has gone stale                                          |
 | mod / tested                 | This has been tested                                                 |
+| mod / testing                | This is being tested                                                 |
 | mod / wont-fix               | This will not be worked on                                           |
