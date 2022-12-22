@@ -97,6 +97,7 @@ Below is a list of all labels currently used on the project for organizing issue
 | help / features              | Questions regarding the use of application features                  |
 | help / other                 | General questions not specific to application deployment or features |
 | mod / accepted               | This request has been accepted                                       |
+| mod / announcement           | This is an admin announcement                                        |
 | mod / changes-requested      | Changes have been requested before proceeding                        |
 | mod / duplicate              | This issue or pull request already exists                            |
 | mod / good-first-issue       | Good for newcomers                                                   |
