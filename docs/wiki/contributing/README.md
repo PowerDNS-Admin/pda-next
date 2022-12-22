@@ -81,6 +81,15 @@ This category should only be used by project maintainers for use in management w
 | Color    | #e5ef23 |
 | Pattern  | mod / * |
 
+#### Skills Flags
+
+This category should only be used by project maintainers to categorize the skills required for addressing a topic.
+
+| Property | Value     |
+|----------|-----------|
+| Color    | #5319e7   |
+| Pattern  | skill / * |
+
 ### Labels
 
 Below is a list of all labels currently used on the project for organizing issues, discussions, and pull-requests.
@@ -111,3 +120,8 @@ Below is a list of all labels currently used on the project for organizing issue
 | mod / tested                 | This has been tested                                                 |
 | mod / testing                | This is being tested                                                 |
 | mod / wont-fix               | This will not be worked on                                           |
+| skill / database             | Requires a database skill-set                                        |
+| skill / docker               | Requires a Docker skill-set                                          |
+| skill / html                 | Requires a HTML skill-set                                            |
+| skill / javascript           | Requires a JavaScript skill-set                                      |
+| skill / python               | Requires a Python skill-set                                          |
