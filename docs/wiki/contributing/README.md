@@ -122,6 +122,7 @@ Below is a list of all labels currently used on the project for organizing issue
 | mod / wont-fix               | This will not be worked on                                           |
 | skill / database             | Requires a database skill-set                                        |
 | skill / docker               | Requires a Docker skill-set                                          |
+| skill / documentation        | Requires a documentation skill-set                                   |
 | skill / html                 | Requires a HTML skill-set                                            |
 | skill / javascript           | Requires a JavaScript skill-set                                      |
 | skill / python               | Requires a Python skill-set                                          |
