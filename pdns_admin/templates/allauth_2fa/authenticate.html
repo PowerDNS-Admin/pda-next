@@ -1,0 +1,18 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load form_tags %}
+{% block content %}
+  <section>
+    <h2 class="pg-subtitle">
+      {% translate "Two-Factor Authentication" %}
+    </h2>
+    <form method="post">
+      {% csrf_token %}
+      {{ form.non_field_errors }}
+      {% render_text_input form.otp_token %}
+      <button type="submit" class="pg-button-primary mt-3">
+        {% translate 'Verify' %}
+      </button>
+    </form>
+  </section>
+{% endblock %}

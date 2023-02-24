@@ -1,0 +1,70 @@
+{% extends "account/base.html" %}
+{% load i18n %}
+{% load form_tags %}
+{% block head_title %}{% translate "E-mail Addresses" %}{% endblock %}
+{% block content %}
+  <h1 class="pg-title">{% translate "E-mail Addresses" %}</h1>
+  {% if user.emailaddress_set.all %}
+  <p>{% translate 'The following e-mail addresses are associated with your account:' %}</p>
+  <form action="{% url 'account_email' %}" class="email_list" method="post">
+    {% csrf_token %}
+    <fieldset class="blockLabels">
+      {% for emailaddress in user.emailaddress_set.all %}
+        <div class="mb-2">
+          <label for="email_radio_{{ forloop.counter }}"
+                 class="{% if emailaddress.primary %}primary_email{% endif %}">
+          <input id="email_radio_{{ forloop.counter }}" type="radio" name="email"
+                 {% if emailaddress.primary or user.emailaddress_set.count == 1 %}checked="checked"{% endif %}
+                 value="{{ emailaddress.email }}"/>
+          {{ emailaddress.email }}
+          <span class="pg-help">
+            {% if emailaddress.verified %}
+              <span class="pg-text-success">{% translate "Verified" %}</span>
+            {% else %}
+              <span class="pg-text-muted">{% translate "Unverified" %}</span>
+            {% endif %}
+            {% if emailaddress.primary %}<span class="pg-text-info">{% translate "Primary" %}</span>{% endif %}
+          </span>
+          </label>
+        </div>
+      {% endfor %}
+      <div class="mt-2">
+        <button class="pg-button-primary" type="submit" name="action_primary">{% translate 'Make Primary' %}</button>
+        <button class="pg-button-secondary" type="submit" name="action_send">{% translate 'Re-send Verification' %}</button>
+        <button class="pg-button-danger" type="submit" name="action_remove">{% translate 'Remove' %}</button>
+      </div>
+    </fieldset>
+  </form>
+{% else %}
+  <p>
+    <strong>{% translate 'Warning:' %}</strong> {% translate "You currently do not have any e-mail address set up. You should really add an e-mail address so you can receive notifications, reset your password, etc." %}
+  </p>
+{% endif %}
+{% if can_add_email %}
+  <hr>
+  <h2 class="pg-subtitle">{% translate "Add E-mail Address" %}</h2>
+  <form method="post" action="{% url 'account_email' %}" class="add_email">
+    {% csrf_token %}
+    {% render_form_fields form %}
+    <div class="mt-2">
+      <button class="pg-button-primary" name="action_add" type="submit">{% translate "Add E-mail" %}</button>
+    </div>
+  </form>
+{% endif %}
+{% endblock %}
+{% block page_js %}
+  <script type="text/javascript">
+    (function () {
+      var message = "{% translate 'Do you really want to remove the selected e-mail address?' %}";
+      var actions = document.getElementsByName('action_remove');
+      if (actions.length) {
+        actions[0].addEventListener("click", function (e) {
+          console.log('asdlfkjsadlkjflsakjdflksdaj')
+          if (!confirm(message)) {
+            e.preventDefault();
+          }
+        });
+      }
+    })();
+  </script>
+{% endblock %}

@@ -1,0 +1,21 @@
+{% extends "allauth_2fa/2fa_base.html" %}
+{% load i18n %}
+{% load form_tags %}
+
+{% block app %}
+  <section class="app-card">
+    <h2 class="pg-subtitle">{% translate "Disable Two-Factor Authentication" %}</h2>
+    <p class="mb-3">{% translate "Please enter a valid authentication token to disable two-factor authentication:" %}</p>
+    <div class="pg-columns">
+      <div class="pg-column-one-third">
+        <form method="post">
+          {% csrf_token %}
+          {% render_text_input form.token %}
+          <div class="mt-2">
+            <input class="pg-button-primary" type="submit" value="{% translate "Disable Two-Factor" %}">
+          </div>
+        </form>
+      </div>
+    </div>
+  </section>
+{% endblock %}

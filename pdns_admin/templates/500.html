@@ -1,0 +1,8 @@
+{% extends 'error_base.html' %}
+{% load i18n %}
+{% block error_details %}
+  <h1 class="pg-title">{% translate "Shucks. That's an error." %}</h1>
+  <h2 class="pg-subtitle">
+    {% translate "Please try again, and if you continue to get this message, contact support." %}
+  </h2>
+{% endblock %}

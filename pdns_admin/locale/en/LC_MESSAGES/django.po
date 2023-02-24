@@ -1,0 +1,830 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+msgid ""
+"Sorry, that page requires an active subscription. You've been redirected."
+msgstr ""
+
+msgid ""
+"Sorry, that page requires a higher subscription tier. Upgrade your plan to "
+"continue."
+msgstr ""
+
+msgid "Whoops, we couldn't find a subscription associated with your account!"
+msgstr ""
+
+msgid "At least one plan interval (year or month) must be set!"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"Unable to select a \"{interval}\" plan for {self.product}. Have you setup "
+"your Stripe objects and run ./manage.py bootstrap_subscriptions? You can "
+"also hide this plan interval by removing it from ACTIVE_PLAN_INTERVALS in "
+"apps/subscriptions/metadata.py"
+msgstr ""
+
+msgid "Annual"
+msgstr ""
+
+msgid "Monthly"
+msgstr ""
+
+msgid "Custom"
+msgstr ""
+
+msgid "Starter"
+msgstr ""
+
+msgid "For hobbyists and side-projects"
+msgstr ""
+
+msgid "Up to 100 Widgets"
+msgstr ""
+
+msgid "Unlimited Widget Editing"
+msgstr ""
+
+msgid "Standard"
+msgstr ""
+
+msgid "For small businesses and teams"
+msgstr ""
+
+msgid "Up to 500 Widgets"
+msgstr ""
+
+msgid "Advanced Widget Editing Features"
+msgstr ""
+
+msgid "Premium"
+msgstr ""
+
+msgid "Unlimited Widgets"
+msgstr ""
+
+msgid "Ludicrous Mode"
+msgstr ""
+
+msgid "Priority Support and Training"
+msgstr ""
+
+#, python-brace-format
+msgid "No Product with ID \"{product_meta.stripe_id}\" found! "
+msgstr ""
+
+msgid ""
+"It looks like you do not have any Products in your database. In order to use "
+"subscriptions you first have to setup Stripe billing and sync it with your "
+"local data."
+msgstr ""
+
+msgid "The associated Stripe Subscription object, if it exists"
+msgstr ""
+
+msgid "Updated every time an event that might trigger billing happens."
+msgstr ""
+
+msgid "Used for determining when to next sync with Stripe."
+msgstr ""
+
+#, python-format
+msgid "Subscription | %(team)s"
+msgstr ""
+
+#, python-format
+msgid "Subscription Demo | %(team)s"
+msgstr ""
+
+msgid "Team Name (Optional)"
+msgstr ""
+
+msgid ""
+"It looks like that invitation link has expired. Please request a new "
+"invitation or sign in to continue."
+msgstr ""
+
+msgid ""
+"That invitation could not be found. Please double check your invitation link "
+"or sign in to continue."
+msgstr ""
+
+msgid "Team Name"
+msgstr ""
+
+msgid "Team ID"
+msgstr ""
+
+msgid "Your team name."
+msgstr ""
+
+msgid "A unique ID for your team. No spaces are allowed!"
+msgstr ""
+
+msgid ""
+"There is already a pending invitation for {}. You can resend it by clicking "
+"\"Resend Invitation\"."
+msgstr ""
+
+msgid "My Team"
+msgstr ""
+
+msgid "You're invited to {}!"
+msgstr ""
+
+msgid "Team"
+msgstr ""
+
+msgid "Updating team membership must be done through the team object!"
+msgstr ""
+
+msgid "Manage Teams"
+msgstr ""
+
+msgid "Team details saved!"
+msgstr ""
+
+#, python-format
+msgid "My Team | %(team)s"
+msgstr ""
+
+msgid "Create Team"
+msgstr ""
+
+#, python-brace-format
+msgid "The \"{team}\" team was successfully deleted"
+msgstr ""
+
+#, python-brace-format
+msgid ""
+"It looks like you're already a member of {team}. You've been redirected."
+msgstr ""
+
+msgid "Please log in again to accept your invitation."
+msgstr ""
+
+msgid "Sorry, it looks like that invitation link has expired."
+msgstr ""
+
+msgid "You successfully joined {}"
+msgstr ""
+
+msgid "Sorry, you don't have permission to access that page."
+msgstr ""
+
+msgid "You don't have permission to edit team members in that team."
+msgstr ""
+
+msgid "You aren't allowed to change your own role."
+msgstr ""
+
+#, python-brace-format
+msgid "Role for {member} updated."
+msgstr ""
+
+msgid "You don't have permission to remove others from that team."
+msgstr ""
+
+msgid ""
+"You cannot remove the only administrator from a team. Make another team "
+"member an administrator and try again."
+msgstr ""
+
+#, python-brace-format
+msgid "{member} was removed from {team}."
+msgstr ""
+
+#, python-format
+msgid "Example App | %(team)s"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Language"
+msgstr ""
+
+msgid "Profile"
+msgstr ""
+
+msgid "Success!"
+msgstr ""
+
+#, python-format
+msgid ""
+"API Key created. Your key is: %(key)s. Save this somewhere safe - you will "
+"only see it once!"
+msgstr ""
+
+#, python-format
+msgid ""
+"API Key %(key)s has been revoked. It can no longer be used to access the "
+"site."
+msgstr ""
+
+msgid ""
+"Teams are enabled but you have no teams. Create a team below to access the "
+"rest of the dashboard."
+msgstr ""
+
+#, python-format
+msgid "%(team)s Dashboard"
+msgstr ""
+
+msgid "API Keys"
+msgstr ""
+
+msgid "Prefix"
+msgstr ""
+
+msgid "Created"
+msgstr ""
+
+msgid "Revoke"
+msgstr ""
+
+msgid "You haven't created any API keys yet. Create one below."
+msgstr ""
+
+msgid "New API Key"
+msgstr ""
+
+msgid "Change Picture"
+msgstr ""
+
+msgid "My Details"
+msgstr ""
+
+msgid "Save"
+msgstr ""
+
+msgid "Google Logo"
+msgstr ""
+
+msgid "Continue with Google"
+msgstr ""
+
+msgid "Twitter Logo"
+msgstr ""
+
+msgid "Continue with Twitter"
+msgstr ""
+
+msgid "Connected Accounts"
+msgstr ""
+
+msgid "You haven't linked any social accounts yet. Create one below."
+msgstr ""
+
+msgid "E-mail Addresses"
+msgstr ""
+
+msgid "The following e-mail addresses are associated with your account:"
+msgstr ""
+
+msgid "Verified"
+msgstr ""
+
+msgid "Unverified"
+msgstr ""
+
+msgid "Primary"
+msgstr ""
+
+msgid "Make Primary"
+msgstr ""
+
+msgid "Re-send Verification"
+msgstr ""
+
+msgid "Remove"
+msgstr ""
+
+msgid "Warning:"
+msgstr ""
+
+msgid ""
+"You currently do not have any e-mail address set up. You should really add "
+"an e-mail address so you can receive notifications, reset your password, etc."
+msgstr ""
+
+msgid "Add E-mail Address"
+msgstr ""
+
+msgid "Add E-mail"
+msgstr ""
+
+msgid "Do you really want to remove the selected e-mail address?"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"  Please click the confirmation link below to activate your %(site_name)s "
+"account.\n"
+msgstr ""
+
+msgid "Confirm Email Address"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"  Welcome to %(site_name)s!\n"
+"  Click the confirmation link below to activate your account.\n"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"  Click the link below to reset your %(site_name)s password.\n"
+"  If you didn't request this, you can safely ignore this email.\n"
+msgstr ""
+
+msgid "Reset Password"
+msgstr ""
+
+#, python-format
+msgid ""
+"Hello,\n"
+"\n"
+"Please click the link below to reset your %(site_name)s password.\n"
+"\n"
+"%(password_reset_url)s\n"
+"\n"
+"If you did not try to reset your password you can safely ignore this email.\n"
+msgstr ""
+
+#, python-format
+msgid ""
+"Thanks!\n"
+"\n"
+"The %(site_name)s team\n"
+msgstr ""
+
+msgid "Confirm E-mail Address"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"    Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a>\n"
+"    is an e-mail address for user %(user_display)s.\n"
+"    "
+msgstr ""
+
+msgid "Confirm"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"    This e-mail confirmation link expired or is invalid.\n"
+"    Please <a href=\"%(email_url)s\">issue a new e-mail confirmation "
+"request</a>.\n"
+"    "
+msgstr ""
+
+msgid "Sign In"
+msgstr ""
+
+msgid "or"
+msgstr ""
+
+msgid "Forgot password?"
+msgstr ""
+
+msgid "Are you sure you want to sign out?"
+msgstr ""
+
+msgid "Change Password"
+msgstr ""
+
+msgid "Password Reset"
+msgstr ""
+
+msgid ""
+"Forgot your password? Enter your e-mail address below, and we'll send you an "
+"e-mail allowing you to reset it."
+msgstr ""
+
+msgid "Send Password Reset"
+msgstr ""
+
+msgid ""
+"\n"
+"        Please contact us if you have any trouble resetting your password.\n"
+"      "
+msgstr ""
+
+msgid ""
+"\n"
+"        We've sent you an e-mail. Please get in touch if you do not receive "
+"it within a few minutes.\n"
+"        "
+msgstr ""
+
+msgid "Bad Token"
+msgstr ""
+
+msgid ""
+"\n"
+"        The password reset link was invalid, possibly because it has already "
+"been used.\n"
+"      "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"        Please request a <a href=\"%(passwd_reset_url)s\">new password "
+"reset</a>.\n"
+"      "
+msgstr ""
+
+msgid "Your password is now changed."
+msgstr ""
+
+msgid ""
+"\n"
+"            Your password has been changed.\n"
+"            "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"            You can now <a href=\"%(login_url)s\">login</a> with your new "
+"password.\n"
+"            "
+msgstr ""
+
+msgid "Set Password"
+msgstr ""
+
+msgid "Verify Your E-mail Address"
+msgstr ""
+
+msgid ""
+"\n"
+"        We have sent an e-mail to you for verification.\n"
+"        Follow the link provided to finalize the signup process.\n"
+"        "
+msgstr ""
+
+msgid ""
+"\n"
+"        Please contact us if you do not receive it within a few minutes.\n"
+"        "
+msgstr ""
+
+msgid "Image Gallery"
+msgstr ""
+
+msgid "Account Connections"
+msgstr ""
+
+msgid "← Return to Profile"
+msgstr ""
+
+msgid ""
+"You can sign in to your account using any of the following third party "
+"accounts:"
+msgstr ""
+
+msgid ""
+"You currently have no social network accounts connected to this account."
+msgstr ""
+
+msgid "Add a 3rd Party Account"
+msgstr ""
+
+#, python-format
+msgid "Connect %(provider)s"
+msgstr ""
+
+#, python-format
+msgid "You are about to connect a new third party account from %(provider)s."
+msgstr ""
+
+#, python-format
+msgid "Sign In Via %(provider)s"
+msgstr ""
+
+#, python-format
+msgid "You are about to sign in using a third party account from %(provider)s."
+msgstr ""
+
+msgid "Continue"
+msgstr ""
+
+msgid "Sign Up"
+msgstr ""
+
+#, python-format
+msgid ""
+"You are about to use your %(provider_name)s account to login to\n"
+"%(site_name)s. As a final step, please complete the following form:"
+msgstr ""
+
+msgid "Welcome!"
+msgstr ""
+
+msgid "Accept Invitation?"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"            You've been invited to join %(team_name)s by %(by)s.\n"
+"            "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"                  This invitation was sent to %(invite_email)s but you're "
+"logged in as %(user_email)s.\n"
+"                  What would you like to do?\n"
+"                  "
+msgstr ""
+
+msgid "Sign out"
+msgstr ""
+
+msgid "Create Account to Accept"
+msgstr ""
+
+msgid ""
+"Sorry, it looks like that invitation has already been accepted or expired."
+msgstr ""
+
+msgid ""
+"If you think this is a mistake, ask your team administrator to invite you "
+"again!"
+msgstr ""
+
+msgid "Resend Invitation"
+msgstr ""
+
+msgid "Cancel Invitation"
+msgstr ""
+
+msgid "Invite Team Members"
+msgstr ""
+
+msgid "Send Invitation"
+msgstr ""
+
+msgid "Pending Invitations"
+msgstr ""
+
+msgid "Invited"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Any pending invitations will show up here until accepted."
+msgstr ""
+
+msgid "My Teams"
+msgstr ""
+
+msgid "Name"
+msgstr ""
+
+msgid "View Dashboard"
+msgstr ""
+
+msgid "Edit"
+msgstr ""
+
+msgid "View Details"
+msgstr ""
+
+msgid "Add Team"
+msgstr ""
+
+msgid "No Teams Yet!"
+msgstr ""
+
+msgid "Create your first team below to get started."
+msgstr ""
+
+msgid "Team Details"
+msgstr ""
+
+msgid "Save Details"
+msgstr ""
+
+msgid "Team Members"
+msgstr ""
+
+msgid "Member"
+msgstr ""
+
+msgid "Danger Zone"
+msgstr ""
+
+msgid "Delete Team"
+msgstr ""
+
+msgid "Date Joined"
+msgstr ""
+
+msgid "Update Role"
+msgstr ""
+
+msgid "You are not allowed to modify your own role."
+msgstr ""
+
+msgid "Leave Team"
+msgstr ""
+
+msgid "Remove from Team"
+msgstr ""
+
+msgid "Fly Away!"
+msgstr ""
+
+msgid "You're Signed In!"
+msgstr ""
+
+msgid "This is your application's logged in home page."
+msgstr ""
+
+#, python-format
+msgid "You're logged into the \"%(team_name)s\" Team."
+msgstr ""
+
+msgid "Copyright"
+msgstr ""
+
+msgid "Create account"
+msgstr ""
+
+msgid "Really delete team?"
+msgstr ""
+
+msgid "Close"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"        This will permanently delete the <em><strong>%(team_name)s</strong></"
+"em> team and all associated data.\n"
+"        "
+msgstr ""
+
+msgid "This action cannot be undone."
+msgstr ""
+
+msgid "I understand, permanently delete this team"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Leave team?"
+msgstr ""
+
+msgid "Remove team member?"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"          You will be removed from the team: <em><strong>%(team_name)s</"
+"strong></em>.\n"
+"          After this, you will no longer be able to access any team pages, "
+"and will have to be invited again to regain access.\n"
+"          "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"          This will remove <em><strong>%(member_name)s</strong></em> from "
+"your team: <em>%(team_name)s</em>.\n"
+"          They will no longer be able to access any team pages, and will "
+"have to be invited again to regain access.\n"
+"          "
+msgstr ""
+
+msgid "I understand, leave team"
+msgstr ""
+
+msgid "I understand, remove team member"
+msgstr ""
+
+msgid "Application"
+msgstr ""
+
+msgid "Dashboard"
+msgstr ""
+
+msgid "My Account"
+msgstr ""
+
+msgid "Teams"
+msgstr ""
+
+msgid "Example App"
+msgstr ""
+
+msgid "Subscription Demo"
+msgstr ""
+
+msgid "Subscription"
+msgstr ""
+
+msgid "Blog"
+msgstr ""
+
+msgid "Examples Gallery"
+msgstr ""
+
+msgid "Impersonate a User"
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"      This will permanently delete the <em><strong>%(team_name)s</strong></"
+"em> team and all associated data.\n"
+"      "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"          You will be removed from the team: <em><strong>%(team_name)s</"
+"strong></em>.\n"
+"          After this, you will no longer be able to access any team pages, "
+"and will have to be invited again to regain access.\n"
+"        "
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"          This will remove <em><strong>%(member_name)s</strong></em> from "
+"your team: <em>%(team_name)s</em>.\n"
+"          They will no longer be able to access any team pages, and will "
+"have to be invited again to regain access.\n"
+"        "
+msgstr ""
+
+msgid "Don't have an account?"
+msgstr ""
+
+msgid "Enter your email and password to register"
+msgstr ""
+
+msgid "Terms and Conditions"
+msgstr ""
+
+msgid "Already have an account?"
+msgstr ""
+
+msgid "Account pages"
+msgstr ""
+
+msgid "Admin"
+msgstr ""
+
+msgid "Pegasus Examples"
+msgstr ""
+
+msgid "Already have account?"
+msgstr ""
+
+msgid "Go to sign in."
+msgstr ""
+
+#, python-format
+msgid ""
+"\n"
+"      This will permanently delete the <em><strong>%(team_name)s</strong></"
+"em> team and all associated data.\n"
+"      <strong>This action cannot be undone.</strong>\n"
+"      "
+msgstr ""
+
+msgid "English"
+msgstr ""
+
+msgid "French"
+msgstr ""

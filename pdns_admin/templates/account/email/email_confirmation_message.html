@@ -1,0 +1,7 @@
+{% extends 'account/email/email_template_base.html' %}
+{% load i18n %}
+{% block message_body %}{% blocktranslate with site_name=current_site.name %}
+  Please click the confirmation link below to activate your {{ site_name }} account.
+{% endblocktranslate %}{% endblock %}
+{% block cta_link %}{{ activate_url }}{% endblock %}
+{% block cta_text %}{% translate "Confirm Email Address" %}{% endblock %}

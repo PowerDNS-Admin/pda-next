@@ -1,0 +1,69 @@
+{% extends "web/app/app_base.html" %}
+{% load static %}
+{% block app %}
+<section class="app-card">
+  {% include 'account/components/profile_form.html' %}
+</section>
+{% include 'account/components/2fa.html' %}
+<section class="app-card">
+  {% include 'account/components/social/social_accounts.html' %}
+</section>
+{% include 'account/components/api_keys.html' %}
+{% endblock %}
+{% block page_js %}
+<script src="{% static 'js/app-bundle.js' %}"></script>
+<script>
+  const App = SiteJS.app;
+  document.addEventListener('DOMContentLoaded', () => {
+    const uploadUrl = '{% url "users:upload_profile_image" %}';
+    document.getElementById("profile-upload").onchange = function() {
+      let files = document.getElementById("profile-upload").files;
+      let file = files[0];
+      if (file) {
+        updatePreview(file);
+        uploadImage(file);
+      }
+    };
+    function updatePreview(file) {
+      // https://stackoverflow.com/a/4459419/8207
+      let reader = new FileReader();
+      reader.onload = function (e) {
+        let avatars = document.getElementsByClassName('avatar');
+        for (let i = 0; i < avatars.length; i++) {
+          avatars[i].setAttribute('src', e.target.result);
+        }
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function uploadImage(file) {
+      // update UI
+      let uploadlabel = document.getElementById("profile-upload-label")
+      uploadlabel.innerHTML = '<span class="pg-icon"><i class="fa fa-refresh"></i></span><span>Uploading...</span>';
+      uploadlabel.classList.add('is-active');
+      // upload to server
+      let formData = new FormData();
+      formData.append("avatar", file);
+      formData.append('csrfmiddlewaretoken', App.Cookies.get('csrftoken'));
+      fetch(uploadUrl, {method: "POST", body: formData, credentials: 'same-origin'}).then(
+        function (response) {
+          if (response.ok) {
+            response.text().then(function (text) {
+              // update UI
+              uploadlabel.innerHTML = '<span class="pg-icon"><i class="fa fa-check"></i></span><span>' + text + '</span>';
+              uploadlabel.classList.remove('is-active');
+              uploadlabel.classList.add('has-text-success');
+            });
+          } else {
+            response.text().then(function (errorText) {
+              console.error(errorText);
+              uploadlabel.innerHTML = '<span class="pg-icon"><i class="fa fa-times"></i></span><span>Upload failed!</span>';
+              uploadlabel.classList.add('has-text-danger');
+            });
+          }
+        }
+      );
+    }
+  });
+</script>
+{% endblock %}

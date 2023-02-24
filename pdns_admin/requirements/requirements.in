@@ -1,0 +1,11 @@
+Django
+django-allauth
+django-allauth-2fa
+django-waffle
+psycopg2-binary
+django-environ
+djangorestframework
+djangorestframework-api-key
+drf-spectacular
+django-anymail[mailgun]  # email services
+sentry-sdk

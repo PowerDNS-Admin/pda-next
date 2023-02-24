@@ -1,0 +1,11 @@
+{% load i18n %}
+{% load socialaccount %}
+{% load static %}
+<a class="btn btn-outline-secondary w-100" href="{% provider_login_url 'google' %}">
+  <div class="d-flex align-items-center justify-content-center">
+    <span class="pg-icon">
+      {% include 'web/icons/google-icon.svg' %}
+    </span>
+    {% translate "Continue with Google" %}
+  </div>
+</a>

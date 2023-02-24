@@ -1,0 +1,48 @@
+{% extends "web/base.html" %}
+{% load i18n %}
+{% load static %}
+{% load socialaccount %}
+{% load form_tags %}
+{% block body %}
+<div class="page-header align-items-start min-vh-100" style="background-image: url('https://images.unsplash.com/photo-1497294815431-9365093b7331?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1950&q=80');" loading="lazy">
+  <span class="mask bg-gradient-dark opacity-6"></span>
+  <div class="container my-auto">
+    <div class="row">
+      <div class="col-lg-4 col-md-8 col-12 mx-auto">
+        <div class="card z-index-0 fadeIn3 fadeInBottom">
+          <div class="card-header p-0 position-relative mt-n4 mx-3 z-index-2">
+            <div class="bg-gradient-primary shadow-primary border-radius-lg py-3 pe-1">
+              <h4 class="text-white font-weight-bolder text-center mt-2 mb-0">{% translate "Sign In" %}</h4>
+              <div class="row mt-3">
+                <div class="col text-center mx-auto">
+                  <a class="btn btn-link px-3" href="{% provider_login_url 'google' %}">
+                    <i class="fa fa-google text-white text-lg"></i>
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <form method="post" role="form" class="text-start">
+              {% csrf_token %}
+              {{ form.non_field_errors }}
+              {% render_text_input form.login %}
+              {% render_text_input form.password %}
+              <input class="btn btn-primary w-100" type="submit" value="{% translate "Sign In" %}">
+              <a class="text-primary text-sm text-gradient" href="{% url 'account_reset_password' %}">
+                {% translate "Forgot password?" %}
+              </a>
+              <hr>
+              <p class="mt-4 text-sm text-center">
+                {% translate "Don't have an account?" %}
+                <a href="{% url 'account_signup' %}" class="text-primary text-gradient font-weight-bold">{% translate "Sign Up" %}</a>
+              </p>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}
+{% block footer %}{% endblock %}

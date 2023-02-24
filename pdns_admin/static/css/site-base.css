@@ -1,0 +1,163 @@
+/*!***********************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/sass-loader/dist/cjs.js!./assets/styles/site-base.scss ***!
+  \***********************************************************************************************************************/
+.navbar-avatar {
+  object-fit: cover;
+  width: 32px;
+  height: 32px;
+  max-height: inherit !important;
+  border-radius: 50%;
+}
+
+#profile-picture {
+  display: flex;
+  justify-content: center;
+}
+#profile-picture img.avatar {
+  object-fit: cover;
+  width: 128px;
+  height: 128px;
+  border-radius: 50%;
+}
+
+#profile-upload-holder {
+  padding-top: 0.5em;
+}
+#profile-upload-holder input[type=file] {
+  display: none;
+}
+
+.progress-bar {
+  background-color: var(--primary);
+  width: 2px;
+}
+
+#progress-bar-message {
+  color: var(--gray);
+}
+
+.stripe-element {
+  box-shadow: inset 0 0.0625em 0.125em rgba(10, 10, 10, 0.05);
+  border-radius: 4px;
+  line-height: 1.5;
+  border: 1px solid #dbdbdb;
+  padding: 1em;
+}
+
+.focused-stripe-element {
+  border-color: var(--primary);
+}
+
+.invalid-stripe-element {
+  border-color: var(--danger);
+}
+
+.complete-stripe-element {
+  border-color: var(--success);
+}
+
+.upgrade-features li {
+  display: flex;
+}
+.upgrade-features li .pg-icon {
+  margin-right: 0.5rem;
+}
+.upgrade-features li .upgrade-feature {
+  width: 100%;
+}
+
+#subscription-details-table .subscription-detail {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  margin: 0.5rem;
+}
+#subscription-details-table .subscription-detail .subscription-detail-label {
+  width: 16rem;
+  text-align: right;
+  margin-right: 1rem;
+}
+#subscription-details-table .subscription-detail .subscription-detail-value {
+  width: 100%;
+}
+#subscription-details-table .subscription-detail .subdetail {
+  font-size: 0.8rem;
+  margin-top: 0.2rem;
+}
+
+#plan-selector .plan {
+  height: 100%;
+  border: 3px solid transparent;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 1rem;
+}
+#plan-selector .plan.is-selected {
+  border: 3px solid var(--primary);
+}
+#plan-selector .plan .plan-summary {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+}
+#plan-selector .plan .price {
+  font-size: 1.5rem;
+}
+
+.h-100 {
+  height: 100%;
+}
+
+.muted-link {
+  color: hsl(0deg, 0%, 71%);
+}
+.muted-link:hover {
+  color: hsl(0deg, 0%, 48%);
+  text-decoration: underline;
+}
+
+.errorlist {
+  color: var(--danger);
+}
+
+img.socialicon {
+  padding-right: 0.5em;
+  max-width: 24px;
+  max-height: 24px;
+}
+
+.lds-ripple {
+  display: inline-block;
+  position: relative;
+  width: 80px;
+  height: 80px;
+}
+
+.lds-ripple div {
+  position: absolute;
+  border: 4px solid var(--primary);
+  opacity: 1;
+  border-radius: 50%;
+  animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;
+}
+
+.lds-ripple div:nth-child(2) {
+  animation-delay: -0.5s;
+}
+
+@keyframes lds-ripple {
+  0% {
+    top: 36px;
+    left: 36px;
+    width: 0;
+    height: 0;
+    opacity: 1;
+  }
+  100% {
+    top: 0px;
+    left: 0px;
+    width: 72px;
+    height: 72px;
+    opacity: 0;
+  }
+}
