@@ -1,0 +1,10 @@
+{% if messages %}
+  <div class="floating-alerts">
+    {% for message in messages %}
+    <div class="alert alert-dismissible fade show {% if message.tags %}alert-{% if message.level_tag == 'error' %}danger{% else %}{{ message.level_tag }}{% endif %}{% endif %} {{ message.extra_tags }}" >
+      {{ message }}
+      <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+    {% endfor %}
+  </div>
+{% endif %}

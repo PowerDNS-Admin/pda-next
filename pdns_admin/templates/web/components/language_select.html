@@ -1,0 +1,27 @@
+{% load i18n %}
+{% if not user.is_authenticated and use_i18n %}
+  <form id="language-select" action="{% url 'set_language' %}" method="post">
+    {% csrf_token %}
+    <div class="row justify-content-center">
+      <div class="col col-1">
+        <select class="form-select form-select-sm" name="language">
+          {% get_current_language as LANGUAGE_CODE %}
+          {% get_available_languages as LANGUAGES %}
+          {% get_language_info_list for LANGUAGES as languages %}
+          {% for language in languages %}
+            <option value="{{ language.code }}"{% if language.code == LANGUAGE_CODE %} selected{% endif %}>
+              {{ language.name_local }}
+            </option>
+          {% endfor %}
+        </select>
+      </div>
+    </div>
+  </form>
+  <script>
+    let form = document.getElementById("language-select"),
+      langSelect = document.getElementsByName("language")[0];
+    langSelect.onchange = () => {
+      form.submit();
+    };
+  </script>
+{% endif %}

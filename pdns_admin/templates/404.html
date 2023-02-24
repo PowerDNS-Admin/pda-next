@@ -1,0 +1,8 @@
+{% extends 'error_base.html' %}
+{% load i18n %}
+{% block error_details %}
+  <h1 class="pg-title">{% translate "Shucks. We couldn't find that." %}</h1>
+  <h2 class="pg-subtitle">
+    {% translate "If you think this page should exist, double-check that you are signed in as the right person." %}
+  </h2>
+{% endblock %}

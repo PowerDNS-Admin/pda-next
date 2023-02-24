@@ -1,0 +1,81 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "No Teams Yet!"
+msgstr ""
+
+msgid "Create your first team below to get started."
+msgstr ""
+
+msgid "Create Team"
+msgstr ""
+
+msgid "Invite Team Members"
+msgstr ""
+
+msgid "Invite"
+msgstr ""
+
+msgid "Sent!"
+msgstr ""
+
+msgid "Resend Invitation"
+msgstr ""
+
+msgid "Cancel Invitation"
+msgstr ""
+
+msgid "Any pending invitations will show up here until accepted."
+msgstr ""
+
+msgid "Pending Invitations"
+msgstr ""
+
+msgid "Email"
+msgstr ""
+
+msgid "Role"
+msgstr ""
+
+msgid "Team ID"
+msgstr ""
+
+msgid "A unique ID for your team. No spaces are allowed!"
+msgstr ""
+
+msgid "Cancel"
+msgstr ""
+
+msgid "Add Team"
+msgstr ""
+
+msgid "Save Details"
+msgstr ""
+
+msgid "Team Details"
+msgstr ""
+
+msgid "Team Name"
+msgstr ""
+
+msgid "Your team name."
+msgstr ""
+
+msgid "View Dashboard"
+msgstr ""
+
+msgid "Team Members"
+msgstr ""
+
+msgid "Member"
+msgstr ""

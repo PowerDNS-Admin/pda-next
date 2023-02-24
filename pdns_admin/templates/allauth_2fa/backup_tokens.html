@@ -1,0 +1,32 @@
+{% extends "allauth_2fa/2fa_base.html" %}
+{% load i18n %}
+{% block app %}
+  <section class="app-card">
+    <h2 class="pg-subtitle">{% translate "Two-Factor Authentication Backup Tokens" %}</h2>
+    {% if backup_tokens %}
+      {% if reveal_tokens %}
+        <ul>
+          {% for token in backup_tokens %}
+            <li>{{ token.token }}</li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        {% translate 'Backup tokens have been generated, but are not revealed here for security reasons. Press the button below to generate new ones.' %}
+      {% endif %}
+    {% else %}
+      {% translate 'No backup tokens have been created. Press the button below to generate some.' %}
+    {% endif %}
+
+    <form method="post" class="mt-3">
+      {% csrf_token %}
+      <button class="pg-button-primary" type="submit">
+        {% translate 'Generate backup tokens' %}
+      </button>
+    </form>
+
+  </section>
+  <section class="app-card">
+    <h2 class="pg-subtitle">{% translate "Disable Two-Factor Authentication" %}</h2>
+    <a class="pg-button-primary" href="{% url 'two-factor-remove' %}">Disable Two-Factor</a>
+  </section>
+{% endblock %}

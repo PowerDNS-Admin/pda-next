@@ -1,0 +1,74 @@
+{% load static %}
+{% load meta_tags %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <!--IE compatibility-->
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!--Mobile friendly-->
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% if project_meta %}
+  {% with project_meta|get_title:page_title as title %}
+  {% with project_meta|get_description:page_description as description %}
+  {% with project_meta|get_image_url:page_image as image %}
+      <title>{% block page_title %}{{ title }}{% endblock %}</title>
+      <meta name="description" content="{{ description }}">
+      <meta name="keywords" content="{{ project_meta.KEYWORDS }}">
+      <!-- Twitter Card data -->
+      <meta name="twitter:card" content="summary">
+      <meta name="twitter:title" content="{{ title }}">
+      <meta name="twitter:description" content="{{ description }}">
+      <meta name="twitter:image" content="{{ image }}">
+      <!-- Open Graph data -->
+      <meta property="og:title" content="{{ title }}" />
+      <meta property="og:type" content="website" />
+      <meta property="og:url" content="{{ page_url }}" />
+      <meta property="og:image" content="{{ image }}" />
+      <meta property="og:description" content="{{ description }}" />
+      <meta property="og:site_name" content="{{ project_meta.NAME }}" />
+      <link rel="canonical" href="{% if page_canonical_url %}{{ page_canonical_url }}{% else %}{{ page_url }}{% endif %}">
+  {% endwith %}
+  {% endwith %}
+  {% endwith %}
+{% endif %}
+{% include 'web/components/favicon.html' %}
+    <link rel="stylesheet" href="{% static 'css/site-base.css' %}">
+    <link rel="stylesheet" href="{% static 'css/site-bootstrap.css' %}">
+    <!--     Fonts and icons     -->
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,900|Roboto+Slab:400,700" />
+    <!-- Material Icons -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Round" rel="stylesheet">
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css" integrity="sha512-xh6O/CkQoPOWDdYTDqeRdPCVd1SpvCA9XXcUnZS2FmJNp1coAFzvtCN9BmamE+4aHK8yyUHUSCcJHgXloTyT2A==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/v4-shims.min.css" integrity="sha512-ARfx5eajdcCAuWvuJrgUuJ6D25ON3KZRTCghNXXKeJldCQJ5bXS+6CvG2EhcFWITF95uwZydzpufSKvhmSpTxA==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    {% if GOOGLE_ANALYTICS_ID %}
+        {% include 'web/components/google_analytics.html' %}
+    {% endif %}
+    <script src="{% static 'js/site-bundle.js'%}"></script>
+    <script type="text/javascript">__cssFramework = 'bootstrap';</script>
+    <script src="{% url 'javascript-catalog' %}"></script>
+    {% block page_head %}
+    {% endblock %}
+</head>
+<body class="g-sidenav-show  bg-gray-200" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+{% block body_wrapper %}
+{% block top_nav %}
+  {% include 'web/components/top_nav.html' %}
+{% endblock %}
+{% block messages %}
+  {% include 'web/components/messages.html' %}
+{% endblock messages %}
+{% block body %}
+{% endblock body %}
+{% block footer %}
+  {% include 'web/components/footer.html' %}
+{% endblock footer %}
+{% endblock body_wrapper %}
+{% block page_js %}
+{% endblock page_js %}
+  {% include 'web/components/messages-js.html' %}
+  <script src="{% static 'js/site-bootstrap-bundle.js' %}"></script>
+  {% include 'web/components/sidenav_js.html' %}
+</body>
+</html>

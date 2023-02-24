@@ -1,0 +1,23 @@
+{% load i18n %}
+{% load static %}
+<div class="my-5">
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-md order-md-last">
+        <img class="img-fluid" src="{% static 'images/undraw/undraw_outer_space.svg' %}" alt="Fly Away!">
+      </div>
+      <div class="col-md">
+        <h1 >{{ project_meta.NAME }}</h1>
+        <h2 class="lead">{{ project_meta.DESCRIPTION }}</h2>
+        <div class="my-3">
+          <a href="{% url 'account_signup' %}" class="btn btn-lg btn-primary">
+            {% translate "Create account" %}
+          </a>
+          <a href="{% url 'account_login' %}" class="btn btn-lg btn-outline-primary">
+            {% translate "Sign In" %}
+          </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

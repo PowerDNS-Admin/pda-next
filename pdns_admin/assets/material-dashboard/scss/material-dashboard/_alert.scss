@@ -1,0 +1,19 @@
+@each $state, $value in $theme-gradient-colors {
+  .alert-#{$state} {
+    @include gradient-directional(nth($value, 1) 0%, nth($value, -1) 100%, $deg: 195deg);
+  }
+}
+
+// Pegasus removed these from the default files, to restore the close button on messages
+//.btn-close {
+//  &:focus {
+//    box-shadow: none;
+//  }
+//}
+
+//remove
+//.alert-dismissible {
+//  .btn-close {
+//    background-image: none;
+//  }
+//}

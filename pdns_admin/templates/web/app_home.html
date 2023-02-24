@@ -1,0 +1,27 @@
+{% extends "web/app/app_base.html" %}
+{% load i18n %}
+{% load static %}
+{% block app %}
+<section class="app-card">
+    <div class="pg-columns pg-columns-reversed pg-align-items-center">
+        <div class="pg-column-one-third">
+            <img class="img-fluid" src="{% static 'images/undraw/undraw_outer_space.svg' %}" alt="{% translate "Fly Away!" %}">
+        </div>
+        <div class="pg-column">
+            <h1 class="pg-title">{% translate "You're Signed In!" %}</h1>
+            <h2 class="pg-subtitle">
+                {% translate "This is your application's logged in home page." %}
+            </h2>
+            <p>
+                Now go make something great!
+            </p>
+        </div>
+    </div>
+</section>
+<section class="app-card">
+    <div class="pg-content">
+        <p>To add more to this page you can make new sections like this one.</p>
+        <p>Tip: the source of this page can be found at <code>templates/web/app_home.html</code></p>
+    </div>
+</section>
+{% endblock %}

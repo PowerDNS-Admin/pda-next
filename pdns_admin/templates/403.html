@@ -1,0 +1,8 @@
+{% extends 'error_base.html' %}
+{% load i18n %}
+{% block error_details %}
+  <h1 class="pg-title">{% translate "Oops. You don't have permission to do that." %}</h1>
+  <h2 class="pg-subtitle">
+    {% translate "If you think this is a mistake, contact support." %}
+  </h2>
+{% endblock %}

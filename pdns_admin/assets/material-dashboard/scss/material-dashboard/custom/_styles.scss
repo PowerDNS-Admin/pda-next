@@ -1,0 +1,11 @@
+
+
+
+.floating-alerts {
+  position: fixed;
+  top: 10px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 90%;
+  z-index: 9999;
+}

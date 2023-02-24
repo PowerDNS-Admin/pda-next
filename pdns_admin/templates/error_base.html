@@ -1,0 +1,17 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% block body %}
+<section class="section mt-7">
+  <div class="container">
+    <div class="pg-columns pg-columns-reversed pg-align-items-center">
+      <div class="pg-column">
+        <img class="img-fluid" src="{% static 'images/undraw/undraw_alert.svg' %}" alt="Uh-Oh">
+      </div>
+      <div class="pg-column">
+        {% block error_details %}
+        {% endblock %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock%}

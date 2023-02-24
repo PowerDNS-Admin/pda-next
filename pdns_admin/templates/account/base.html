@@ -1,0 +1,11 @@
+{% extends "web/base.html" %}
+{% load static %}
+{% load i18n %}
+{% block body %}
+<div class="container mt-7 d-flex justify-content-center">
+  <div class="">
+    {% block content %}
+    {% endblock content %}
+  </div>
+</div>
+{% endblock %}
