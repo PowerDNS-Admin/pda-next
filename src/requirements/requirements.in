@@ -8,4 +8,13 @@ djangorestframework
 djangorestframework-api-key
 drf-spectacular
 django-anymail[mailgun]  # email services
+celery-progress
+celery
+celery[redis]
 sentry-sdk
+dnspython
+bcrypt
+netaddr
+python-dateutil
+
+

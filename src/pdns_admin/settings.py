@@ -61,6 +61,7 @@ THIRD_PARTY_APPS = [
     "rest_framework",
     "drf_spectacular",
     "rest_framework_api_key",
+    "celery_progress",
     "waffle",
 ]
 
@@ -286,8 +287,22 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
+# Celery setup (using redis)
+if "REDIS_URL" in env:
+    REDIS_URL = env("REDIS_URL")
+elif "REDIS_TLS_URL" in env:
+    REDIS_URL = env("REDIS_TLS_URL")
+else:
+    REDIS_HOST = env("REDIS_HOST", default="localhost")
+    REDIS_PORT = env("REDIS_PORT", default="6379")
+    REDIS_URL = f"redis://{REDIS_HOST}:{REDIS_PORT}/0"
 
-# replace any values below with specifics for your project
+if REDIS_URL.startswith("rediss"):
+    REDIS_URL = f"{REDIS_URL}?ssl_cert_reqs=none"
+
+CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
+
+
 PROJECT_METADATA = {
     "NAME": gettext_lazy("PowerDNS Admin"),
     "URL": "http://dev-mg.pdnsadmin.org",
