@@ -1,3 +1,10 @@
-.idea
+*.pyc
+*~
 .DS_Store
+.env
+.env.docker
+.env.production
+.idea
+db.sqlite3
+docs/_build
 venv
