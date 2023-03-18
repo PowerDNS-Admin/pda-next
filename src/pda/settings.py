@@ -337,12 +337,12 @@ if isinstance(REDIS_URL, str):
 
 PROJECT_METADATA = {
     'NAME': gettext_lazy(SETTINGS.site_title),
-    'URL': 'https://powerdnsadmin.org',
+    'URL': SETTINGS.site_url,
     'DESCRIPTION': gettext_lazy(SETTINGS.site_description),
-    'IMAGE': 'https://',
+    'IMAGE': SETTINGS.site_logo,
     'KEYWORDS': 'pdns, powerdns, pda, admin, manage, console, dns, domain, nameserver, recursor, cache, authoritative, '
                 + 'dnssec, app, ui',
-    'CONTACT_EMAIL': 'admin@powerdnsadmin.org',
+    'CONTACT_EMAIL': SETTINGS.site_email,
 }
 
 USE_HTTPS_IN_ABSOLUTE_URLS = SETTINGS.use_https_in_absolute_urls

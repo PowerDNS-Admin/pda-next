@@ -1,5 +1,8 @@
 #PDA_SITE_TITLE=PowerDNS Admin
 #PDA_SITE_DESCRIPTION=A PowerDNS web interface with advanced features.
+#PDA_SITE_URL=https://demo.powerdnsadmin.org
+#PDA_SITE_LOGO=https://demo.powerdnsadmin.org/static/img/logo.png
+#PDA_SITE_EMAIL=admin@powerdnsadmin.org
 #PDA_ADMIN_NAME=Admin
 #PDA_ADMIN_EMAIL=admin@yourdomain.com
 #PDA_ROOT_PATH=

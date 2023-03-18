@@ -12,6 +12,9 @@ class AppSettings(BaseSettings):
     version: str = '0.1.0'
     site_title: str = 'PowerDNS Admin'
     site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
+    site_url: str = 'https://demo.powerdnsadmin.org'
+    site_logo: str = 'https://demo.powerdnsadmin.org/static/img/logo.png'
+    site_email: str = 'admin@powerdnsadmin.org'
     admin_name: str = 'Admin'
     admin_email: str = 'admin@yourdomain.com'
     root_path: str = str(ROOT_PATH)
