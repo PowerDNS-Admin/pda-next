@@ -15,12 +15,6 @@ from config import settings
 SECRET_KEY = settings.secret_key
 DEBUG = settings.debug
 ALLOWED_HOSTS = settings.allowed_hosts
-
-if isinstance(settings.secure_proxy_ssl_header_name, str) and len(settings.secure_proxy_ssl_header_name.strip()) \
-        and isinstance(settings.secure_proxy_ssl_header_value, str) \
-        and len(settings.secure_proxy_ssl_header_value.strip()):
-    SECURE_PROXY_SSL_HEADER = (settings.secure_proxy_ssl_header_name, settings.secure_proxy_ssl_header_value)
-
 SECURE_SSL_REDIRECT = settings.secure_ssl_redirect
 SESSION_COOKIE_SECURE = settings.session_cookie_secure
 CSRF_COOKIE_SECURE = settings.csrf_cookie_secure
@@ -31,13 +25,16 @@ if isinstance(settings.secure_hsts_seconds, int) and settings.secure_hsts_second
     SECURE_HSTS_INCLUDE_SUBDOMAINS = settings.secure_hsts_include_subdomains
     SECURE_HSTS_PRELOAD = settings.secure_hsts_preload
 
-# Application definition
+if isinstance(settings.secure_proxy_ssl_header_name, str) and len(settings.secure_proxy_ssl_header_name.strip()) \
+        and isinstance(settings.secure_proxy_ssl_header_value, str) \
+        and len(settings.secure_proxy_ssl_header_value.strip()):
+    SECURE_PROXY_SSL_HEADER = (settings.secure_proxy_ssl_header_name, settings.secure_proxy_ssl_header_value)
 
 ROOT_URLCONF = "pda.urls"
 WSGI_APPLICATION = "pda.wsgi.application"
 FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
-# Django Sites
 SITE_ID = 1
+GOOGLE_ANALYTICS_ID = settings.google_analytics_id
 
 PROJECT_METADATA = {
     'NAME': gettext_lazy(settings.site_title),
@@ -49,8 +46,42 @@ PROJECT_METADATA = {
     'CONTACT_EMAIL': settings.site_email,
 }
 
-# Setup Google Analytics
-GOOGLE_ANALYTICS_ID = settings.google_analytics_id
+# Internationalization / Localization
+# https://docs.djangoproject.com/en/3.2/topics/i18n/
+
+LANGUAGE_CODE = settings.language_code
+LANGUAGE_COOKIE_NAME = settings.language_cookie_name
+LANGUAGES = [
+    ('en', gettext_lazy('English')),
+    ('fr', gettext_lazy('French')),
+]
+LOCALE_PATHS = (os.path.join(settings.src_path, 'locale'),)
+TIME_ZONE = settings.time_zone
+USE_I18N = settings.use_i18n
+USE_L10N = settings.use_l10n
+USE_TZ = settings.use_tz
+
+# Static files (CSS, JavaScript, Images)
+# https://docs.djangoproject.com/en/3.2/howto/static-files/
+
+STATIC_ROOT = os.path.join(settings.src_path, 'static_root')
+STATIC_URL = '/static/'
+STATICFILES_DIRS = [os.path.join(settings.src_path, 'static')]
+
+# uncomment to use manifest storage to bust cache when file change
+# note: this may break some image references in sass files which is why it is not enabled by default
+# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
+
+MEDIA_ROOT = os.path.join(settings.root_path, 'media')
+MEDIA_URL = '/media/'
+
+# Default primary key field type
+# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
+
+# future versions of Django will use BigAutoField as the default, but it can result in unwanted library
+# migration files being generated, so we stick with AutoField for now.
+# change this to BigAutoField if you're sure you want to use it and aren't worried about migrations.
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -255,43 +286,6 @@ SOCIALACCOUNT_PROVIDERS = {
         },
     },
 }
-
-# Internationalization / Localization
-# https://docs.djangoproject.com/en/3.2/topics/i18n/
-
-LANGUAGE_CODE = settings.language_code
-LANGUAGE_COOKIE_NAME = settings.language_cookie_name
-LANGUAGES = [
-    ('en', gettext_lazy('English')),
-    ('fr', gettext_lazy('French')),
-]
-LOCALE_PATHS = (os.path.join(settings.src_path, 'locale'),)
-TIME_ZONE = settings.time_zone
-USE_I18N = settings.use_i18n
-USE_L10N = settings.use_l10n
-USE_TZ = settings.use_tz
-
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/3.2/howto/static-files/
-
-STATIC_ROOT = os.path.join(settings.src_path, 'static_root')
-STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(settings.src_path, 'static')]
-
-# uncomment to use manifest storage to bust cache when file change
-# note: this may break some image references in sass files which is why it is not enabled by default
-# STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
-
-MEDIA_ROOT = os.path.join(settings.root_path, 'media')
-MEDIA_URL = '/media/'
-
-# Default primary key field type
-# https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
-
-# future versions of Django will use BigAutoField as the default, but it can result in unwanted library
-# migration files being generated, so we stick with AutoField for now.
-# change this to BigAutoField if you're sure you want to use it and aren't worried about migrations.
-DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Email setup
 
