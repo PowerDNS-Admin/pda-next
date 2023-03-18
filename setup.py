@@ -50,7 +50,7 @@ setup(
         'pypng==0.20220715.0',
         'pyrsistent==0.19.3',
         'python3-openid==3.2.0',
-        'python-dotenv==0.21.0',
+        'python-dotenv==0.21.1',
         'pytz==2022.7.1',
         'pyaml==21.10.1',
         'qrcode==7.4.2',
