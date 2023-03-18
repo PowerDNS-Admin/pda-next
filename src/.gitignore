@@ -3,8 +3,8 @@
 *~
 db.sqlite3
 .sass-cache/
-pdns_admin/localsettings.py
-pdns_admin/local.py
+pda/localsettings.py
+pda/local.py
 static_root/
 openapitools.json
 media/

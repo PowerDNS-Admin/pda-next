@@ -8,7 +8,7 @@ Setup a virtualenv and install requirements
 (this example uses [virtualenvwrapper](https://virtualenvwrapper.readthedocs.io/en/latest/)):
 
 ```bash
-mkvirtualenv pdns_admin -p python3.9
+mkvirtualenv pda -p python3.9
 pip install -r requirements.txt
 ```
 

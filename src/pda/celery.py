@@ -3,9 +3,9 @@ import os
 from celery import Celery
 
 # set the default Django settings module for the 'celery' program.
-os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pdns_admin.settings")
+os.environ.setdefault("DJANGO_SETTINGS_MODULE", "pda.settings")
 
-app = Celery("pdns_admin")
+app = Celery("pda")
 
 # Using a string here means the worker doesn't have to serialize
 # the configuration object to child processes.
