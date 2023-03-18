@@ -27,7 +27,7 @@ env.read_env(os.path.join(BASE_DIR, ".env"))
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY", default="qaKHezmCdVKwdHCgjvqPYMKwsYiQIEAHORqaijbI")
+SECRET_KEY = os.getenv('PDA_SECRET_KEY', 'INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -133,8 +133,8 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-if 'DATABASE_URL' in env:
-    DATABASES = {'default': env.db()}
+if 'PDA_DATABASE_URL' in env:
+    DATABASES = {'default': env.db(var='PDA_DATABASE_URL')}
 else:
     DATABASES = {
         'default': {
@@ -343,12 +343,12 @@ USE_HTTPS_IN_ABSOLUTE_URLS = False  # set this to True in production to have URL
 ADMINS = [('Matt Scott', 'admin@powerdnsadmin.org')]
 
 # Add your Google Analytics ID to the environment to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = env('GOOGLE_ANALYTICS_ID', default='')
+GOOGLE_ANALYTICS_ID = env('PDA_GOOGLE_ANALYTICS_ID', default='')
 
 # Sentry setup
 
 # populate this to configure sentry. should take the form: 'https://****@sentry.io/12345'
-SENTRY_DSN = env('SENTRY_DSN', default='')
+SENTRY_DSN = env('PDA_SENTRY_DSN', default='')
 
 if SENTRY_DSN:
     import sentry_sdk

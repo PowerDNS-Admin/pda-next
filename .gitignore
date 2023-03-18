@@ -1,10 +1,12 @@
 *.pyc
 *~
 .DS_Store
+*.egg-info
 .env
 .env.docker
 .env.production
 .idea
+conf/config.yml
 db.sqlite3
 docs/_build
 venv
