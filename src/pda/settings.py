@@ -8,7 +8,6 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
-import environ
 import os
 from django.utils.translation import gettext_lazy
 from pathlib import Path
@@ -129,6 +128,7 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 DATABASES = {}
 
 if isinstance(SETTINGS.db_url, str) and len(SETTINGS.db_url.strip()):
+    import environ
     env = environ.Env()
     DATABASES['default'] = env.db_url_config(url=SETTINGS.db_url)
 
