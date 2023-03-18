@@ -15,13 +15,24 @@ class AppSettings(BaseSettings):
     site_url: str = 'https://demo.powerdnsadmin.org'
     site_logo: str = 'https://demo.powerdnsadmin.org/static/img/logo.png'
     site_email: str = 'admin@powerdnsadmin.org'
+    site_from_email: str = 'pda@powerdnsadmin.org'
     admin_name: str = 'Admin'
     admin_email: str = 'admin@yourdomain.com'
+    admin_from_email: str = 'noreply@powerdnsadmin.org'
     root_path: str = str(ROOT_PATH)
     src_path: str = str(SRC_PATH)
     template_path: str = str(TEMPLATE_PATH)
     config_path: str = 'conf/config.yml'
     allowed_hosts: list[str] = ['*']
+    secure_proxy_ssl_header_name: str = 'HTTP_X_FORWARDED_PROTO'
+    secure_proxy_ssl_header_value: str = 'https'
+    secure_ssl_redirect: bool = True
+    session_cookie_secure: bool = True
+    csrf_cookie_secure: bool = True
+    secure_hsts_seconds: int | str | None = 2592000
+    """ HSTS (HTTP Strict Transport Security) Seconds (30 days in seconds)"""
+    secure_hsts_include_subdomains: bool = True
+    secure_hsts_preload: bool = True
     debug: bool = False
     dev_server_address: str = '0.0.0.0'
     dev_server_port: int = 8080

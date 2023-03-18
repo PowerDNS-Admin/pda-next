@@ -16,7 +16,41 @@ SECRET_KEY = settings.secret_key
 DEBUG = settings.debug
 ALLOWED_HOSTS = settings.allowed_hosts
 
+if isinstance(settings.secure_proxy_ssl_header_name, str) and len(settings.secure_proxy_ssl_header_name.strip()) \
+        and isinstance(settings.secure_proxy_ssl_header_value, str) \
+        and len(settings.secure_proxy_ssl_header_value.strip()):
+    SECURE_PROXY_SSL_HEADER = (settings.secure_proxy_ssl_header_name, settings.secure_proxy_ssl_header_value)
+
+SECURE_SSL_REDIRECT = settings.secure_ssl_redirect
+SESSION_COOKIE_SECURE = settings.session_cookie_secure
+CSRF_COOKIE_SECURE = settings.csrf_cookie_secure
+USE_HTTPS_IN_ABSOLUTE_URLS = settings.use_https_in_absolute_urls
+
+if isinstance(settings.secure_hsts_seconds, int) and settings.secure_hsts_seconds > 0:
+    SECURE_HSTS_SECONDS = settings.secure_hsts_seconds
+    SECURE_HSTS_INCLUDE_SUBDOMAINS = settings.secure_hsts_include_subdomains
+    SECURE_HSTS_PRELOAD = settings.secure_hsts_preload
+
 # Application definition
+
+ROOT_URLCONF = "pda.urls"
+WSGI_APPLICATION = "pda.wsgi.application"
+FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
+# Django Sites
+SITE_ID = 1
+
+PROJECT_METADATA = {
+    'NAME': gettext_lazy(settings.site_title),
+    'URL': settings.site_url,
+    'DESCRIPTION': gettext_lazy(settings.site_description),
+    'IMAGE': settings.site_logo,
+    'KEYWORDS': 'pdns, powerdns, pda, admin, manage, console, dns, domain, nameserver, recursor, cache, authoritative, '
+                + 'dnssec, app, ui',
+    'CONTACT_EMAIL': settings.site_email,
+}
+
+# Setup Google Analytics
+GOOGLE_ANALYTICS_ID = settings.google_analytics_id
 
 DJANGO_APPS = [
     "django.contrib.admin",
@@ -70,8 +104,6 @@ MIDDLEWARE = [
     "waffle.middleware.WaffleMiddleware",
 ]
 
-ROOT_URLCONF = "pda.urls"
-
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
@@ -108,10 +140,6 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = "pda.wsgi.application"
-
-FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
-
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
@@ -119,6 +147,7 @@ DATABASES = {}
 
 if isinstance(settings.db_url, str) and len(settings.db_url.strip()):
     import environ
+
     env = environ.Env()
     DATABASES['default'] = env.db_url_config(url=settings.db_url)
 
@@ -161,7 +190,7 @@ else:
     else:
         raise ValueError('Invalid database configuration detected')
 
-# Auth / login stuff
+# Auth Setup
 
 # Django recommends overriding the user model even if you don't think you need to because it makes
 # future changes much easier.
@@ -214,7 +243,7 @@ AUTHENTICATION_BACKENDS = (
     'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# enable social login
+# Third-Party Social Authentication Setup
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
         'SCOPE': [
@@ -227,7 +256,7 @@ SOCIALACCOUNT_PROVIDERS = {
     },
 }
 
-# Internationalization
+# Internationalization / Localization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
 LANGUAGE_CODE = settings.language_code
@@ -237,13 +266,9 @@ LANGUAGES = [
     ('fr', gettext_lazy('French')),
 ]
 LOCALE_PATHS = (os.path.join(settings.src_path, 'locale'),)
-
 TIME_ZONE = settings.time_zone
-
 USE_I18N = settings.use_i18n
-
 USE_L10N = settings.use_l10n
-
 USE_TZ = settings.use_tz
 
 # Static files (CSS, JavaScript, Images)
@@ -273,10 +298,26 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 EMAIL_BACKEND = None
 if isinstance(settings.email_backend, str) and len(settings.email_backend.strip()):
     EMAIL_BACKEND = settings.email_backend
+    SERVER_EMAIL = settings.admin_from_email
+    DEFAULT_FROM_EMAIL = settings.site_from_email
+    ADMINS = [(settings.admin_name, settings.admin_email)]
 
-# Django sites
+    # Your email config goes here.
+    # see https://github.com/anymail/django-anymail for more details / examples
+    # To use mailgun, comment out the lines below and make sure your key and domain
+    # are available in the environment.
+    # EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
 
-SITE_ID = 1
+    # ANYMAIL = {
+    #     "MAILGUN_API_KEY": env('MAILGUN_API_KEY', default=None),
+    #     "MAILGUN_SENDER_DOMAIN": env('MAILGUN_SENDER_DOMAIN', default=None),
+    # }
+
+    # Mailchimp setup
+
+    # set these values if you want to subscribe people to a mailchimp list after they sign up.
+    # MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY", default=None)
+    # MAILCHIMP_LIST_ID = env("MAILCHIMP_LIST_ID", default=None)
 
 # DRF config
 REST_FRAMEWORK = {
@@ -323,28 +364,11 @@ if isinstance(REDIS_URL, str):
     # Celery setup (using redis)
     CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 
-PROJECT_METADATA = {
-    'NAME': gettext_lazy(settings.site_title),
-    'URL': settings.site_url,
-    'DESCRIPTION': gettext_lazy(settings.site_description),
-    'IMAGE': settings.site_logo,
-    'KEYWORDS': 'pdns, powerdns, pda, admin, manage, console, dns, domain, nameserver, recursor, cache, authoritative, '
-                + 'dnssec, app, ui',
-    'CONTACT_EMAIL': settings.site_email,
-}
-
-USE_HTTPS_IN_ABSOLUTE_URLS = settings.use_https_in_absolute_urls
-
-# Setup Site Admin Contacts
-ADMINS = [(settings.admin_name, settings.admin_email)]
-
-# Setup Google Analytics
-GOOGLE_ANALYTICS_ID = settings.google_analytics_id
-
 # Setup Sentry Exception Tracking
 if isinstance(settings.sentry_dsn, str) and len(settings.sentry_dsn.strip()):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
+
     sentry_sdk.init(dsn=settings.sentry_dsn, integrations=[DjangoIntegration()])
 
 LOGGING = {
