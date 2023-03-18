@@ -291,10 +291,20 @@ SOCIALACCOUNT_PROVIDERS = {
 
 EMAIL_BACKEND = None
 if isinstance(settings.email_backend, str) and len(settings.email_backend.strip()):
-    EMAIL_BACKEND = settings.email_backend
-    SERVER_EMAIL = settings.admin_from_email
-    DEFAULT_FROM_EMAIL = settings.site_from_email
     ADMINS = [(settings.admin_name, settings.admin_email)]
+    DEFAULT_FROM_EMAIL = settings.site_from_email
+    SERVER_EMAIL = settings.admin_from_email
+    EMAIL_BACKEND = settings.email_backend
+    EMAIL_HOST = settings.email_host
+    EMAIL_HOST_PASSWORD = settings.email_host_password
+    EMAIL_HOST_USER = settings.email_host_user
+    EMAIL_PORT = settings.email_port
+    EMAIL_SSL_CERTFILE = settings.email_ssl_certfile
+    EMAIL_SSL_KEYFILE = settings.email_ssl_keyfile
+    EMAIL_SUBJECT_PREFIX = settings.email_subject_prefix
+    EMAIL_TIMEOUT = settings.email_timeout
+    EMAIL_USE_SSL = settings.email_use_ssl
+    EMAIL_USE_TLS = settings.email_use_tls
 
     # Your email config goes here.
     # see https://github.com/anymail/django-anymail for more details / examples

@@ -2,7 +2,7 @@
 
 ## Configuration Guide
 
-### Startup Configuration
+### Environment Configuration
 
 The configuration settings listed in this section are used for initially configuring the application before
 initialization. Configuration settings are only placed here if the setting is required to bootstrap the application and
@@ -17,7 +17,7 @@ The setting name is prefixed with `PDA_` and the environment variable name is co
 For example, the setting name `setting_name` would be accessed through the `AppSettings` class
 as `AppSettings.setting_name` and the environment variable name would be `PDA_SETTING_NAME`.
 
-#### Application Startup Settings
+#### Application Environment Settings
 
 ##### PDA_ACCOUNT_EMAIL_REQUIRED | type = bool
  
@@ -209,6 +209,403 @@ The address that the development server should listen on.
 Default: 8080
 
 The port that the development server should listen on.
+
+###### PDA_DJANGO_LOG_LEVEL | type = string
+
+Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
+Default: 'INFO'
+
+The log level that should be used for Django logging.
+
+See https://docs.djangoproject.com/en/3.1/topics/logging/#django-s-logging-configuration for more information.
+
+##### PDA_EMAIL_BACKEND | type = string | None
+
+Default: None
+
+The e-mail backend to use for sending e-mails. If this is not set, the default e-mail backend will be used.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-backend for more information.
+
+##### PDA_EMAIL_HOST | type = string | None
+
+Default: None
+
+The host to use for the SMTP server that should be used to send e-mails. This setting is only used if
+`PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-host for more information.
+
+##### PDA_EMAIL_HOST_PASSWORD | type = string | None
+
+Default: None
+
+The password to use for the SMTP server that should be used to send e-mails. This setting is only used if
+`PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-host-password for more information.
+
+##### PDA_EMAIL_HOST_USER | type = string | None
+
+Default: None
+
+The username to use for the SMTP server that should be used to send e-mails. This setting is only used if
+`PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-host-user for more information.
+
+##### PDA_EMAIL_PORT | type = int
+
+Default: 587
+
+The port to use for the SMTP server that should be used to send e-mails. This setting is only used if
+`PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-port for more information.
+
+##### PDA_EMAIL_SSL_CERTFILE | type = string | None
+
+Default: None
+
+The path to the SSL certificate file to use when connecting to the SMTP server that should be used to send
+e-mails. This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-ssl-certfile for more information.
+
+##### PDA_EMAIL_SSL_KEYFILE | type = string | None
+
+Default: None
+
+The path to the SSL key file to use when connecting to the SMTP server that should be used to send e-mails.
+This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-ssl-keyfile for more information.
+
+##### PDA_EMAIL_SUBJECT_PREFIX | type = string | None
+
+Default: '[PDA] '
+
+Subject-line prefix for email messages sent with django.core.mail.mail_admins or django.core.mail.mail_managers.
+You’ll probably want to include the trailing space.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-subject-prefix for more information.
+
+##### PDA_EMAIL_TIMEOUT | type = int | None
+
+Default: None
+
+The timeout to use when connecting to the SMTP server that should be used to send e-mails. This setting is
+only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-timeout for more information.
+
+##### PDA_EMAIL_USE_TLS | type = bool
+
+Default: True
+
+Determines whether TLS should be used when connecting to the SMTP server that should be used to send e-mails.
+This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-use-tls for more information.
+
+##### PDA_EMAIL_USE_SSL | type = bool
+
+Default: False
+
+Determines whether SSL should be used when connecting to the SMTP server that should be used to send e-mails.
+This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#email-use-ssl for more information.
+
+##### PDA_GOOGLE_ANALYTICS_ID | type = string | None
+
+Default: None
+
+The Google Analytics ID to use for tracking. If this is not set, Google Analytics will not be used.
+
+##### PDA_LOG_LEVEL | type = string
+
+Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
+Default: 'INFO'
+
+The log level that should be used for the application's logging.
+
+See https://docs.djangoproject.com/en/3.1/topics/logging/#configuring-logging for more information.
+
+##### PDA_LOG_PATH | type = string | None
+
+Default: '/var/log/pda/pda.log'
+
+The path to the log file that should be used for the application's logging. If this is not set, the application's
+logging will be sent to stdout.
+
+See https://docs.djangoproject.com/en/3.1/topics/logging/#configuring-logging for more information.
+
+##### PDA_LOG_RETENTION | type = int
+
+Default: 30
+
+The number of days that the application's log file should be retained. This setting is only used if `PDA_LOG_PATH`
+is set.
+
+##### PDA_LOG_ROTATION | type = string
+
+Options: daily, weekly, monthly \
+Default: 'daily'
+
+The rotation that should be used for the application's log file. This setting is only used if `PDA_LOG_PATH` is
+set.
+
+##### PDA_LOG_SIZE | type = int
+
+Default: 100000000
+
+The maximum size, in bytes, that the application's log file should be allowed to grow to. This setting is only
+used if `PDA_LOG_PATH` is set.
+
+##### PDA_LOG_TO_FILE | type = bool
+
+Default: False
+
+Determines whether the application's logging should be sent to a file. If this is set to `True`, the application's
+logging will be sent to the file specified by `PDA_LOG_PATH`.
+
+##### PDA_LOG_TO_SENTRY | type = bool
+
+Default: False
+
+Determines whether the application's logging should be sent to Sentry. If this is set to `True`, the application's
+logging will be sent to Sentry.
+
+##### PDA_LOG_TO_STDOUT | type = bool
+
+Default: True
+
+Determines whether the application's logging should be sent to stdout. If this is set to `True`, the application's
+logging will be sent to stdout.
+
+##### PDA_LOG_TO_SYSLOG | type = bool
+
+Default: False
+
+Determines whether the application's logging should be sent to syslog. If this is set to `True`, the application's
+logging will be sent to syslog.
+
+##### PDA_REDIS_HOST | type = string | None
+
+Default: None
+
+The host that should be used to connect to Redis. This setting is only used if `PDA_REDIS_URL` is not set.
+
+##### PDA_REDIS_PASSWORD | type = string | None
+
+Default: None
+
+The password that should be used to connect to Redis. This setting is only used if `PDA_REDIS_URL` is not set.
+
+##### PDA_REDIS_PORT | type = int
+
+Default: 6379
+
+The port that should be used to connect to Redis. This setting is only used if `PDA_REDIS_URL` is not set.
+
+##### PDA_REDIS_URL | type = string | None
+
+Default: 'redis://127.0.0.1:6379/0'
+
+The URL that should be used to connect to Redis.
+
+##### PDA_ROOT_PATH | type = string
+
+Default: Automatically Detected
+
+The path to the root directory of the application. This setting is automatically detected during initialization
+and should not be set manually unless you know what you're doing.
+
+##### PDA_SECRET_KEY | type = string
+
+Default: INSECURE VALUE
+
+The secret key that should be used for the application. This setting is used to provide cryptographic signing,
+and should be set to a unique, unpredictable value. To generate a value for this setting, run the following command:
+
+    pda gen_salt
+
+##### PDA_SECURE_HSTS_SECONDS | type = int
+
+Default: 2592000
+
+The number of seconds that the `Strict-Transport-Security` header should be set for. This setting is only used
+if the value is set to an integer value greater than 0.
+
+See https://docs.djangoproject.com/en/3.1/ref/middleware/#http-strict-transport-security for more information.
+
+##### PDA_SECURE_HSTS_INCLUDE_SUBDOMAINS | type = bool
+
+Default: True
+
+Determines whether the `Strict-Transport-Security` header should include subdomains. This setting is only used
+if `PDA_SECURE_HSTS_SECONDS` is set to an integer value greater than 0.
+
+##### PDA_SECURE_HSTS_PRELOAD | type = bool
+
+Default: True
+
+Determines whether the `Strict-Transport-Security` header should include the `preload` directive. This setting
+is only used if `PDA_SECURE_HSTS_SECONDS` is set to an integer value greater than 0.
+
+##### PDA_SECURE_PROXY_SSL_HEADER_NAME | type = string | None
+
+Default: None
+
+The name of the header that should be used to determine whether the request was made over HTTPS. This setting
+is only used if `PDA_SECURE_PROXY_SSL_HEADER_VALUE` is set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#secure-proxy-ssl-header for more information.
+
+##### PDA_SECURE_PROXY_SSL_HEADER_VALUE | type = string | None
+
+Default: None
+
+The value of the header that should be used to determine whether the request was made over HTTPS. This setting
+is only used if `PDA_SECURE_PROXY_SSL_HEADER_NAME` is set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#secure-proxy-ssl-header for more information.
+
+##### PDA_SECURE_SSL_REDIRECT | type = bool
+
+Default: True
+
+Determines whether the application should redirect all requests to HTTPS.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#secure-ssl-redirect for more information.
+
+##### PDA_SENTRY_DSN | type = string | None
+
+Default: None
+
+The DSN that should be used to connect to Sentry. If this is not set, the application's logging will not be
+sent to Sentry. This setting is only used if `PDA_LOG_TO_SENTRY` is set to `True`.
+
+##### PDA_SESSION_COOKIE_SECURE | type = bool
+
+Default: True
+
+Whether to use a secure cookie for the session cookie. If this is set to True, the cookie will be marked as
+“secure”, which means browsers may ensure that the cookie is only sent under an HTTPS connection.
+
+Leaving this setting off isn’t a good idea because an attacker could capture an unencrypted session cookie
+with a packet sniffer and use the cookie to hijack the user’s session.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#session-cookie-secure for more information.
+
+##### PDA_SITE_DESCRIPTION | type = string
+
+Default: 'A PowerDNS web interface with advanced features.'
+
+A brief description of the application or it's purpose. This setting is used to provide a description of the
+application for use in various places throughout the application.
+
+##### PDA_SITE_EMAIL | type = string
+
+Default: 'pda@yourdomain.com'
+
+The email used for general contact with the organization running the application. This setting is used to
+provide a contact email for the application for use in various places throughout the application.
+
+##### PDA_SITE_FROM_EMAIL | type = string
+
+Default: 'pda@yourdomain.com'
+
+The email used for sending emails from the application.
+
+##### PDA_SITE_LOGO | type = string | None
+
+Default: None
+
+The URL of the logo that should be used for the application. This setting is used to provide a logo for the
+application for use in various places throughout the application.
+
+##### PDA_SITE_TITLE | type = string
+
+Default: 'PowerDNS Admin'
+
+The title of the application. This setting is used to provide a title for the application for use in various
+places throughout the application.
+
+##### PDA_SITE_URL | type = string
+
+Default: 'https://demo.powerdnsadmin.org'
+
+The URL of the application. This setting is used to provide a URL for the application for use in various places
+throughout the application.
+
+##### PDA_SRC_PATH | type = string
+
+Default: Automatically set to the `src` directory within the application root path.
+
+The path to the source directory of the application. This setting is automatically populated during initialization
+and should not be set manually unless you know what you're doing.
+
+##### PDA_SYSLOG_HOST | type = string | None
+
+Default: None
+
+The host that should be used to connect to syslog. This setting is only used if `PDA_LOG_TO_SYSLOG` is set to
+`True`.
+
+##### PDA_SYSLOG_PORT | type = int
+
+Default: 514
+
+The port that should be used to connect to syslog. This setting is only used if `PDA_LOG_TO_SYSLOG` is set to
+`True`.
+
+##### PDA_TEMPLATE_PATH | type = string
+
+Default: Automatically set to the `templates` directory within the path `PDA_SRC_PATH`.
+
+The path to the templates directory of the application. This setting is automatically populated during initialization
+and should not be set manually unless you know what you're doing.
+
+##### PDA_TIME_ZONE | type = string
+
+Default: 'UTC'
+
+The timezone that should be used for the application. This setting is used to provide a timezone for the
+application for use in various places throughout the application. This setting should be set to a valid
+timezone name as defined in the `pytz` library.
+
+##### PDA_USE_HTTPS_IN_ABSOLUTE_URLS | type = bool
+
+Default: True
+
+Determines whether absolute URLs should be generated using HTTPS. This setting is used to provide a URL for
+the application for use in various places throughout the application.
+
+##### PDA_USE_I18N | type = bool
+
+Default: True
+
+Determines whether the application should use internationalization and localization.
+
+See https://docs.djangoproject.com/en/3.1/topics/i18n/ for more information.
+
+##### PDA_USE_L10N | type = bool
+
+Default: True
+
+Determines whether the application should use localization.
+
+See https://docs.djangoproject.com/en/3.1/topics/i18n/ for more information.
+
+##### PDA_USE_TZ | type = bool
+
+Default: True
+
+Determines whether the application should use timezones.
+
+See https://docs.djangoproject.com/en/3.1/topics/i18n/timezones/ for more information.
 
 ### Runtime Configuration
 

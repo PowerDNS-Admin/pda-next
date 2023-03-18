@@ -4,69 +4,99 @@ from pathlib import Path
 from pydantic import BaseSettings
 
 ROOT_PATH: Path = Path(__file__).parent.parent
+""" The root path of the application which is typically the project repository root path. """
+
 SRC_PATH: Path = ROOT_PATH / 'src'
+""" The source path of the application which is typically the src directory within the ROOT_PATH. """
+
 TEMPLATE_PATH: Path = SRC_PATH / 'templates'
+""" The template path of the application which is typically the templates directory within the SRC_PATH. """
 
 
 class AppSettings(BaseSettings):
-    version: str = '0.1.0'
+    """ The application settings object that loads setting values from the application environment. """
 
-    site_title: str = 'PowerDNS Admin'
-    site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
-    site_url: str = 'https://demo.powerdnsadmin.org'
-    site_logo: str = 'https://demo.powerdnsadmin.org/static/img/logo.png'
-    site_email: str = 'admin@powerdnsadmin.org'
-    site_from_email: str = 'pda@powerdnsadmin.org'
-    admin_name: str = 'Admin'
+    version: str = '0.1.0'
+    """ The application version number """
+
+    account_authentication_method: str = 'username_email'  # email, username, username_email
+    account_email_required: bool = False
+    account_email_verification: str = 'none'  # none, optional, required
     admin_email: str = 'admin@yourdomain.com'
     admin_from_email: str = 'noreply@yourdomain.com'
-    root_path: str = str(ROOT_PATH)
-    src_path: str = str(SRC_PATH)
-    template_path: str = str(TEMPLATE_PATH)
-    config_path: str = '/etc/pda/config.yml'
+    admin_name: str = 'Admin'
     allowed_hosts: list[str] = ['*']
-    secure_proxy_ssl_header_name: str = 'HTTP_X_FORWARDED_PROTO'
-    secure_proxy_ssl_header_value: str = 'https'
-    secure_ssl_redirect: bool = True
-    session_cookie_secure: bool = True
+    config_path: str = '/etc/pda/config.yml'
     csrf_cookie_secure: bool = True
-    secure_hsts_seconds: int | str | None = 2592000
-    """ HSTS (HTTP Strict Transport Security) Seconds (30 days in seconds)"""
-    secure_hsts_include_subdomains: bool = True
-    secure_hsts_preload: bool = True
     debug: bool = False
     dev_server_address: str = '0.0.0.0'
     dev_server_port: int = 8080
     django_log_level: str = 'INFO'
-    log_level: str = 'INFO'
-    secret_key: str = 'INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk'
-    db_url: str = 'sqlite:///pda.db'
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
-    db_path: str = '/var/lib/pda/pda.db'
     db_host: str = ''
-    db_port: int | None = None
-    db_user: str = ''
-    db_password: str = ''
     db_name: str = ''
-    redis_url: str = ''
+    db_password: str = ''
+    db_path: str = '/var/lib/pda/pda.db'
+    db_port: int | None = None
+    db_url: str = 'sqlite:///pda.db'
+    db_user: str = ''
+    email_backend: str | None = None
+    email_host: str = 'localhost'
+    email_host_user: str | None = None
+    email_host_password: str | None = None
+    email_port: int = 587
+    email_ssl_certfile: str | None = None
+    email_ssl_keyfile: str | None = None
+    email_subject_prefix: str | None = '[PDA] '
+    email_timeout: int | None = None
+    email_use_ssl: bool = False
+    email_use_tls: bool = True
+    google_analytics_id: str | None = None
+    language_code: str = 'en-us'
+    language_cookie_name: str = 'pdns_admin_language'
+    log_level: str = 'INFO'
+    log_path: str = '/var/log/pda/pda.log'
+    log_retention: int = 30
+    log_rotation: str = 'daily'  # daily, weekly, monthly
+    log_size: int = 10000000
+    log_to_file: bool = False
+    log_to_sentry: bool = False
+    log_to_stdout: bool = True
+    log_to_syslog: bool = False
     redis_host: str = ''
+    redis_password: str | None = None
     redis_port: int = 6379
+    redis_url: str = ''
+    root_path: str = str(ROOT_PATH)
+    secret_key: str = 'INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk'
+    secure_hsts_include_subdomains: bool = True
+    secure_hsts_preload: bool = True
+    secure_hsts_seconds: int | str | None = 2592000
+    secure_proxy_ssl_header_name: str = 'HTTP_X_FORWARDED_PROTO'
+    secure_proxy_ssl_header_value: str = 'https'
+    secure_ssl_redirect: bool = True
+    sentry_dsn: str = ''
+    session_cookie_secure: bool = True
+    site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
+    site_email: str = 'pda@yourdomain.com'
+    site_from_email: str = 'pda@yourdomain.com'
+    site_logo: str | None = None
+    site_title: str = 'PowerDNS Admin'
+    site_url: str = 'https://pda.yourdomain.com'
+    src_path: str = str(SRC_PATH)
+    syslog_host: str | None = None
+    syslog_port: int = 514
+    template_path: str = str(TEMPLATE_PATH)
     time_zone: str = 'UTC'
+    use_https_in_absolute_urls: bool = True
     use_i18n: bool = True
     use_l10n: bool = True
     use_tz: bool = True
-    use_https_in_absolute_urls: bool = True
-    language_code: str = 'en-us'
-    language_cookie_name: str = 'pdns_admin_language'
-    email_backend: str | None = None
-    account_email_required: bool = False
-    account_email_verification: str = 'none'  # none, optional, required
-    account_authentication_method: str = 'username_email'  # email, username, username_email
-    google_analytics_id: str = ''
-    sentry_dsn: str = ''
+
+    """ The following settings are automatically loaded at application startup. """
 
     config: dict | None = None
-    """ Additional configuration settings loaded from the given YAML configuration file (if any) """
+    """ Additional configuration settings loaded automatically from the given YAML configuration file (if any) """
 
     class Config:
         env_prefix = 'pda_'
