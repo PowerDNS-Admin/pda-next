@@ -368,13 +368,6 @@ if isinstance(REDIS_URL, str):
     # Celery setup (using redis)
     CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 
-# Setup Sentry Exception Tracking
-if isinstance(settings.sentry_dsn, str) and len(settings.sentry_dsn.strip()):
-    import sentry_sdk
-    from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(dsn=settings.sentry_dsn, integrations=[DjangoIntegration()])
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -399,3 +392,10 @@ LOGGING = {
         },
     },
 }
+
+# Setup Sentry Exception Tracking
+if isinstance(settings.sentry_dsn, str) and len(settings.sentry_dsn.strip()):
+    import sentry_sdk
+    from sentry_sdk.integrations.django import DjangoIntegration
+
+    sentry_sdk.init(dsn=settings.sentry_dsn, integrations=[DjangoIntegration()])

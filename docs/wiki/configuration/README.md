@@ -167,17 +167,17 @@ To set up a MySQL connection using this approach, a connection string like the f
     mysql://user:password@host:port/database
 
 To set up a PostgreSQL connection using this approach, a connection string like the following can be used:
-    
-        postgres://user:password@host:port/database
+
+    postgres://user:password@host:port/database
 
 To set up a SQLite connection using this approach, a connection string like the following can be used:
     
-        sqlite:////absolute/path/to/database/file
+    sqlite:////absolute/path/to/database/file
 
 If you wish to specify a path to the database file that is relative to the project root, you can use the
 following connection string:
     
-        sqlite:///relative/path/to/database/file
+    sqlite:///relative/path/to/database/file
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
@@ -210,7 +210,7 @@ Default: 8080
 
 The port that the development server should listen on.
 
-###### PDA_DJANGO_LOG_LEVEL | type = string
+##### PDA_DJANGO_LOG_LEVEL | type = string
 
 Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
 Default: 'INFO'
