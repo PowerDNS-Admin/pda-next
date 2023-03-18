@@ -95,7 +95,8 @@ def load_settings(env_file_path: str = '.env', env_file_encoding: str = 'UTF-8',
         app_settings = load_config(app_settings)
 
     # Prepend the root path to the database path if it is not an absolute path
-    if isinstance(app_settings.db_path, str) and len(app_settings.db_path.strip()) and not app_settings.db_path.startswith('/'):
+    if isinstance(app_settings.db_path, str) and len(
+            app_settings.db_path.strip()) and not app_settings.db_path.startswith('/'):
         app_settings.db_path = str(os.path.join(app_settings.root_path, app_settings.db_path))
 
     return app_settings
