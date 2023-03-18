@@ -114,11 +114,15 @@ Default: 'sqlite'
 The database engine to use for the application. Currently, there are three supported database engines: MySQL,
 PostgreSQL, and SQLite. This setting is only used if `PDA_DB_URL` is not set.
 
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
+
 > PDA_DB_HOST | type = string
 
 Default: ''
 
 The host to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
 > PDA_DB_NAME | type = string
 
@@ -126,11 +130,15 @@ Default: ''
 
 The name of the database to use for the application. This setting is only used if `PDA_DB_URL` is not set.
 
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
+
 > PDA_DB_PASSWORD | type = string
 
 Default: ''
 
 The password to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
 > PDA_DB_PATH | type = string
 
@@ -144,6 +152,8 @@ is not set.
 Default: None
 
 The port to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
 > PDA_DB_URL | type = string
 
@@ -176,6 +186,29 @@ See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more infor
 Default: ''
 
 The username to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
+
+> PDA_DEBUG | type = bool
+
+Default: False
+
+Determines whether the application should run in debug mode. If this is set to True, the application will
+display detailed error pages when an exception occurs.
+
+See https://docs.djangoproject.com/en/3.1/ref/settings/#debug for more information.
+
+> PDA_DEV_SERVER_ADDRESS | type = string
+
+Default: '0.0.0.0'
+
+The address that the development server should listen on.
+
+> PDA_DEV_SERVER_PORT | type = int
+
+Default: 8080
+
+The port that the development server should listen on.
 
 ### Runtime Configuration
 
