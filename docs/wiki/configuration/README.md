@@ -19,7 +19,7 @@ as `AppSettings.setting_name` and the environment variable name would be `PDA_SE
 
 #### Application Startup Settings
 
-> PDA_ACCOUNT_EMAIL_REQUIRED | type = bool
+##### PDA_ACCOUNT_EMAIL_REQUIRED | type = bool
  
 Default: False
 
@@ -29,7 +29,7 @@ This setting must be set to True if `PDA_ACCOUNT_EMAIL_VERIFICATION` is set to "
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
-> PDA_ACCOUNT_EMAIL_VERIFICATION | type = string
+##### PDA_ACCOUNT_EMAIL_VERIFICATION | type = string
 
 Options: mandatory, optional, none \
 Default: 'none'
@@ -44,7 +44,7 @@ is still sent, whereas in case of “none” no e-mail verification mails are se
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
-> PDA_ACCOUNT_AUTHENTICATION_METHOD | type = string
+##### PDA_ACCOUNT_AUTHENTICATION_METHOD | type = string
 
 Options: username_email, email, username \
 Default: 'username_email'
@@ -56,7 +56,7 @@ Setting this to “email” requires `PDA_ACCOUNT_EMAIL_REQUIRED` to be True
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
-> PDA_ADMIN_EMAIL | type = string
+##### PDA_ADMIN_EMAIL | type = string
 
 Default: 'admin@yourdomain.com'
 
@@ -64,14 +64,14 @@ Should be set to the e-mail address of the site administrator.
 
 See https://docs.djangoproject.com/en/4.1/ref/settings/#admins for more information.
 
-> PDA_ADMIN_FROM_EMAIL | type = string
+##### PDA_ADMIN_FROM_EMAIL | type = string
 
 Default: 'noreply@yourdomain.com'
 
 Should be set to the e-mail address that should be used as the sender of error e-mails sent by the application
 to administrators.
 
-> PDA_ADMIN_NAME | type = string
+##### PDA_ADMIN_NAME | type = string
 
 Default: 'Admin'
 
@@ -79,7 +79,7 @@ Should be set to the name of the site administrator.
 
 See https://docs.djangoproject.com/en/4.1/ref/settings/#admins for more information.
 
-> PDA_ALLOWED_HOSTS | type = string
+##### PDA_ALLOWED_HOSTS | type = string
 
 Default: '*'
 
@@ -90,7 +90,7 @@ seemingly-safe web server configurations.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts for more information.
 
-> PDA_CONFIG_PATH | type = string
+##### PDA_CONFIG_PATH | type = string
 
 Default: '/etc/pda/config.yml'
 
@@ -99,14 +99,14 @@ configuration settings for the application.
 
 A template for this file can be found at `config/config.tpl.yml`.
 
-> PDA_CSRF_COOKIE_SECURE | type = bool
+##### PDA_CSRF_COOKIE_SECURE | type = bool
 
 Default: True
 
 Whether to use a secure cookie for the CSRF cookie. If this is set to True, the cookie will be marked as “secure”,
 which means browsers may ensure that the cookie is only sent with an HTTPS connection.
 
-> PDA_DB_ENGINE | type = string
+##### PDA_DB_ENGINE | type = string
 
 Options: mysql, postgres, sqlite \
 Default: 'sqlite'
@@ -116,7 +116,7 @@ PostgreSQL, and SQLite. This setting is only used if `PDA_DB_URL` is not set.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_HOST | type = string
+##### PDA_DB_HOST | type = string
 
 Default: ''
 
@@ -124,7 +124,7 @@ The host to use for the database connection. This setting is only used if `PDA_D
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_NAME | type = string
+##### PDA_DB_NAME | type = string
 
 Default: ''
 
@@ -132,7 +132,7 @@ The name of the database to use for the application. This setting is only used i
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_PASSWORD | type = string
+##### PDA_DB_PASSWORD | type = string
 
 Default: ''
 
@@ -140,14 +140,14 @@ The password to use for the database connection. This setting is only used if `P
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_PATH | type = string
+##### PDA_DB_PATH | type = string
 
 Default: '/var/lib/pda/pda.db'
 
 The path to the SQLite database file to use for the application. This setting is only used if `PDA_DB_URL`
 is not set.
 
-> PDA_DB_PORT | type = int | None
+##### PDA_DB_PORT | type = int | None
 
 Default: None
 
@@ -155,7 +155,7 @@ The port to use for the database connection. This setting is only used if `PDA_D
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_URL | type = string
+##### PDA_DB_URL | type = string
 
 Default: 'sqlite:///pda.db'
 
@@ -181,7 +181,7 @@ following connection string:
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DB_USER | type = string
+##### PDA_DB_USER | type = string
 
 Default: ''
 
@@ -189,7 +189,7 @@ The username to use for the database connection. This setting is only used if `P
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-> PDA_DEBUG | type = bool
+##### PDA_DEBUG | type = bool
 
 Default: False
 
@@ -198,13 +198,13 @@ display detailed error pages when an exception occurs.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#debug for more information.
 
-> PDA_DEV_SERVER_ADDRESS | type = string
+##### PDA_DEV_SERVER_ADDRESS | type = string
 
 Default: '0.0.0.0'
 
 The address that the development server should listen on.
 
-> PDA_DEV_SERVER_PORT | type = int
+##### PDA_DEV_SERVER_PORT | type = int
 
 Default: 8080
 
