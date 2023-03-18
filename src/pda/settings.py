@@ -10,21 +10,11 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 
 import os
 from django.utils.translation import gettext_lazy
-from pathlib import Path
-from config import AppSettings, load_settings
+from config import settings
 
-# Define the default root path of the project based on the location of this file
-ROOT_PATH: Path = Path(__file__).parent.parent.parent
-
-# Define the default environment file path to load settings from
-ENV_FILE_PATH: str = os.getenv('PDA_ENV_FILE', str(ROOT_PATH / '.env'))
-
-# Load various Django settings from an environment file and the local environment
-SETTINGS: AppSettings = load_settings(ENV_FILE_PATH)
-
-SECRET_KEY = SETTINGS.secret_key
-DEBUG = SETTINGS.debug
-ALLOWED_HOSTS = SETTINGS.allowed_hosts
+SECRET_KEY = settings.secret_key
+DEBUG = settings.debug
+ALLOWED_HOSTS = settings.allowed_hosts
 
 # Application definition
 
@@ -85,7 +75,7 @@ ROOT_URLCONF = "pda.urls"
 TEMPLATES = [
     {
         "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [SETTINGS.template_path, ],
+        "DIRS": [settings.template_path, ],
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
@@ -101,7 +91,7 @@ TEMPLATES = [
     },
     {
         'BACKEND': 'django.template.backends.jinja2.Jinja2',
-        'DIRS': [SETTINGS.template_path, ],
+        'DIRS': [settings.template_path, ],
         'APP_DIRS': False,
         'OPTIONS': {
             'environment': 'pda.jinja2.JinjaEnvironment',
@@ -127,31 +117,31 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 
 DATABASES = {}
 
-if isinstance(SETTINGS.db_url, str) and len(SETTINGS.db_url.strip()):
+if isinstance(settings.db_url, str) and len(settings.db_url.strip()):
     import environ
     env = environ.Env()
-    DATABASES['default'] = env.db_url_config(url=SETTINGS.db_url)
+    DATABASES['default'] = env.db_url_config(url=settings.db_url)
 
     if 'NAME' in DATABASES['default'] and isinstance(DATABASES['default']['NAME'], str) and len(
             DATABASES['default']['NAME'].strip()):
-        DATABASES['default']['NAME'] = os.path.join(SETTINGS.root_path, DATABASES['default']['NAME'])
+        DATABASES['default']['NAME'] = os.path.join(settings.root_path, DATABASES['default']['NAME'])
 else:
     db: dict = {}
-    db_engine: str = SETTINGS.db_engine.lower()
+    db_engine: str = settings.db_engine.lower()
 
     if db_engine == 'sqlite':
         db = {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': SETTINGS.db_path,
+            'NAME': settings.db_path,
         }
 
     elif db_engine in ['mysql', 'postgresql']:
         db = {
-            'HOST': SETTINGS.db_host,
-            'PORT': SETTINGS.db_port,
-            'USER': SETTINGS.db_user,
-            'PASSWORD': SETTINGS.db_password,
-            'NAME': SETTINGS.db_name,
+            'HOST': settings.db_host,
+            'PORT': settings.db_port,
+            'USER': settings.db_user,
+            'PASSWORD': settings.db_password,
+            'NAME': settings.db_name,
         }
 
         if db_engine == 'mysql':
@@ -200,7 +190,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Allauth setup
 
 ACCOUNT_ADAPTER = 'apps.users.adapter.AccountAdapter'
-ACCOUNT_AUTHENTICATION_METHOD = SETTINGS.account_authentication_method
+ACCOUNT_AUTHENTICATION_METHOD = settings.account_authentication_method
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
@@ -213,7 +203,7 @@ ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
 # or "optional" to send confirmation emails but not require them
-ACCOUNT_EMAIL_VERIFICATION = SETTINGS.account_email_verification
+ACCOUNT_EMAIL_VERIFICATION = settings.account_email_verification
 
 ALLAUTH_2FA_ALWAYS_REVEAL_BACKUP_TOKENS = False
 
@@ -240,34 +230,34 @@ SOCIALACCOUNT_PROVIDERS = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = SETTINGS.language_code
-LANGUAGE_COOKIE_NAME = SETTINGS.language_cookie_name
+LANGUAGE_CODE = settings.language_code
+LANGUAGE_COOKIE_NAME = settings.language_cookie_name
 LANGUAGES = [
     ('en', gettext_lazy('English')),
     ('fr', gettext_lazy('French')),
 ]
-LOCALE_PATHS = (os.path.join(SETTINGS.src_path, 'locale'),)
+LOCALE_PATHS = (os.path.join(settings.src_path, 'locale'),)
 
-TIME_ZONE = SETTINGS.time_zone
+TIME_ZONE = settings.time_zone
 
-USE_I18N = SETTINGS.use_i18n
+USE_I18N = settings.use_i18n
 
-USE_L10N = SETTINGS.use_l10n
+USE_L10N = settings.use_l10n
 
-USE_TZ = SETTINGS.use_tz
+USE_TZ = settings.use_tz
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
 
-STATIC_ROOT = os.path.join(SETTINGS.src_path, 'static_root')
+STATIC_ROOT = os.path.join(settings.src_path, 'static_root')
 STATIC_URL = '/static/'
-STATICFILES_DIRS = [os.path.join(SETTINGS.src_path, 'static')]
+STATICFILES_DIRS = [os.path.join(settings.src_path, 'static')]
 
 # uncomment to use manifest storage to bust cache when file change
 # note: this may break some image references in sass files which is why it is not enabled by default
 # STATICFILES_STORAGE = 'django.contrib.staticfiles.storage.ManifestStaticFilesStorage'
 
-MEDIA_ROOT = os.path.join(SETTINGS.root_path, 'media')
+MEDIA_ROOT = os.path.join(settings.root_path, 'media')
 MEDIA_URL = '/media/'
 
 # Default primary key field type
@@ -281,8 +271,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 # Email setup
 
 EMAIL_BACKEND = None
-if isinstance(SETTINGS.email_backend, str) and len(SETTINGS.email_backend.strip()):
-    EMAIL_BACKEND = SETTINGS.email_backend
+if isinstance(settings.email_backend, str) and len(settings.email_backend.strip()):
+    EMAIL_BACKEND = settings.email_backend
 
 # Django sites
 
@@ -297,9 +287,9 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': SETTINGS.site_title,
-    'DESCRIPTION': SETTINGS.site_description,
-    'VERSION': SETTINGS.version,
+    'TITLE': settings.site_title,
+    'DESCRIPTION': settings.site_description,
+    'VERSION': settings.version,
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_SETTINGS': {
         'displayOperationId': True,
@@ -318,11 +308,11 @@ SPECTACULAR_SETTINGS = {
 }
 
 REDIS_URL: str | None = None
-if isinstance(SETTINGS.redis_url, str) and len(SETTINGS.redis_url.strip()):
-    REDIS_URL = SETTINGS.redis_url
-elif isinstance(SETTINGS.redis_host, str) and len(SETTINGS.redis_host.strip()):
-    REDIS_HOST = SETTINGS.redis_host
-    REDIS_PORT = SETTINGS.redis_port
+if isinstance(settings.redis_url, str) and len(settings.redis_url.strip()):
+    REDIS_URL = settings.redis_url
+elif isinstance(settings.redis_host, str) and len(settings.redis_host.strip()):
+    REDIS_HOST = settings.redis_host
+    REDIS_PORT = settings.redis_port
     REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
 
 if isinstance(REDIS_URL, str):
@@ -334,28 +324,28 @@ if isinstance(REDIS_URL, str):
     CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 
 PROJECT_METADATA = {
-    'NAME': gettext_lazy(SETTINGS.site_title),
-    'URL': SETTINGS.site_url,
-    'DESCRIPTION': gettext_lazy(SETTINGS.site_description),
-    'IMAGE': SETTINGS.site_logo,
+    'NAME': gettext_lazy(settings.site_title),
+    'URL': settings.site_url,
+    'DESCRIPTION': gettext_lazy(settings.site_description),
+    'IMAGE': settings.site_logo,
     'KEYWORDS': 'pdns, powerdns, pda, admin, manage, console, dns, domain, nameserver, recursor, cache, authoritative, '
                 + 'dnssec, app, ui',
-    'CONTACT_EMAIL': SETTINGS.site_email,
+    'CONTACT_EMAIL': settings.site_email,
 }
 
-USE_HTTPS_IN_ABSOLUTE_URLS = SETTINGS.use_https_in_absolute_urls
+USE_HTTPS_IN_ABSOLUTE_URLS = settings.use_https_in_absolute_urls
 
 # Setup Site Admin Contacts
-ADMINS = [(SETTINGS.admin_name, SETTINGS.admin_email)]
+ADMINS = [(settings.admin_name, settings.admin_email)]
 
 # Setup Google Analytics
-GOOGLE_ANALYTICS_ID = SETTINGS.google_analytics_id
+GOOGLE_ANALYTICS_ID = settings.google_analytics_id
 
 # Setup Sentry Exception Tracking
-if isinstance(SETTINGS.sentry_dsn, str) and len(SETTINGS.sentry_dsn.strip()):
+if isinstance(settings.sentry_dsn, str) and len(settings.sentry_dsn.strip()):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
-    sentry_sdk.init(dsn=SETTINGS.sentry_dsn, integrations=[DjangoIntegration()])
+    sentry_sdk.init(dsn=settings.sentry_dsn, integrations=[DjangoIntegration()])
 
 LOGGING = {
     'version': 1,
@@ -373,11 +363,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': SETTINGS.django_log_level,
+            'level': settings.django_log_level,
         },
         'pda': {
             'handlers': ['console'],
-            'level': SETTINGS.log_level,
+            'level': settings.log_level,
         },
     },
 }

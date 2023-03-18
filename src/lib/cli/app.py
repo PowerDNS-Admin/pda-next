@@ -1,44 +1,21 @@
 import click
 import os
-import yaml
 import sys
 from cryptography.fernet import Fernet
-from config import AppSettings, load_settings
+from config import AppSettings, settings
 
 CONTEXT_SETTINGS = dict(auto_envvar_prefix="PDA")
-version: str = '0.1.0'
+version: str = settings.version
 
 
 class Environment:
-    _root_path: str | None = None
     _settings: AppSettings = None
-    _config: dict[str, any] | None = None
     _fernet: Fernet | None = None
-
-    def __init__(self):
-        """ Initializes the environment. """
-        self._root_path = os.getcwd()
-
-    @property
-    def root_path(self) -> str | None:
-        """ Returns the path to the app's root directory. """
-        return self._root_path
-
-    @root_path.setter
-    def root_path(self, value: str):
-        """ Sets the app's path. """
-        self._root_path = value
 
     @property
     def debug(self) -> bool:
         """ Returns whether debug mode is enabled. """
         return self._settings.debug if isinstance(self._settings, AppSettings) else False
-
-    @debug.setter
-    def debug(self, value: bool):
-        """ Sets the debug mode. """
-        if isinstance(self._settings, AppSettings):
-            self._settings.debug = value
 
     @property
     def settings(self) -> AppSettings:
@@ -97,31 +74,9 @@ class AsCli(click.MultiCommand):
 
 @click.command(cls=AsCli, context_settings=CONTEXT_SETTINGS)
 @click.version_option(version, '-V', '--version', message='%(version)s')
-@click.option('-p', '--root-path', type=click.Path(exists=True, file_okay=False, resolve_path=True),
-              help="Overrides the application's default root path.")
-@click.option("-v", "--verbose", is_flag=True, default=None, help="Increases verbosity of the application.")
-@click.option('-e', '--env-file', default='.env', type=str,
-              help="The path to an .env file to load command settings from.")
-@click.option('--env-file-encoding', default='UTF-8', type=str,
-              help="The encoding of the env file specified by the \"--env-file\" option.")
-@click.option('-s', '--secrets-dir', default=None, type=str,
-              help="The path to a directory containing environment variable secret files.")
 @pass_environment
-def cli(ctx: Environment, verbose: bool | None, root_path: str | None, env_file: str, env_file_encoding: str,
-        secrets_dir: str | None):
+def cli(ctx: Environment):
     """A CLI to consume the app's execution and management functions."""
 
-    if root_path is not None:
-        ctx.root_path = root_path
-
-    # Load the app's settings based on the given options.
-    ctx.settings = load_settings(env_file, env_file_encoding, secrets_dir)
-
-    # Configure the debug setting of the application if the "--verbose" option is set.
-    if isinstance(verbose, bool):
-        ctx.settings.debug = verbose
-        ctx.debug = verbose
-
-    # Override the root path default of the application settings if present
-    if root_path is not None:
-        ctx.settings.root_path = root_path
+    # Cache a reference to the app's settings within the context.
+    ctx.settings = settings

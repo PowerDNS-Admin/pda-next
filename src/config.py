@@ -86,31 +86,31 @@ def load_settings(env_file_path: str = '.env', env_file_encoding: str = 'UTF-8',
             os.putenv('PDA_ENV_SECRETS_DIR', secrets_path)
 
     # Load base app configuration settings from the given environment file and the local environment
-    settings = AppSettings(**params)
+    app_settings = AppSettings(**params)
 
     # Load additional configuration from the given YAML configuration file (if any)
-    if settings.config_path is not None:
-        if not settings.config_path.startswith('/'):
-            settings.config_path = os.path.join(settings.root_path, settings.config_path)
-        settings = load_config(settings)
+    if app_settings.config_path is not None:
+        if not app_settings.config_path.startswith('/'):
+            app_settings.config_path = os.path.join(app_settings.root_path, app_settings.config_path)
+        app_settings = load_config(app_settings)
 
     # Prepend the root path to the database path if it is not an absolute path
-    if isinstance(settings.db_path, str) and len(settings.db_path.strip()) and not settings.db_path.startswith('/'):
-        settings.db_path = str(os.path.join(settings.root_path, settings.db_path))
+    if isinstance(app_settings.db_path, str) and len(app_settings.db_path.strip()) and not app_settings.db_path.startswith('/'):
+        app_settings.db_path = str(os.path.join(app_settings.root_path, app_settings.db_path))
 
-    return settings
+    return app_settings
 
 
-def load_config(settings: AppSettings) -> AppSettings:
+def load_config(app_settings: AppSettings) -> AppSettings:
     """ Loads the app's configuration from the given configuration file. """
 
-    config_path: str | None = settings.config_path
+    config_path: str | None = app_settings.config_path
 
     if not isinstance(config_path, str):
-        return settings
+        return app_settings
 
     if not config_path.startswith('/'):
-        config_path = os.path.join(settings.root_path, config_path)
+        config_path = os.path.join(app_settings.root_path, config_path)
 
     if not os.path.exists(config_path):
         raise Exception(f'The given path for the configuration file does not exist: {config_path}')
@@ -119,22 +119,29 @@ def load_config(settings: AppSettings) -> AppSettings:
         raise Exception(f'The given path for the configuration file is not a file: {config_path}')
 
     with open(config_path, 'r') as f:
-        settings.config = yaml.load(f, Loader=yaml.FullLoader)
+        app_settings.config = yaml.load(f, Loader=yaml.FullLoader)
         f.close()
 
-    return settings
+    return app_settings
 
 
-def save_config(settings: AppSettings, config: dict[str, any]) -> bool:
+def save_config(app_settings: AppSettings, config: dict[str, any]) -> bool:
     """ Saves the app's configuration to the defined configuration file setting path. """
 
-    config_path: str = settings.config_path
+    config_path: str = app_settings.config_path
 
     if not config_path.startswith('/'):
-        config_path = os.path.join(settings.root_path, config_path)
+        config_path = os.path.join(app_settings.root_path, config_path)
 
     with open(config_path, 'w') as f:
         yaml.dump(config, f)
         f.close()
 
     return True
+
+
+# Define the default environment file path to load settings from
+env_file_path: str = os.getenv('PDA_ENV_FILE', str(ROOT_PATH / '.env'))
+
+# Load various Django settings from an environment file and the local environment
+settings: AppSettings = load_settings(env_file_path)
