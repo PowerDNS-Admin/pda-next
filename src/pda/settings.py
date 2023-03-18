@@ -23,9 +23,6 @@ ENV_FILE_PATH: str = os.getenv('PDA_ENV_FILE', str(ROOT_PATH / '.env'))
 # Load various Django settings from an environment file and the local environment
 SETTINGS: AppSettings = load_settings(ENV_FILE_PATH)
 
-env = environ.Env()
-env.read_env(os.path.join(ROOT_PATH, ".env"))
-
 SECRET_KEY = SETTINGS.secret_key
 DEBUG = SETTINGS.debug
 ALLOWED_HOSTS = SETTINGS.allowed_hosts
@@ -132,6 +129,7 @@ FORM_RENDERER = "django.forms.renderers.TemplatesSetting"
 DATABASES = {}
 
 if isinstance(SETTINGS.db_url, str) and len(SETTINGS.db_url.strip()):
+    env = environ.Env()
     DATABASES['default'] = env.db_url_config(url=SETTINGS.db_url)
 
     if 'NAME' in DATABASES['default'] and isinstance(DATABASES['default']['NAME'], str) and len(
@@ -375,11 +373,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': env('DJANGO_LOG_LEVEL', default='INFO'),
+            'level': SETTINGS.django_log_level,
         },
         'pda': {
             'handlers': ['console'],
-            'level': env('PDNS_ADMIN_LOG_LEVEL', default='INFO'),
+            'level': SETTINGS.log_level,
         },
     },
 }

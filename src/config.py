@@ -25,6 +25,8 @@ class AppSettings(BaseSettings):
     debug: bool = False
     dev_server_address: str = '0.0.0.0'
     dev_server_port: int = 8080
+    django_log_level: str = 'INFO'
+    log_level: str = 'INFO'
     secret_key: str = 'INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk'
     db_url: str = 'sqlite:///pda.db'
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
