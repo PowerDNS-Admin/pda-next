@@ -1,10 +1,12 @@
+---
 name: 'Docker Image'
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - 'main-off'
+      - 'dev'
+      - 'master'
     tags:
       - 'v*.*.*'
 
@@ -22,7 +24,7 @@ jobs:
         uses: docker/metadata-action@v3
         with:
           images: |
-            powerdnsadmin/pda-next
+            powerdnsadmin/pda-legacy
           tags: |
             type=ref,event=tag
             type=semver,pattern={{version}}
@@ -41,12 +43,11 @@ jobs:
 
       - name: Docker Image Build
         uses: docker/build-push-action@v2
-        if: github.ref == 'refs/heads/master'
         with:
           context: ./
           file: ./docker/Dockerfile
           push: true
-          tags: powerdnsadmin/pda-next:latest
+          tags: powerdnsadmin/pda-legacy:${{ github.ref_name }}
 
       - name: Docker Image Release Tagging
         uses: docker/build-push-action@v2
