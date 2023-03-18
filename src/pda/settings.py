@@ -251,7 +251,7 @@ AUTH_PASSWORD_VALIDATORS = [
 
 ACCOUNT_ADAPTER = 'apps.users.adapter.AccountAdapter'
 ACCOUNT_AUTHENTICATION_METHOD = settings.account_authentication_method
-ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_EMAIL_REQUIRED = settings.account_email_required
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True

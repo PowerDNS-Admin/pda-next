@@ -10,6 +10,7 @@ TEMPLATE_PATH: Path = SRC_PATH / 'templates'
 
 class AppSettings(BaseSettings):
     version: str = '0.1.0'
+
     site_title: str = 'PowerDNS Admin'
     site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
     site_url: str = 'https://demo.powerdnsadmin.org'
@@ -18,11 +19,11 @@ class AppSettings(BaseSettings):
     site_from_email: str = 'pda@powerdnsadmin.org'
     admin_name: str = 'Admin'
     admin_email: str = 'admin@yourdomain.com'
-    admin_from_email: str = 'noreply@powerdnsadmin.org'
+    admin_from_email: str = 'noreply@yourdomain.com'
     root_path: str = str(ROOT_PATH)
     src_path: str = str(SRC_PATH)
     template_path: str = str(TEMPLATE_PATH)
-    config_path: str = 'conf/config.yml'
+    config_path: str = '/etc/pda/config.yml'
     allowed_hosts: list[str] = ['*']
     secure_proxy_ssl_header_name: str = 'HTTP_X_FORWARDED_PROTO'
     secure_proxy_ssl_header_value: str = 'https'
@@ -41,7 +42,7 @@ class AppSettings(BaseSettings):
     secret_key: str = 'INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk'
     db_url: str = 'sqlite:///pda.db'
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
-    db_path: str = 'pda.db'
+    db_path: str = '/var/lib/pda/pda.db'
     db_host: str = ''
     db_port: int | None = None
     db_user: str = ''
@@ -58,6 +59,7 @@ class AppSettings(BaseSettings):
     language_code: str = 'en-us'
     language_cookie_name: str = 'pdns_admin_language'
     email_backend: str | None = None
+    account_email_required: bool = False
     account_email_verification: str = 'none'  # none, optional, required
     account_authentication_method: str = 'username_email'  # email, username, username_email
     google_analytics_id: str = ''
