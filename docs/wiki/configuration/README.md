@@ -116,25 +116,25 @@ PostgreSQL, and SQLite. This setting is only used if `PDA_DB_URL` is not set.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-##### PDA_DB_HOST | type = string
+##### PDA_DB_HOST | type = string | None
 
-Default: ''
+Default: None
 
 The host to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-##### PDA_DB_NAME | type = string
+##### PDA_DB_NAME | type = string | None
 
-Default: ''
+Default: None
 
 The name of the database to use for the application. This setting is only used if `PDA_DB_URL` is not set.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-##### PDA_DB_PASSWORD | type = string
+##### PDA_DB_PASSWORD | type = string | None
 
-Default: ''
+Default: None
 
 The password to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
 
@@ -181,9 +181,9 @@ following connection string:
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-##### PDA_DB_USER | type = string
+##### PDA_DB_USER | type = string | None
 
-Default: ''
+Default: None
 
 The username to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
 

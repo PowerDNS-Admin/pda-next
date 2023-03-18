@@ -33,13 +33,13 @@ class AppSettings(BaseSettings):
     dev_server_port: int = 8080
     django_log_level: str = 'INFO'
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
-    db_host: str = ''
-    db_name: str = ''
-    db_password: str = ''
+    db_host: str | None = None
+    db_name: str | None = None
+    db_password: str | None = None
     db_path: str = '/var/lib/pda/pda.db'
     db_port: int | None = None
     db_url: str = 'sqlite:///pda.db'
-    db_user: str = ''
+    db_user: str | None = None
     email_backend: str | None = None
     email_host: str = 'localhost'
     email_host_user: str | None = None
