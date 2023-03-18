@@ -15,7 +15,7 @@ setup(
         'celery-progress==0.1.3',
         'certifi==2022.12.7',
         'cffi==1.15.1',
-        'charset-normalizer==3.0.1',
+        'charset-normalizer==3.1.0',
         'click==8.1.3',
         'click-didyoumean==0.3.0',
         'click-plugins==1.1.1',
