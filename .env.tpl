@@ -1,13 +1,26 @@
+#PDA_ROOT_PATH=
+#PDA_SRC_PATH=
+#PDA_TEMPLATE_PATH=
+PDA_CONFIG_PATH=conf/config.yml
+PDA_ALLOWED_HOSTS=*
+# SECURITY WARNING: don't run with debug turned on in production!
 PDA_DEBUG=0
 PDA_DEV_SERVER_ADDRESS=0.0.0.0
 PDA_DEV_SERVER_PORT=8080
+# SECURITY WARNING: keep the secret key used in production secret!
 PDA_SECRET_KEY=INSECURE-CHANGE-ME-6up8zksTD6mi4N3z3zFk
-PDA_DATABASE_URL=mysql://pda:pda@127.0.0.1:3306/pda
-PDA_DB_HOST=localhost
-PDA_DB_PORT=3306
-PDA_DB_USER=pda
-PDA_DB_PASSWORD=pda
-PDA_DB_NAME=pda
-PDA_CONFIG=conf/config.yml
+PDA_DB_URL=sqlite:///pda.db
+#PDA_DB_ENGINE=sqlite
+#PDA_DB_PATH=pda.db
+#PDA_DB_HOST=
+#PDA_DB_PORT=
+#PDA_DB_USER=
+#PDA_DB_PASSWORD=
+#PDA_DB_NAME=
+PDA_REDIS_URL=redis://127.0.0.1:6379/0
+#PDA_REDIS_HOST=127.0.0.1
+#PDA_REDIS_PORT=6379
 PDA_GOOGLE_ANALYTICS_ID=''
 PDA_SENTRY_DSN=''
+# Account Email Verification: none, optional, mandatory
+PDA_ACCOUNT_EMAIL_VERIFICATION=none

@@ -1,3 +1,4 @@
+*.db
 *.pyc
 *~
 .DS_Store
@@ -7,6 +8,5 @@
 .env.production
 .idea
 conf/config.yml
-db.sqlite3
 docs/_build
 venv
