@@ -202,16 +202,16 @@ AUTH_PASSWORD_VALIDATORS = [
 # Allauth setup
 
 ACCOUNT_ADAPTER = 'apps.users.adapter.AccountAdapter'
-ACCOUNT_AUTHENTICATION_METHOD = 'email'
+ACCOUNT_AUTHENTICATION_METHOD = SETTINGS.account_authentication_method
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_SUBJECT_PREFIX = ''
 ACCOUNT_CONFIRM_EMAIL_ON_GET = True
 ACCOUNT_UNIQUE_EMAIL = True
 ACCOUNT_USERNAME_REQUIRED = False
-ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = False
+ACCOUNT_SIGNUP_PASSWORD_ENTER_TWICE = True
 ACCOUNT_SESSION_REMEMBER = True
 ACCOUNT_LOGOUT_ON_GET = True
-ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = True
+ACCOUNT_LOGIN_ON_EMAIL_CONFIRMATION = False
 
 # User signup configuration: change to "mandatory" to require users to confirm email before signing in.
 # or "optional" to send confirmation emails but not require them
@@ -220,7 +220,7 @@ ACCOUNT_EMAIL_VERIFICATION = SETTINGS.account_email_verification
 ALLAUTH_2FA_ALWAYS_REVEAL_BACKUP_TOKENS = False
 
 AUTHENTICATION_BACKENDS = (
-    # Needed to login by username in Django admin, regardless of `allauth`
+    # Needed to log in by username in Django admin, regardless of `allauth`
     'django.contrib.auth.backends.ModelBackend',
     # `allauth` specific authentication methods, such as login by e-mail
     'allauth.account.auth_backends.AuthenticationBackend',
@@ -242,21 +242,21 @@ SOCIALACCOUNT_PROVIDERS = {
 # Internationalization
 # https://docs.djangoproject.com/en/3.2/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
-LANGUAGE_COOKIE_NAME = 'pdns_admin_language'
+LANGUAGE_CODE = SETTINGS.language_code
+LANGUAGE_COOKIE_NAME = SETTINGS.language_cookie_name
 LANGUAGES = [
     ('en', gettext_lazy('English')),
     ('fr', gettext_lazy('French')),
 ]
 LOCALE_PATHS = (os.path.join(SETTINGS.src_path, 'locale'),)
 
-TIME_ZONE = 'UTC'
+TIME_ZONE = SETTINGS.time_zone
 
-USE_I18N = True
+USE_I18N = SETTINGS.use_i18n
 
-USE_L10N = True
+USE_L10N = SETTINGS.use_l10n
 
-USE_TZ = True
+USE_TZ = SETTINGS.use_tz
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.2/howto/static-files/
@@ -282,11 +282,9 @@ DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 # Email setup
 
-# use in development
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-# use in production
-# see https://github.com/anymail/django-anymail for more details/examples
-# EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+EMAIL_BACKEND = None
+if isinstance(SETTINGS.email_backend, str) and len(SETTINGS.email_backend.strip()):
+    EMAIL_BACKEND = SETTINGS.email_backend
 
 # Django sites
 
@@ -301,9 +299,9 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'PowerDNS Admin',
-    'DESCRIPTION': 'PowerDNS Admin',
-    'VERSION': '0.1.0',
+    'TITLE': SETTINGS.site_title,
+    'DESCRIPTION': SETTINGS.site_description,
+    'VERSION': SETTINGS.version,
     'SERVE_INCLUDE_SCHEMA': False,
     'SWAGGER_UI_SETTINGS': {
         'displayOperationId': True,
@@ -321,48 +319,45 @@ SPECTACULAR_SETTINGS = {
     ],
 }
 
-# Celery setup (using redis)
-if 'REDIS_URL' in env:
-    REDIS_URL = env('REDIS_URL')
-elif 'REDIS_TLS_URL' in env:
-    REDIS_URL = env('REDIS_TLS_URL')
-else:
-    REDIS_HOST = env('REDIS_HOST', default='localhost')
-    REDIS_PORT = env('REDIS_PORT', default='6379')
+REDIS_URL: str | None = None
+if isinstance(SETTINGS.redis_url, str) and len(SETTINGS.redis_url.strip()):
+    REDIS_URL = SETTINGS.redis_url
+elif isinstance(SETTINGS.redis_host, str) and len(SETTINGS.redis_host.strip()):
+    REDIS_HOST = SETTINGS.redis_host
+    REDIS_PORT = SETTINGS.redis_port
     REDIS_URL = f'redis://{REDIS_HOST}:{REDIS_PORT}/0'
 
-if REDIS_URL.startswith('rediss'):
-    REDIS_URL = f'{REDIS_URL}?ssl_cert_reqs=none'
+if isinstance(REDIS_URL, str):
+    # Disable REDIS SSL cert verification if using rediss:// protocol
+    if REDIS_URL.startswith('rediss'):
+        REDIS_URL += '?ssl_cert_reqs=none'
 
-CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
+    # Celery setup (using redis)
+    CELERY_BROKER_URL = CELERY_RESULT_BACKEND = REDIS_URL
 
 PROJECT_METADATA = {
-    'NAME': gettext_lazy('PowerDNS Admin'),
-    'URL': 'http://demo.powerdnsadmin.org',
-    'DESCRIPTION': gettext_lazy('PowerDNS Admin'),
+    'NAME': gettext_lazy(SETTINGS.site_title),
+    'URL': 'https://powerdnsadmin.org',
+    'DESCRIPTION': gettext_lazy(SETTINGS.site_description),
     'IMAGE': 'https://',
     'KEYWORDS': 'pdns, powerdns, pda, admin, manage, console, dns, domain, nameserver, recursor, cache, authoritative, '
                 + 'dnssec, app, ui',
     'CONTACT_EMAIL': 'admin@powerdnsadmin.org',
 }
 
-USE_HTTPS_IN_ABSOLUTE_URLS = False  # set this to True in production to have URLs generated with https instead of http
+USE_HTTPS_IN_ABSOLUTE_URLS = SETTINGS.use_https_in_absolute_urls
 
-ADMINS = [('Matt Scott', 'admin@powerdnsadmin.org')]
+# Setup Site Admin Contacts
+ADMINS = [(SETTINGS.admin_name, SETTINGS.admin_email)]
 
-# Add your Google Analytics ID to the environment to connect to Google Analytics
-GOOGLE_ANALYTICS_ID = env('PDA_GOOGLE_ANALYTICS_ID', default='')
+# Setup Google Analytics
+GOOGLE_ANALYTICS_ID = SETTINGS.google_analytics_id
 
-# Sentry setup
-
-# populate this to configure sentry. should take the form: 'https://****@sentry.io/12345'
-SENTRY_DSN = env('PDA_SENTRY_DSN', default='')
-
-if SENTRY_DSN:
+# Setup Sentry Exception Tracking
+if isinstance(SETTINGS.sentry_dsn, str) and len(SETTINGS.sentry_dsn.strip()):
     import sentry_sdk
     from sentry_sdk.integrations.django import DjangoIntegration
-
-    sentry_sdk.init(dsn=SENTRY_DSN, integrations=[DjangoIntegration()])
+    sentry_sdk.init(dsn=SETTINGS.sentry_dsn, integrations=[DjangoIntegration()])
 
 LOGGING = {
     'version': 1,

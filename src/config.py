@@ -9,6 +9,11 @@ TEMPLATE_PATH: Path = SRC_PATH / 'templates'
 
 
 class AppSettings(BaseSettings):
+    version: str = '0.1.0'
+    site_title: str = 'PowerDNS Admin'
+    site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
+    admin_name: str = 'Admin'
+    admin_email: str = 'admin@yourdomain.com'
     root_path: str = str(ROOT_PATH)
     src_path: str = str(SRC_PATH)
     template_path: str = str(TEMPLATE_PATH)
@@ -29,9 +34,18 @@ class AppSettings(BaseSettings):
     redis_url: str = ''
     redis_host: str = ''
     redis_port: int = 6379
+    time_zone: str = 'UTC'
+    use_i18n: bool = True
+    use_l10n: bool = True
+    use_tz: bool = True
+    use_https_in_absolute_urls: bool = True
+    language_code: str = 'en-us'
+    language_cookie_name: str = 'pdns_admin_language'
+    email_backend: str | None = None
+    account_email_verification: str = 'none'  # none, optional, required
+    account_authentication_method: str = 'username_email'  # email, username, username_email
     google_analytics_id: str = ''
     sentry_dsn: str = ''
-    account_email_verification: str = 'none'  # none, optional, required
 
     config: dict | None = None
     """ Additional configuration settings loaded from the given YAML configuration file (if any) """
