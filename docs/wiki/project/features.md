@@ -76,6 +76,7 @@ otherwise.
 There really isn't much to be said here since this space has not seemingly changed in quite some time.
 
 Supported Providers:
+- Authentik
 - Microsoft Active Directory
 - OpenLDAP
 
@@ -85,6 +86,7 @@ To get things started by achieving feature parity to the legacy project, the lis
 initially supported.
 
 Supported Providers:
+- Authentik
 - Google
 - Github
 - Microsoft
@@ -95,9 +97,10 @@ Supported Providers:
 Some level of focused integration will be provided to the SAML IdP service providers listed below.
 
 Supported Providers:
+- Authentik
 - AWS IAM
-- Microsoft Azure AD
 - Google Cloud Identity
+- Microsoft Azure AD
 
 #### SMS / Voice
 
