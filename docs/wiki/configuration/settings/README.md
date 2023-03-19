@@ -2,10 +2,11 @@
 
 ## Configuration Guide
 
-### [Application Settings](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md)
+### Application Settings Guide
 
-To get an in-depth understanding of the many application settings available, see the
-[Application Settings Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md).
+The application has two general categories of settings to be managed: environment configuration and
+runtime configuration. Environment configuration is used to configure the application during initialization.
+Runtime configuration is used to configure application features during runtime.
 
 #### [Environment Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/environment-settings.md)
 
