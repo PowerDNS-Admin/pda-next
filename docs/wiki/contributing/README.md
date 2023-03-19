@@ -1,16 +1,6 @@
 # PDA Next
 
-## Contribution Guide
-
-Coming soon!
-
-### Opening Issues
-
-Coming soon!
-
-### Starting Discussions
-
-Coming soon!
+## Additional Contribution Notes
 
 ### Labeling Standards
 
@@ -21,14 +11,6 @@ each unlabeled issue to set in motion any further workflows, both automated and 
 Please consider all the following when creating new issues or discussions. If an issue or discussion isn't properly
 labeled per the following standards, it may result in notable delays before a project maintainer addresses the issue or
 discussion.
-
-#### Labeling Issues
-
-Coming soon!
-
-#### Labeling Discussions
-
-Coming soon!
 
 ### Labeling Categories
 
@@ -108,6 +90,7 @@ Below is a list of all labels currently used on the project for organizing issue
 | help / other                 | General questions not specific to application deployment or features |
 | mod / accepted               | This request has been accepted                                       |
 | mod / announcement           | This is an admin announcement                                        |
+| mod / change-request         | Used by internal developers to indicate a change-request.            |
 | mod / changes-requested      | Changes have been requested before proceeding                        |
 | mod / duplicate              | This issue or pull request already exists                            |
 | mod / good-first-issue       | Good for newcomers                                                   |

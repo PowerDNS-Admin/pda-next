@@ -28,13 +28,20 @@ Some general tips for engaging here on GitHub:
 
 * Next, search our [issues list](https://github.com/PowerDNS-Admin/pda-next/issues?q=is%3Aissue) to see if the bug you've found has already been reported. If you come across a bug report that seems to match, please click "add a reaction" in the top right corner of the issue and add a thumbs up (:thumbsup:). This will help draw more attention to it. Any comments you can add to provide additional information or context would also be much appreciated.
 
-* If you can't find any existing issues (open or closed) that seem to match yours, you're welcome to [submit a new bug report](https://github.com/PowerDNS-Admin/pda-next/issues/new?label=type%3A+bug&template=bug_report.yaml). Be sure to complete the entire report template, including detailed steps that someone triaging your issue can follow to confirm the reported behavior. (If we're not able to replicate the bug based on the information provided, we'll ask for additional detail.)
+* If you can't find any existing issues (open or closed) that seem to match yours, you're welcome to
+[submit a new bug report](https://github.com/PowerDNS-Admin/pda-next/issues/new?label=type%3A+bug&template=bug_report.yaml).
+Be sure to complete the entire report template, including detailed steps that someone triaging your issue
+can follow to confirm the reported behavior. (If we're not able to replicate the bug based on the information
+provided, we'll ask for additional detail.)
 
 * Some other tips to keep in mind:
   * Error messages and screenshots are especially helpful.
   * Don't prepend your issue title with a label like `[Bug]`; the proper label will be assigned automatically.
   * Verify that you have GitHub notifications enabled and are subscribed to your issue after submitting.
   * We appreciate your patience as bugs are prioritized by their severity, impact, and difficulty to resolve.
+
+* Also, please consider reading our
+[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
 
 ## :bulb: Feature Requests
 
@@ -49,6 +56,9 @@ Some general tips for engaging here on GitHub:
   * Try to anticipate any likely questions about your proposal and provide that information proactively.
   * Verify that you have GitHub notifications enabled and are subscribed to your issue after submitting.
   * You're welcome to volunteer to implement your FR, but don't submit a pull request until it has been approved.
+
+* Also, please consider reading our
+[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
 
 ## :arrow_heading_up: Submitting Pull Requests
 
@@ -74,6 +84,9 @@ Some general tips for engaging here on GitHub:
 * Some other tips to keep in mind:
   * If you'd like to volunteer for someone else's issue, please post a comment on that issue letting us know. (This will allow the maintainers to assign it to you.)
   * All new functionality must include relevant tests where applicable.
+
+* Also, please consider reading our
+[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
 
 ## :rescue_worker_helmet: Become a Maintainer
 
