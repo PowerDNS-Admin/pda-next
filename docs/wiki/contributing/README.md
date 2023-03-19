@@ -29,7 +29,7 @@ Some general tips for engaging here on GitHub:
 * Next, search our [issues list](https://github.com/PowerDNS-Admin/pda-next/issues?q=is%3Aissue) to see if the bug you've found has already been reported. If you come across a bug report that seems to match, please click "add a reaction" in the top right corner of the issue and add a thumbs up (:thumbsup:). This will help draw more attention to it. Any comments you can add to provide additional information or context would also be much appreciated.
 
 * If you can't find any existing issues (open or closed) that seem to match yours, you're welcome to
-[submit a new bug report](https://github.com/PowerDNS-Admin/pda-next/issues/new?label=type%3A+bug&template=bug_report.yaml).
+[submit a new bug report](https://github.com/PowerDNS-Admin/pda-next/issues/new?assignees=&labels=bug+%2F+broken-feature&template=bug_report.yaml).
 Be sure to complete the entire report template, including detailed steps that someone triaging your issue
 can follow to confirm the reported behavior. (If we're not able to replicate the bug based on the information
 provided, we'll ask for additional detail.)
@@ -41,7 +41,7 @@ provided, we'll ask for additional detail.)
   * We appreciate your patience as bugs are prioritized by their severity, impact, and difficulty to resolve.
 
 * Also, please consider reading our
-[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
+[Labeling Standards](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/labeling-standards.md).
 
 ### :bulb: Feature Requests
 
@@ -49,7 +49,7 @@ provided, we'll ask for additional detail.)
 
 * If you have a rough idea that's not quite ready for formal submission yet, start a [GitHub discussion](https://github.com/PowerDNS-Admin/pda-next/discussions) instead. This is a great way to test the viability and narrow down the scope of a new feature prior to submitting a formal proposal, and can serve to generate interest in your idea from other community members.
 
-* Once you're ready, submit a feature request [using this template](https://github.com/PowerDNS-Admin/pda-next/issues/new?label=type%3A+feature&template=feature_request.yaml). Be sure to provide sufficient context and detail to convey exactly what you're proposing and why. The stronger your use case, the better chance your proposal has of being accepted.
+* Once you're ready, submit a feature request [using this template](https://github.com/PowerDNS-Admin/pda-next/issues/new?assignees=&labels=feature+%2F+request&template=feature_request.yaml). Be sure to provide sufficient context and detail to convey exactly what you're proposing and why. The stronger your use case, the better chance your proposal has of being accepted.
 
 * Some other tips to keep in mind:
   * Don't prepend your issue title with a label like `[Feature]`; the proper label will be assigned automatically.
@@ -58,7 +58,7 @@ provided, we'll ask for additional detail.)
   * You're welcome to volunteer to implement your FR, but don't submit a pull request until it has been approved.
 
 * Also, please consider reading our
-[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
+[Labeling Standards](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/labeling-standards.md).
 
 ### :arrow_heading_up: Submitting Pull Requests
 
@@ -86,7 +86,7 @@ provided, we'll ask for additional detail.)
   * All new functionality must include relevant tests where applicable.
 
 * Also, please consider reading our
-[Additional Contribution Notes](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
+[Labeling Standards](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/labeling-standards.md).
 
 ### :rescue_worker_helmet: Become a Maintainer
 
