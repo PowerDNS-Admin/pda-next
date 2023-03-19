@@ -54,27 +54,27 @@ For information about how to deploy the application in various environments, ple
 For information on how to create and execute automated application tests, please visit the
 [Testing Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/testing/README.md) section of the wiki.
 
-## Security Policy
+## [Security Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/SECURITY.md)
 
 Please see our
 [Security Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/SECURITY.md).
 
-## Support
+## [Support Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md)
 
 Please see our
-[Support Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/SUPPORT.md).
+[Support Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md).
 
-## Code of Conduct
+## [Code of Conduct](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CODE_OF_CONDUCT.md)
 
 Please see our
-[Code of Conduct Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CODE_OF_CONDUCT.md).
+[Code of Conduct](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CODE_OF_CONDUCT.md).
 
-## License
+## [License](https://github.com/PowerDNS-Admin/pda-next/blob/main/LICENSE)
 
 This project is released under the MIT license. For additional
 information, [see the full license](https://github.com/PowerDNS-Admin/pda-next/blob/main/LICENSE).
 
-## Donate
+## [Donate](https://www.buymeacoffee.com/AzorianMatt)
 
 Like my work?
 
