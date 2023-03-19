@@ -2,6 +2,11 @@
 
 A PowerDNS web interface with advanced features.
 
+***WARNING: This project is a work in progress and is NOT ready for production use!***
+
+If you're excited to follow the development progress of the next-generation PDA application, then please wait for
+an official release announcement before using this project.
+
 ## Features:
 
 - Provides forward and reverse zone management
