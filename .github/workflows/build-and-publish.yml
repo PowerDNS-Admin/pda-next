@@ -9,6 +9,15 @@ on:
       - '-main'
     tags:
       - 'v*.*.*'
+    paths-ignore:
+      - .github/**
+      - bin/**
+      - conf/**
+      - docs/**
+      - .env.tpl
+      - .gitignore
+      - LICENSE
+      - README.md
 
 jobs:
   build-and-push-docker-image:
