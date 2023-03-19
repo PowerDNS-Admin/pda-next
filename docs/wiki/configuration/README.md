@@ -2,19 +2,17 @@
 
 ## Configuration Guide
 
-### Startup Configuration
+### [Application Settings](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md)
 
-The configuration settings listed in this section are used for initially configuring the application before
-initialization. Configuration settings are only placed here if the setting is required to bootstrap the application and
-only changes for the deployment environment.
+To get an in-depth understanding of the many application settings available, see the
+[Application Settings Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md).
 
-> PDA_SETTING_NAME | type = default
+#### [Environment Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/environment-settings.md)
 
-A description of what the setting is for and how it works should be here.
+To view the alphabetical list of environment configuration settings, see the
+[Environment Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/environment-settings.md).
 
-### Runtime Configuration
+#### [Runtime Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/runtime-settings.md)
 
-The configuration settings listed in this section are used during runtime by various application features. Configuration
-settings are only placed here if the setting isn't required to bootstrap the application during initialization.
-
-**More coming soon!**
+To view the alphabetical list of environment configuration settings, see the
+[Runtime Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/runtime-settings.md).
