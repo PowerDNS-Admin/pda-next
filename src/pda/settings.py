@@ -306,22 +306,65 @@ if isinstance(settings.email_backend, str) and len(settings.email_backend.strip(
     EMAIL_USE_SSL = settings.email_use_ssl
     EMAIL_USE_TLS = settings.email_use_tls
 
-    # Your email config goes here.
-    # see https://github.com/anymail/django-anymail for more details / examples
-    # To use mailgun, comment out the lines below and make sure your key and domain
-    # are available in the environment.
-    # EMAIL_BACKEND = 'anymail.backends.mailgun.EmailBackend'
+    #
+    # Anymail Backend Settings
+    #
 
-    # ANYMAIL = {
-    #     "MAILGUN_API_KEY": env('MAILGUN_API_KEY', default=None),
-    #     "MAILGUN_SENDER_DOMAIN": env('MAILGUN_SENDER_DOMAIN', default=None),
-    # }
+    # Amazon SES
+    ANYMAIL_AMAZON_SES_AUTO_CONFIRM_SNS_SUBSCRIPTIONS = settings.anymail_amazon_ses_auto_confirm_sns_subscriptions
+    ANYMAIL_AMAZON_SES_CLIENT_PARAMS = settings.anymail_amazon_ses_client_params
+    ANYMAIL_AMAZON_SES_CONFIGURATION_SET_NAME = settings.anymail_amazon_ses_configuration_set_name
+    ANYMAIL_AMAZON_SES_MESSAGE_TAG_NAME = settings.anymail_amazon_ses_message_tag_name
+    ANYMAIL_AMAZON_SES_SESSION_PARAMS = settings.anymail_amazon_ses_session_params
 
-    # Mailchimp setup
+    # MailerSend
+    ANYMAIL_MAILERSEND_API_TOKEN = settings.anymail_mailersend_api_token
+    ANYMAIL_MAILERSEND_API_URL = settings.anymail_mailersend_api_url
+    ANYMAIL_MAILERSEND_BATCH_SEND_MODE = settings.anymail_mailersend_batch_send_mode
+    ANYMAIL_MAILERSEND_INBOUND_SECRET = settings.anymail_mailersend_inbound_secret
+    ANYMAIL_MAILERSEND_SIGNING_SECRET = settings.anymail_mailersend_signing_secret
 
-    # set these values if you want to subscribe people to a mailchimp list after they sign up.
-    # MAILCHIMP_API_KEY = env("MAILCHIMP_API_KEY", default=None)
-    # MAILCHIMP_LIST_ID = env("MAILCHIMP_LIST_ID", default=None)
+    # Mailgun
+    ANYMAIL_MAILGUN_API_KEY = settings.anymail_mailgun_api_key
+    ANYMAIL_MAILGUN_API_URL = settings.anymail_mailgun_api_url
+    ANYMAIL_MAILGUN_SENDER_DOMAIN = settings.anymail_mailgun_sender_domain
+    ANYMAIL_MAILGUN_WEBHOOK_SIGNING_KEY = settings.anymail_mailgun_webhook_signing_key
+
+    # Mailjet
+    ANYMAIL_MAILJET_API_KEY = settings.anymail_mailjet_api_key
+    ANYMAIL_MAILJET_API_URL = settings.anymail_mailjet_api_url
+    ANYMAIL_MAILJET_SECRET_KEY = settings.anymail_mailjet_secret_key
+
+    # Mandrill
+    ANYMAIL_MANDRILL_API_KEY = settings.anymail_mandrill_api_key
+    ANYMAIL_MANDRILL_API_URL = settings.anymail_mandrill_api_url
+    ANYMAIL_MANDRILL_WEBHOOK_KEY = settings.anymail_mandrill_webhook_key
+    ANYMAIL_MANDRILL_WEBHOOK_URL = settings.anymail_mandrill_webhook_url
+
+    # Postal
+    ANYMAIL_POSTAL_API_KEY = settings.anymail_postal_api_key
+    ANYMAIL_POSTAL_API_URL = settings.anymail_postal_api_url
+    ANYMAIL_POSTAL_WEBHOOK_KEY = settings.anymail_postal_webhook_key
+
+    # Postmark
+    ANYMAIL_POSTMARK_API_URL = settings.anymail_postmark_api_url
+    ANYMAIL_POSTMARK_SERVER_TOKEN = settings.anymail_postmark_server_token
+
+    # SendGrid
+    ANYMAIL_SENDGRID_API_KEY = settings.anymail_sendgrid_api_key
+    ANYMAIL_SENDGRID_API_URL = settings.anymail_sendgrid_api_url
+    ANYMAIL_SENDGRID_GENERATE_MESSAGE_ID = settings.anymail_sendgrid_generate_message_id
+    ANYMAIL_SENDGRID_MERGE_FIELD_FORMAT = settings.anymail_sendgrid_merge_field_format
+
+    # Sendinblue
+    ANYMAIL_SENDINBLUE_API_KEY = settings.anymail_sendinblue_api_key
+    ANYMAIL_SENDINBLUE_API_URL = settings.anymail_sendinblue_api_url
+
+    # SparkPost
+    ANYMAIL_SPARKPOST_API_KEY = settings.anymail_sparkpost_api_key
+    ANYMAIL_SPARKPOST_API_URL = settings.anymail_sparkpost_api_url
+    ANYMAIL_SPARKPOST_SUBACCOUNT = settings.anymail_sparkpost_subaccount
+    ANYMAIL_SPARKPOST_TRACK_INITIAL_OPEN_AS_OPENED = settings.anymail_sparkpost_track_initial_open_as_opened
 
 # DRF config
 REST_FRAMEWORK = {
