@@ -19,16 +19,44 @@ on:
       - 'dev'
       - 'main'
       - 'dependabot/**'
-      - 'feature/*'
+      - 'feature/**'
       - 'issue/**'
+    paths-ignore:
+      - .github/*
+      - bin/*
+      - conf/*
+      - docs/*
+      - src/locale/*
+      - src/requirements*
+      - src/static/css/*
+      - src/static/images/*
+      - src/.babelrc
+      - .env.tpl
+      - .gitignore
+      - LICENSE
+      - README.md
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
       - 'dev'
       - 'main'
       - 'dependabot/**'
-      - 'feature/*'
+      - 'feature/**'
       - 'issue/**'
+    paths-ignore:
+      - .github/*
+      - bin/*
+      - conf/*
+      - docs/*
+      - src/locale/*
+      - src/requirements*
+      - src/static/css/*
+      - src/static/images/*
+      - src/.babelrc
+      - .env.tpl
+      - .gitignore
+      - LICENSE
+      - README.md
   schedule:
     - cron: '45 2 * * 2'
 
