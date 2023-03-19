@@ -33,11 +33,11 @@ an official release announcement before using this project.
 For information about the project such as feature planning, the roadmap, and milestones, then please see the
 [Project Information](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/README.md) section of the wiki.
 
-### [Contributing](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CONTRIBUTING.md)
+### [Contributing](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md)
 
 If you're interested in participating in the project design discussions, or you want to actively submit work to the
 project then you should check out the
-[Contribution Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CONTRIBUTING.md)!
+[Contribution Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md)!
 
 ### [Application Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/README.md)
 
