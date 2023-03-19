@@ -37,7 +37,8 @@ Default: False
 
 Determine whether the user is required to provide an email address during registration.
 
-This setting must be set to True if `PDA_ACCOUNT_EMAIL_VERIFICATION` is set to "mandatory".
+This setting must be set to True if `PDA_ACCOUNT_EMAIL_VERIFICATION` is set to "mandatory" or
+`PDA_ACCOUNT_AUTHENTICATION_METHOD` is set to "email".
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
@@ -119,7 +120,7 @@ Any additional keyword arguments to pass to the boto3.client() call when creatin
 
 See https://anymail.dev/en/stable/esps/amazon_ses/#std-setting-ANYMAIL_AMAZON_SES_CLIENT_PARAMS for more information.
 
-##### ANYMAIL_AMAZON_SES_CONFIGURATION_SET_NAME | type = string | None
+##### PDA_ANYMAIL_AMAZON_SES_CONFIGURATION_SET_NAME | type = string | None
 
 Default: None
 
@@ -128,7 +129,7 @@ The name of the Amazon SES configuration set to use for all messages sent throug
 See https://anymail.dev/en/stable/esps/amazon_ses/#std-setting-ANYMAIL_AMAZON_SES_CONFIGURATION_SET_NAME
 for more information.
 
-##### ANYMAIL_AMAZON_SES_MESSAGE_TAG_NAME | type = string | None
+##### PDA_ANYMAIL_AMAZON_SES_MESSAGE_TAG_NAME | type = string | None
 
 Default: None
 
@@ -137,7 +138,7 @@ The name of the Amazon SES message tag to use for all messages sent through AnyM
 See https://anymail.dev/en/stable/esps/amazon_ses/#std-setting-ANYMAIL_AMAZON_SES_MESSAGE_TAG_NAME
 for more information.
 
-##### ANYMAIL_AMAZON_SES_SESSION_PARAMS | type = dict | None
+##### PDA_ANYMAIL_AMAZON_SES_SESSION_PARAMS | type = dict | None
 
 Default: None
 
@@ -145,7 +146,7 @@ Any additional keyword arguments to pass to the boto3.session.Session() call whe
 
 See https://anymail.dev/en/stable/esps/amazon_ses/#std-setting-ANYMAIL_AMAZON_SES_SESSION_PARAMS for more information.
 
-##### ANYMAIL_MAILERSEND_API_TOKEN | type = string | None
+##### PDA_ANYMAIL_MAILERSEND_API_TOKEN | type = string | None
 
 Default: None
 
@@ -153,7 +154,7 @@ The MailerSend API token to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailersend/#std-setting-ANYMAIL_MAILERSEND_API_TOKEN for more information.
 
-##### ANYMAIL_MAILERSEND_API_URL | type = string | None
+##### PDA_ANYMAIL_MAILERSEND_API_URL | type = string | None
 
 Default: 'https://api.mailersend.com/v1'
 
@@ -161,7 +162,7 @@ The MailerSend API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailersend/#std-setting-ANYMAIL_MAILERSEND_API_URL for more information.
 
-##### ANYMAIL_MAILERSEND_BATCH_SEND_MODE | type = string | None
+##### PDA_ANYMAIL_MAILERSEND_BATCH_SEND_MODE | type = string | None
 
 Default: None
 
@@ -169,7 +170,7 @@ The MailerSend batch send mode to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailersend/#std-setting-ANYMAIL_MAILERSEND_BATCH_SEND_MODE for more information.
 
-##### ANYMAIL_MAILERSEND_INBOUND_SECRET | type = string | None
+##### PDA_ANYMAIL_MAILERSEND_INBOUND_SECRET | type = string | None
 
 Default: None
 
@@ -177,7 +178,7 @@ The MailerSend inbound secret to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailersend/#std-setting-ANYMAIL_MAILERSEND_INBOUND_SECRET for more information.
 
-##### ANYMAIL_MAILERSEND_SIGNING_SECRET | type = string | None
+##### PDA_ANYMAIL_MAILERSEND_SIGNING_SECRET | type = string | None
 
 Default: None
 
@@ -185,7 +186,7 @@ The MailerSend signing secret to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailersend/#std-setting-ANYMAIL_MAILERSEND_SIGNING_SECRET for more information.
 
-##### ANYMAIL_MAILGUN_API_KEY | type = string | None
+##### PDA_ANYMAIL_MAILGUN_API_KEY | type = string | None
 
 Default: None
 
@@ -193,7 +194,7 @@ The Mailgun API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailgun/#std-setting-ANYMAIL_MAILGUN_API_KEY for more information.
 
-##### ANYMAIL_MAILGUN_API_URL | type = string | None
+##### PDA_ANYMAIL_MAILGUN_API_URL | type = string | None
 
 Default: 'https://api.mailgun.net/v3'
 
@@ -201,7 +202,7 @@ The Mailgun API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailgun/#std-setting-ANYMAIL_MAILGUN_API_URL for more information.
 
-##### ANYMAIL_MAILGUN_SENDER_DOMAIN | type = string | None
+##### PDA_ANYMAIL_MAILGUN_SENDER_DOMAIN | type = string | None
 
 Default: None
 
@@ -209,7 +210,7 @@ The Mailgun sender domain to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailgun/#std-setting-ANYMAIL_MAILGUN_SENDER_DOMAIN for more information.
 
-##### ANYMAIL_MAILGUN_WEBHOOK_SIGNING_KEY | type = string | None
+##### PDA_ANYMAIL_MAILGUN_WEBHOOK_SIGNING_KEY | type = string | None
 
 Default: None
 
@@ -217,7 +218,7 @@ The Mailgun webhook signing key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailgun/#std-setting-ANYMAIL_MAILGUN_WEBHOOK_SIGNING_KEY for more information.
 
-##### ANYMAIL_MAILJET_API_KEY | type = string | None
+##### PDA_ANYMAIL_MAILJET_API_KEY | type = string | None
 
 Default: None
 
@@ -225,7 +226,7 @@ The Mailjet API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailjet/#std-setting-ANYMAIL_MAILJET_API_KEY for more information.
 
-##### ANYMAIL_MAILJET_API_URL | type = string | None
+##### PDA_ANYMAIL_MAILJET_API_URL | type = string | None
 
 Default: 'https://api.mailjet.com/v3'
 
@@ -233,7 +234,7 @@ The Mailjet API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailjet/#std-setting-ANYMAIL_MAILJET_API_URL for more information.
 
-##### ANYMAIL_MAILJET_SECRET_KEY | type = string | None
+##### PDA_ANYMAIL_MAILJET_SECRET_KEY | type = string | None
 
 Default: None
 
@@ -241,7 +242,7 @@ The Mailjet secret key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mailjet/#std-setting-ANYMAIL_MAILJET_API_KEY for more information.
 
-##### ANYMAIL_MANDRILL_API_KEY | type = string | None
+##### PDA_ANYMAIL_MANDRILL_API_KEY | type = string | None
 
 Default: None
 
@@ -249,7 +250,7 @@ The Mandrill API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mandrill/#std-setting-ANYMAIL_MANDRILL_API_KEY for more information.
 
-##### ANYMAIL_MANDRILL_API_URL | type = string | None
+##### PDA_ANYMAIL_MANDRILL_API_URL | type = string | None
 
 Default: 'https://mandrillapp.com/api/1.0'
 
@@ -257,7 +258,7 @@ The Mandrill API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mandrill/#std-setting-ANYMAIL_MANDRILL_API_URL for more information.
 
-##### ANYMAIL_MANDRILL_WEBHOOK_KEY | type = string | None
+##### PDA_ANYMAIL_MANDRILL_WEBHOOK_KEY | type = string | None
 
 Default: None
 
@@ -265,7 +266,7 @@ The Mandrill webhook key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/mandrill/#std-setting-ANYMAIL_MANDRILL_WEBHOOK_KEY for more information.
 
-##### ANYMAIL_POSTAL_API_KEY | type = string | None
+##### PDA_ANYMAIL_POSTAL_API_KEY | type = string | None
 
 Default: None
 
@@ -273,7 +274,7 @@ The Postal API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/postal/#std-setting-ANYMAIL_POSTAL_API_KEY for more information.
 
-##### ANYMAIL_POSTAL_API_URL | type = string | None
+##### PDA_ANYMAIL_POSTAL_API_URL | type = string | None
 
 Default: None
 
@@ -281,7 +282,7 @@ The Postal API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/postal/#std-setting-ANYMAIL_POSTAL_API_URL for more information.
 
-##### ANYMAIL_POSTAL_WEBHOOK_KEY | type = string | None
+##### PDA_ANYMAIL_POSTAL_WEBHOOK_KEY | type = string | None
 
 Default: None
 
@@ -289,7 +290,7 @@ The Postal webhook key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/postal/#std-setting-ANYMAIL_POSTAL_WEBHOOK_KEY for more information.
 
-##### ANYMAIL_POSTMARK_API_URL | type = string | None
+##### PDA_ANYMAIL_POSTMARK_API_URL | type = string | None
 
 Default: 'https://api.postmarkapp.com/'
 
@@ -297,7 +298,7 @@ The Postmark API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/postmark/#std-setting-ANYMAIL_POSTMARK_API_URL for more information.
 
-##### ANYMAIL_POSTMARK_SERVER_TOKEN | type = string | None
+##### PDA_ANYMAIL_POSTMARK_SERVER_TOKEN | type = string | None
 
 Default: None
 
@@ -305,7 +306,7 @@ The Postmark server token to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/postmark/#std-setting-ANYMAIL_POSTMARK_SERVER_TOKEN for more information.
 
-##### ANYMAIL_SENDGRID_API_KEY | type = string | None
+##### PDA_ANYMAIL_SENDGRID_API_KEY | type = string | None
 
 Default: None
 
@@ -313,7 +314,7 @@ The SendGrid API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendgrid/#std-setting-ANYMAIL_SENDGRID_API_KEY for more information.
 
-##### ANYMAIL_SENDGRID_API_URL | type = string | None
+##### PDA_ANYMAIL_SENDGRID_API_URL | type = string | None
 
 Default: 'https://api.sendgrid.com/v3/'
 
@@ -321,7 +322,7 @@ The SendGrid API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendgrid/#std-setting-ANYMAIL_SENDGRID_API_URL for more information.
 
-##### ANYMAIL_SENDGRID_GENERATE_MESSAGE_ID | type = bool
+##### PDA_ANYMAIL_SENDGRID_GENERATE_MESSAGE_ID | type = bool
 
 Default: True
 
@@ -329,7 +330,7 @@ Whether to generate a Message-ID header for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendgrid/#std-setting-ANYMAIL_SENDGRID_GENERATE_MESSAGE_ID for more information.
 
-##### ANYMAIL_SENDGRID_MERGE_FIELD_FORMAT | type = string | None
+##### PDA_ANYMAIL_SENDGRID_MERGE_FIELD_FORMAT | type = string | None
 
 Default: None
 
@@ -337,7 +338,7 @@ The merge field format to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendgrid/#std-setting-ANYMAIL_SENDGRID_MERGE_FIELD_FORMAT for more information.
 
-##### ANYMAIL_SENDINBLUE_API_KEY | type = string | None
+##### PDA_ANYMAIL_SENDINBLUE_API_KEY | type = string | None
 
 Default: None
 
@@ -345,7 +346,7 @@ The SendinBlue API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendinblue/#std-setting-ANYMAIL_SENDINBLUE_API_KEY for more information.
 
-##### ANYMAIL_SENDINBLUE_API_URL | type = string | None
+##### PDA_ANYMAIL_SENDINBLUE_API_URL | type = string | None
 
 Default: 'https://api.sendinblue.com/v3/'
 
@@ -353,7 +354,7 @@ The SendinBlue API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sendinblue/#std-setting-ANYMAIL_SENDINBLUE_API_URL for more information.
 
-##### ANYMAIL_SPARKPOST_API_KEY | type = string | None
+##### PDA_ANYMAIL_SPARKPOST_API_KEY | type = string | None
 
 Default: None
 
@@ -361,7 +362,7 @@ The SparkPost API key to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sparkpost/#std-setting-ANYMAIL_SPARKPOST_API_KEY for more information.
 
-##### ANYMAIL_SPARKPOST_API_URL | type = string | None
+##### PDA_ANYMAIL_SPARKPOST_API_URL | type = string | None
 
 Default: 'https://api.sparkpost.com/api/v1'
 
@@ -369,7 +370,7 @@ The SparkPost API URL to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sparkpost/#std-setting-ANYMAIL_SPARKPOST_API_URL for more information.
 
-##### ANYMAIL_SPARKPOST_SUBACCOUNT | type = string | None
+##### PDA_ANYMAIL_SPARKPOST_SUBACCOUNT | type = string | None
 
 Default: None
 
@@ -377,7 +378,7 @@ The SparkPost subaccount to use for all messages sent through AnyMail.
 
 See https://anymail.dev/en/stable/esps/sparkpost/#std-setting-ANYMAIL_SPARKPOST_SUBACCOUNT for more information.
 
-##### ANYMAIL_SPARKPOST_TRACK_INITIAL_OPEN_AS_OPENED | type = bool
+##### PDA_ANYMAIL_SPARKPOST_TRACK_INITIAL_OPEN_AS_OPENED | type = bool
 
 Default: False
 
