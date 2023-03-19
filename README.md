@@ -7,7 +7,7 @@ A PowerDNS web interface with advanced features.
 If you're excited to follow the development progress of the next-generation PDA application, then please wait for
 an official release announcement before using this project.
 
-## Features:
+## [Features](./docs/wiki/project/features.md):
 
 - Provides forward and reverse zone management
 - Provides zone templating features
