@@ -1,5 +1,9 @@
 # PDA Next
 
-## Project Support
+**Looking to help?** Try taking a look at the project's
+[Contribution Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md).
 
-**Looking for help?** PDA has a somewhat active community of fellow users that may be able to provide assistance. Just [start a discussion](https://github.com/PowerDNS-Admin/pda-next/discussions/new) right here on GitHub!
+## [Support Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md)
+
+Please see the project's [Support Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md)
+for information on how to obtain support for the project.
