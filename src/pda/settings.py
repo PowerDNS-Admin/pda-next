@@ -371,20 +371,52 @@ if isinstance(REDIS_URL, str):
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
+    'filters': {
+        'require_debug_false': {
+            '()': 'django.utils.log.RequireDebugFalse',
+        },
+        'require_debug_true': {
+            '()': 'django.utils.log.RequireDebugTrue',
+        },
+    },
     'formatters': {
+        'django.server': {
+            '()': 'django.utils.log.ServerFormatter',
+            'format': '[{server_time}] {levelname} {message}',
+            'style': '{',
+        },
         'verbose': {
             'format': '[{asctime}] {levelname} "{name}" {message}',
             'style': '{',
-            'datefmt': '%d/%b/%Y %H:%M:%S',  # match Django server time format
+            'datefmt': '%d/%b/%Y %H:%M:%S',
         },
     },
     'handlers': {
-        'console': {'class': 'logging.StreamHandler', 'formatter': 'verbose'},
+        'console': {
+            'filters': ['require_debug_true'],
+            'class': 'logging.StreamHandler',
+            'formatter': 'verbose'
+        },
+        'django.server': {
+            'class': 'logging.StreamHandler',
+            'formatter': 'django.server',
+        },
+        'mail_admins': {
+            'filters': ['require_debug_false'],
+            'class': 'django.utils.log.AdminEmailHandler',
+            'level': 'ERROR',
+            'include_html': True,
+        },
     },
     'loggers': {
         'django': {
-            'handlers': ['console'],
+            'handlers': ['console', 'mail_admins'],
             'level': settings.log_level_django,
+        },
+        'django.server': {
+            'handlers': ['django.server'],
+            'level': settings.log_level_django,
+            'propagate': False,
         },
         'pda': {
             'handlers': ['console'],

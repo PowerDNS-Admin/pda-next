@@ -157,7 +157,7 @@ See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more infor
 
 ##### PDA_DB_URL | type = string
 
-Default: 'sqlite:///pda.db'
+Default: 'sqlite:////var/lib/pda/pda.db'
 
 Defines the database connection string to use for the application. Currently, there are three supported database
 engines: MySQL, PostgreSQL, and SQLite.
