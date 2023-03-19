@@ -16,19 +16,19 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - '-dev'
-      - '-master'
-      - '-dependabot/**'
-      - '-feature/*'
-      - '-issue/**'
+      - 'dev'
+      - 'master'
+      - 'dependabot/**'
+      - 'feature/*'
+      - 'issue/**'
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
-      - '-dev'
-      - '-master'
-      - '-dependabot/**'
-      - '-feature/*'
-      - '-issue/**'
+      - 'dev'
+      - 'master'
+      - 'dependabot/**'
+      - 'feature/*'
+      - 'issue/**'
   schedule:
     - cron: '45 2 * * 2'
 

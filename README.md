@@ -7,6 +7,8 @@ A PowerDNS web interface with advanced features.
 If you're excited to follow the development progress of the next-generation PDA application, then please wait for
 an official release announcement before using this project.
 
+[![CodeQL](https://github.com/PowerDNS-Admin/pda-next/actions/workflows/codeql-analysis.yml/badge.svg)](https://github.com/PowerDNS-Admin/pda-next/actions/workflows/codeql-analysis.yml)
+
 ## [Features](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/features.md):
 
 - Provides forward and reverse zone management
