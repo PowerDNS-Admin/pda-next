@@ -2,7 +2,7 @@
 
 ## Bare Metal Deployment Guides
 
-### [Linux](./linux)
+### [Linux](./linux/README.md)
 
 - [Alma Linux](./linux/alma-linux.md)
 - [Alpine Linux](./linux/alpine-linux.md)
@@ -20,5 +20,5 @@
 
 ### Other
 
-- [macOS](./macos)
-- [Windows](./windows)
+- [macOS](./macos/README.md)
+- [Windows](./windows/README.md)
