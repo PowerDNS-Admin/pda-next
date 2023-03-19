@@ -62,7 +62,7 @@ Some general tips for engaging here on GitHub:
 
 * It's very important that you not submit a pull request until a relevant issue has been opened **and** assigned to you. Otherwise, you risk wasting time on work that may ultimately not be needed.
 
-* New pull requests should generally be based off of the `dev` branch, rather than `master`. The `dev` branch is used for ongoing development, while `master` is used for tracking stable releases.
+* New pull requests should generally be based off of the `dev` branch, rather than `main`. The `dev` branch is used for ongoing development, while `main` is used for tracking stable releases.
 
 * In most cases, it is not necessary to add a changelog entry: A maintainer will take care of this when the PR is merged. (This helps avoid merge conflicts resulting from multiple PRs being submitted simultaneously.)
 
