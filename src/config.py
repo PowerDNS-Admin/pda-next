@@ -22,6 +22,7 @@ class AppSettings(BaseSettings):
     account_authentication_method: str = 'username_email'  # email, username, username_email
     account_email_required: bool = False
     account_email_verification: str = 'none'  # none, optional, required
+    account_username_required: bool = False
     admin_email: str = 'admin@yourdomain.com'
     admin_from_email: str = 'noreply@yourdomain.com'
     admin_name: str = 'Admin'

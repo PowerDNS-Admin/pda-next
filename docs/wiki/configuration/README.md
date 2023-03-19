@@ -19,6 +19,18 @@ as `AppSettings.setting_name` and the environment variable name would be `PDA_SE
 
 #### Application Environment Settings
 
+##### PDA_ACCOUNT_AUTHENTICATION_METHOD | type = string
+
+Options: username_email, email, username \
+Default: 'username_email'
+
+Specifies the login method to use – whether the user logs in by entering their username,
+e-mail address, or either one of both.
+
+Setting this to “email” requires `PDA_ACCOUNT_EMAIL_REQUIRED` to be True
+
+See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
+
 ##### PDA_ACCOUNT_EMAIL_REQUIRED | type = bool
  
 Default: False
@@ -44,15 +56,13 @@ is still sent, whereas in case of “none” no e-mail verification mails are se
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
-##### PDA_ACCOUNT_AUTHENTICATION_METHOD | type = string
+##### PDA_ACCOUNT_USERNAME_REQUIRED | type = bool
+ 
+Default: False
 
-Options: username_email, email, username \
-Default: 'username_email'
+Determine whether the user is required to provide a username during registration.
 
-Specifies the login method to use – whether the user logs in by entering their username,
-e-mail address, or either one of both.
-
-Setting this to “email” requires `PDA_ACCOUNT_EMAIL_REQUIRED` to be True
+This setting must be set to True if `PDA_ACCOUNT_AUTHENTICATION_METHOD` is set to "username" or "username_email".
 
 See https://django-allauth.readthedocs.io/en/latest/configuration.html for more information.
 
