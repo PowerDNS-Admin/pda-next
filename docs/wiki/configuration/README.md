@@ -216,7 +216,17 @@ Default: None
 
 The e-mail backend to use for sending e-mails. If this is not set, the default e-mail backend will be used.
 
+For simple testing and local development, the `django.core.mail.backends.console.EmailBackend` can be used to send
+e-mails to the console.
+
+For production use, the `django.core.mail.backends.smtp.EmailBackend` can be used to send e-mails using an SMTP
+server.
+
 See https://docs.djangoproject.com/en/3.1/ref/settings/#email-backend for more information.
+
+There are many backend implementations available for Django aside from just those provided directly through Django.
+This project uses the `django-anymail` package to provide support for a number of additional e-mail backends. For
+more information on the available backends, see the `django-anymail` documentation.
 
 ##### PDA_EMAIL_HOST | type = string | None
 
