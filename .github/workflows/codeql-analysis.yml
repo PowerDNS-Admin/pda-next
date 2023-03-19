@@ -22,14 +22,14 @@ on:
       - 'feature/**'
       - 'issue/**'
     paths-ignore:
-      - .github/*
-      - bin/*
-      - conf/*
-      - docs/*
-      - src/locale/*
-      - src/requirements*
-      - src/static/css/*
-      - src/static/images/*
+      - .github/**
+      - bin/**
+      - conf/**
+      - docs/**
+      - src/locale/**
+      - src/requirements**
+      - src/static/css/**
+      - src/static/images/**
       - src/.babelrc
       - .env.tpl
       - .gitignore
@@ -44,14 +44,14 @@ on:
       - 'feature/**'
       - 'issue/**'
     paths-ignore:
-      - .github/*
-      - bin/*
-      - conf/*
-      - docs/*
-      - src/locale/*
-      - src/requirements*
-      - src/static/css/*
-      - src/static/images/*
+      - .github/**
+      - bin/**
+      - conf/**
+      - docs/**
+      - src/locale/**
+      - src/requirements**
+      - src/static/css/**
+      - src/static/images/**
       - src/.babelrc
       - .env.tpl
       - .gitignore
