@@ -2,12 +2,12 @@
 
 ## Wiki Index
 
-### [Project Information](./project/README.md)
+### [Project Information](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/README.md)
 
-- [Features](./project/features.md)
-- [Releases](./project/releases.md)
-- [Roadmap](./project/roadmap.md)
-- [Milestones](./project/milestones.md)
+- [Features](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/features.md)
+- [Releases](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/releases.md)
+- [Roadmap](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/roadmap.md)
+- [Milestones](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/milestones.md)
 
 ### Contributing
 
@@ -18,14 +18,14 @@ project then you should check out the
 ### Configuration
 
 For information on configuring the application, please visit the
-[Configuration Guide](./configuration/README.md).
+[Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/README.md).
 
 ### Deployment
 
 For information about how to deploy the application in various environments, please visit the
-[Deployment Guides](./deployment/README.md).
+[Deployment Guides](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/README.md).
 
 ### Testing
 
 For information on how to create and execute automated application tests, please visit the
-[Testing Guide](./testing/README.md).
+[Testing Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/testing/README.md).

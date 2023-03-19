@@ -2,8 +2,8 @@
 
 ## Kubernetes Deployment Guides
 
-- [Helm Charts](./helm-charts.md)
-- [K3s](./k3s.md)
-- [Kubeadm](./kubeadm.md)
-- [Minikube](./minikube.md)
-- [Rancher](./rancher.md)
+- [Helm Charts](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/deployment/kubernetes/helm-charts.md)
+- [K3s](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/deployment/kubernetes/k3s.md)
+- [Kubeadm](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/deployment/kubernetes/kubeadm.md)
+- [Minikube](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/deployment/kubernetes/minikube.md)
+- [Rancher](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/deployment/kubernetes/rancher.md)

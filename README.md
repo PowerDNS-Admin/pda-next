@@ -7,7 +7,7 @@ A PowerDNS web interface with advanced features.
 If you're excited to follow the development progress of the next-generation PDA application, then please wait for
 an official release announcement before using this project.
 
-## [Features](./docs/wiki/project/features.md):
+## [Features](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/features.md):
 
 - Provides forward and reverse zone management
 - Provides zone templating features
@@ -26,12 +26,12 @@ an official release announcement before using this project.
 - Provides an API for zone and record management among other features
 - Provides full IDN/Punycode support
 
-## [Project Documentation](./docs/README.md)
+## [Project Documentation](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/README.md)
 
-### [Project Information](./docs/wiki/project/README.md)
+### [Project Information](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/README.md)
 
 For information about the project such as feature planning, the roadmap, and milestones, then please see the
-[Project Information](./docs/wiki/project/README.md) section of the wiki.
+[Project Information](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/README.md) section of the wiki.
 
 ### [Contributing](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CONTRIBUTING.md)
 
@@ -39,20 +39,20 @@ If you're interested in participating in the project design discussions, or you 
 project then you should check out the
 [Contribution Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CONTRIBUTING.md)!
 
-### [Application Configuration](./docs/wiki/configuration/README.md)
+### [Application Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/README.md)
 
 For information about all the ways this application can be configured and what each setting does, please visit the
-[Configuration Guide](./docs/wiki/configuration/README.md) section of the wiki.
+[Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/README.md) section of the wiki.
 
-### [Application Deployment](./docs/wiki/deployment/README.md)
+### [Application Deployment](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/README.md)
 
 For information about how to deploy the application in various environments, please visit the
-[Deployment Guides](./docs/wiki/deployment/README.md) section of the wiki.
+[Deployment Guides](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/README.md) section of the wiki.
 
-### [Application Testing](./docs/wiki/testing/README.md)
+### [Application Testing](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/testing/README.md)
 
 For information on how to create and execute automated application tests, please visit the
-[Testing Guide](./docs/wiki/testing/README.md) section of the wiki.
+[Testing Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/testing/README.md) section of the wiki.
 
 ## Security Policy
 
