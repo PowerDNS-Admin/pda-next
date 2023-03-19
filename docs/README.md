@@ -12,10 +12,11 @@ application configuration, deployment, testing, and planning.
 For information about the project such as feature planning, the roadmap, and milestones, then please see the
 [Project Information](./wiki/project) section of the wiki.
 
-### [Contributing](./wiki/contributing)
+### [Contributing](https://github.com/PowerDNS-Admin/PDA-Next/blob/main/.github/CONTRIBUTING.md)
 
 If you're interested in participating in the project design discussions, or you want to actively submit work to the
-project then you should check out the [Contribution Guide](./wiki/contributing)!
+project then you should check out the
+[Contribution Guide](https://github.com/PowerDNS-Admin/PDA-Next/blob/main/.github/CONTRIBUTING.md)!
 
 ### [Application Configuration](./wiki/configuration)
 
