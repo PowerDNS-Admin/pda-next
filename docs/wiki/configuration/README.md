@@ -210,15 +210,6 @@ Default: 8080
 
 The port that the development server should listen on.
 
-##### PDA_DJANGO_LOG_LEVEL | type = string
-
-Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
-Default: 'INFO'
-
-The log level that should be used for Django logging.
-
-See https://docs.djangoproject.com/en/3.1/topics/logging/#django-s-logging-configuration for more information.
-
 ##### PDA_EMAIL_BACKEND | type = string | None
 
 Default: None
@@ -323,7 +314,7 @@ Default: None
 
 The Google Analytics ID to use for tracking. If this is not set, Google Analytics will not be used.
 
-##### PDA_LOG_LEVEL | type = string
+##### PDA_LOG_LEVEL_APP | type = string
 
 Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
 Default: 'INFO'
@@ -331,6 +322,15 @@ Default: 'INFO'
 The log level that should be used for the application's logging.
 
 See https://docs.djangoproject.com/en/3.1/topics/logging/#configuring-logging for more information.
+
+##### PDA_LOG_LEVEL_DJANGO | type = string
+
+Options: DEBUG, INFO, WARNING, ERROR, CRITICAL \
+Default: 'INFO'
+
+The log level that should be used for Django logging.
+
+See https://docs.djangoproject.com/en/3.1/topics/logging/#django-s-logging-configuration for more information.
 
 ##### PDA_LOG_PATH | type = string | None
 

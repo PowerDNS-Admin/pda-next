@@ -31,7 +31,6 @@ class AppSettings(BaseSettings):
     debug: bool = False
     dev_server_address: str = '0.0.0.0'
     dev_server_port: int = 8080
-    django_log_level: str = 'INFO'
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
     db_host: str | None = None
     db_name: str | None = None
@@ -54,7 +53,8 @@ class AppSettings(BaseSettings):
     google_analytics_id: str | None = None
     language_code: str = 'en-us'
     language_cookie_name: str = 'pdns_admin_language'
-    log_level: str = 'INFO'
+    log_level_app: str = 'INFO'
+    log_level_django: str = 'INFO'
     log_path: str = '/var/log/pda/pda.log'
     log_retention: int = 30
     log_rotation: str = 'daily'  # daily, weekly, monthly

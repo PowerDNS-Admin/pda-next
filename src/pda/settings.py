@@ -384,11 +384,11 @@ LOGGING = {
     'loggers': {
         'django': {
             'handlers': ['console'],
-            'level': settings.django_log_level,
+            'level': settings.log_level_django,
         },
         'pda': {
             'handlers': ['console'],
-            'level': settings.log_level,
+            'level': settings.log_level_app,
         },
     },
 }
