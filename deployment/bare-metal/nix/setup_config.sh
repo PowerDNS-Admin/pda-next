@@ -20,11 +20,11 @@ PDA_REDIS_URL=redis://127.0.0.1:6379/0
 PDA_SECRET_KEY=$PDA_SECRET_KEY
 PDA_SECURE_HSTS_SECONDS=0
 PDA_SECURE_SSL_REDIRECT=0
-PDA_SITE_EMAIL=admin@powerdnsadmin.org
-PDA_SITE_FROM_EMAIL=demo@powerdnsadmin.org
-PDA_SITE_LOGO=https://demo.powerdnsadmin.org/static/img/logo.png
+PDA_SITE_EMAIL=support@yourdomain.com
+PDA_SITE_FROM_EMAIL=yoursite@yourdomain.com
+PDA_SITE_LOGO=https://pda.yourdomain.com/static/img/logo.png
 PDA_SITE_TITLE=PowerDNS Admin
-PDA_SITE_URL=https://demo.powerdnsadmin.org
-PDA_TIME_ZONE=America/Indiana/Indianapolis
+PDA_SITE_URL=https://pda.yourdomain.com
+PDA_TIME_ZONE=UTC
 PDA_USE_HTTPS_IN_ABSOLUTE_URLS=0
 EOF

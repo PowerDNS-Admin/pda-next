@@ -26,5 +26,3 @@ echo "The environment is ready to run!"
 echo ""
 echo "Please run the \"pda\" command to get started."
 echo ""
-
-export PDACLI_DISTRO
