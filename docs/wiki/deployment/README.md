@@ -1,5 +1,16 @@
 # PDA Next
 
+## TL;DR
+
+To get started quickly with a simple development deployment, execute the following commands on a
+*nix based system with `git` installed:
+
+```
+git clone https://github.com/PowerDNS-Admin/pda-next.git
+cd pda-next
+source deployment/bare-metal/shared/setup.sh
+```
+
 ## Deployment Guides
 
 ### [Bare Metal](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/bare-metal/README.md)
