@@ -33,3 +33,6 @@ def cli(ctx: Environment, dry_run: bool = False):
     c = click.getchar()
 
     click.echo(f'Choice: {c}')
+    click.echo('')
+    click.echo('This configuration tool is not ready for use yet and thus does not save any files.')
+    click.echo('')

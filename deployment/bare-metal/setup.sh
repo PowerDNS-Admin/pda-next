@@ -1,13 +1,13 @@
 #!/usr/bin/env bash
 
 # Load OS meta
-if ! . "deployment/bare-metal/nix/detect_os.sh"; then
+if ! . "deployment/bare-metal/shared/detect_os.sh"; then
   echo "Failed to match supported OS. Halting execution."
   return 1
 fi
 
 # Collect inputs from the user before preparing the environment
-. "deployment/bare-metal/nix/collect_inputs.sh"
+. "deployment/bare-metal/shared/collect_inputs.sh"
 
 # Prepare the system for the project using an OS specific script if it exists, otherwise use a distribution script
 if [ -f "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_OS.sh" ]; then
@@ -19,7 +19,7 @@ else
 fi
 
 # Create a starting environment config file that can be updated by the app's `configure` command
-. "deployment/bare-metal/nix/create_config.sh"
+. "deployment/bare-metal/shared/create_config.sh"
 
 # Run the environment configuration wizard
 pda configure
