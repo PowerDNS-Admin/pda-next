@@ -22,11 +22,11 @@ on:
       - 'feature/**'
       - 'issue/**'
     paths:
-      - !src/locale/**
-      - !src/requirements**
-      - !src/static/css/**
-      - !src/static/images/**
-      - !src/.babelrc
+      - '!src/locale/**'
+      - '!src/requirements**'
+      - '!src/static/css/**'
+      - '!src/static/images/**'
+      - '!src/.babelrc'
       - src/**
       - setup.py
   pull_request:
@@ -38,11 +38,11 @@ on:
       - 'feature/**'
       - 'issue/**'
     paths:
-      - !src/locale/**
-      - !src/requirements**
-      - !src/static/css/**
-      - !src/static/images/**
-      - !src/.babelrc
+      - '!src/locale/**'
+      - '!src/requirements**'
+      - '!src/static/css/**'
+      - '!src/static/images/**'
+      - '!src/.babelrc'
       - src/**
       - setup.py
   schedule:
