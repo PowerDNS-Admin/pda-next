@@ -6,7 +6,7 @@ touch conf/config.yml
 
 # TODO: Only perform this if the file does not exist
 
-tee .env.test &> /dev/null <<EOF
+tee .env.dev &> /dev/null <<EOF
 PDA_ACCOUNT_EMAIL_REQUIRED=1
 PDA_ADMIN_EMAIL=youremail@yourdomain.com
 PDA_ADMIN_FROM_EMAIL=youremail@yourdomain.com

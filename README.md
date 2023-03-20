@@ -28,6 +28,17 @@ an official release announcement before using this project.
 - Provides an API for zone and record management among other features
 - Provides full IDN/Punycode support
 
+## TL;DR
+
+To get started quickly with a simple deployment, execute the following commands on a *nix based system
+with `git` installed:
+
+```
+git clone https://github.com/PowerDNS-Admin/pda-next.git
+cd pda-next
+source deployment/bare-metal/nix/setup.sh
+```
+
 ## [Project Documentation](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/README.md)
 
 ### [Project Information](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/README.md)
