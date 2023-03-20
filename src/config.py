@@ -190,6 +190,9 @@ def load_config(app_settings: AppSettings) -> AppSettings:
     if not isinstance(config_path, str):
         return app_settings
 
+    if len(config_path.strip()) == 0:
+        return app_settings
+
     if not config_path.startswith('/'):
         config_path = os.path.join(app_settings.root_path, config_path)
 
