@@ -6,13 +6,10 @@ if ! . "deployment/bare-metal/nix/load_os_meta.sh"; then
   return 1
 fi
 
-# Load CLI variables
-# shellcheck source=deployment/bare-metal/linux/debian/vars.sh
-. "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO/vars.sh"
+# TODO: Only collect inputs from user and run config setup if the .env file does not exist
 
-# Collect input from the user
-# shellcheck source=deployment/bare-metal/linux/debian/inputs.sh
-. "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO/inputs.sh"
+# Collect inputs from the user
+. "deployment/bare-metal/nix/collect_inputs.sh"
 
 # Prepare the system for the project
 # shellcheck source=deployment/bare-metal/linux/debian/prepare.sh

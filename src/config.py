@@ -28,10 +28,10 @@ class AppSettings(BaseSettings):
     admin_name: str = 'Admin'
     allowed_hosts: list[str] = ['*']
     anymail_amazon_ses_auto_confirm_sns_subscriptions: bool = True
-    anymail_amazon_ses_client_params: dict | None = None
+    anymail_amazon_ses_client_params: dict = {}
     anymail_amazon_ses_configuration_set_name: str | None = None
     anymail_amazon_ses_message_tag_name: str | None = None
-    anymail_amazon_ses_session_params: dict | None = None
+    anymail_amazon_ses_session_params: dict = {}
     anymail_mailersend_api_token: str | None = None
     anymail_mailersend_api_url: str = 'https://api.mailersend.com/v1'
     anymail_mailersend_batch_send_mode: str | None = None
@@ -73,7 +73,7 @@ class AppSettings(BaseSettings):
     db_name: str | None = None
     db_password: str | None = None
     db_path: str = '/var/lib/pda/pda.db'
-    db_port: int | None = None
+    db_port: int = 0
     db_url: str = 'sqlite:///pda.db'
     db_user: str | None = None
     email_backend: str | None = None
@@ -84,7 +84,7 @@ class AppSettings(BaseSettings):
     email_ssl_certfile: str | None = None
     email_ssl_keyfile: str | None = None
     email_subject_prefix: str | None = '[PDA] '
-    email_timeout: int | None = None
+    email_timeout: int = 0
     email_use_ssl: bool = False
     email_use_tls: bool = True
     google_analytics_id: str | None = None
