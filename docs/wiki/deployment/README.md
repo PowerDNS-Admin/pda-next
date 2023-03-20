@@ -8,7 +8,7 @@ with `bash` and `git` installed:
 ```
 git clone https://github.com/PowerDNS-Admin/pda-next.git
 cd pda-next
-deployment/bare-metal/setup.sh
+deployment/setup.sh
 ```
 
 ## Deployment Guides
