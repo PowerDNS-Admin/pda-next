@@ -36,6 +36,9 @@ if [[ "$PDACLI_BUILD_CONF" == '1' ]]; then
   . "deployment/bare-metal/nix/setup_config.sh"
 fi
 
+# shellcheck source=.env.tpl
+[ -f "$PDA_ENV_FILE" ] && . "$PDA_ENV_FILE"
+
 echo ""
 echo "The environment is ready to run!"
 echo ""
