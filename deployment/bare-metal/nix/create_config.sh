@@ -14,15 +14,17 @@ PDACLI_ENV_VARS_SET=(
 )
 
 # Generate a new secret_key setting value
+echo "Generating new secret key for the environment configuration file..."
 # shellcheck disable=SC2034
 PDA_SECRET_KEY=$(pda gen_salt -r)
 
-# Create a variable to hold the environment variable settings that will be saved to the .env.dev file
+# Create a variable to hold the environment variable settings that will be saved to the environment configuration file
 env_data=''
 for var_name in "${PDACLI_ENV_VARS_SET[@]}"
 do
   env_data+="$var_name='${!var_name}'\n"
 done
 
-# Save the environment variables to the .env.dev file
-echo -e "$env_data" >> "\n$PDA_ENV_FILE"
+# Save the environment variables to the configured file path
+echo "Saving environment configuration to: $PDA_ENV_FILE"
+echo -e "\n$env_data" >> "$PDA_ENV_FILE"

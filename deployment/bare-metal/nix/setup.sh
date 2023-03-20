@@ -21,11 +21,26 @@ fi
 # Create a starting environment config file that can be updated by the app's `configure` command
 . "deployment/bare-metal/nix/create_config.sh"
 
-echo ""
-echo "The environment is ready to run!"
-echo ""
-echo "Please run the \"pda\" command to get started."
-echo ""
-echo "For more information, please visit:"
-echo "https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/README.md"
-echo ""
+# Run the environment configuration wizard
+pda configure
+
+# Capture the exit status of the configure command
+config_status=$?
+
+if [ "$config_status" -ne 0 ]; then
+  echo ""
+  echo "Failed to configure the environment. Halting execution."
+  echo ""
+  echo "Please try to run the \"pda configure\" command manually to troubleshoot the issue."
+  echo ""
+  return 1
+else
+  echo ""
+  echo "The environment is ready to run!"
+  echo ""
+  echo "Please run the \"pda\" command to get started."
+  echo ""
+  echo "For more information, please visit:"
+  echo "https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/README.md"
+  echo ""
+fi
