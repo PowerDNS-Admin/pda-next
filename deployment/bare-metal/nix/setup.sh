@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Load OS meta
-if ! . "deployment/bare-metal/nix/load_os_meta.sh"; then
+if ! . "deployment/bare-metal/nix/detect_os.sh"; then
   echo "Failed to match supported OS. Halting execution."
   return 1
 fi
