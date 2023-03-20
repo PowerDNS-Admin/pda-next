@@ -601,6 +601,35 @@ This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.bac
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#email-use-ssl for more information.
 
+#### PDA_ENV_FILE | type = string | None
+
+Default: '/etc/pda/.env'
+
+The path to the environment file that should be used to load environment variables during application startup.
+This file should be a standard `.env` file that can be parsed by the Pydantic `BaseSettings` class.
+
+See https://docs.pydantic.dev/usage/settings/ for more information.
+
+#### PDA_ENV_FILE_ENCODING | type = string | None
+
+Default: 'UTF-8'
+
+The encoding that should be used when reading the environment file that should be used to load environment
+variables during application startup. This setting is only used if `PDA_ENV_FILE` is set.
+
+See https://docs.pydantic.dev/usage/settings/ for more information.
+
+#### PDA_ENV_SECRETS_DIR | type = string | None
+
+Default: '/var/run/secrets'
+
+The path to the directory that should be used to load secrets from during application startup. This directory
+should contain files that contain values to be loaded into application settings. The name of the file should
+be the name of the setting that should be loaded. For example, if the file is named `example_option`, then
+the contents of the file will be loaded into the `example_option` setting.
+
+See https://docs.pydantic.dev/usage/settings/ for more information.
+
 #### PDA_ENV_TYPE | type = string | None
 
 Default: 'production'

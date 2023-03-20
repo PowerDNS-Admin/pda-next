@@ -85,6 +85,9 @@ class AppSettings(BaseSettings):
     email_timeout: int = 0
     email_use_ssl: bool = False
     email_use_tls: bool = True
+    env_file: str = '/etc/pda/.env'
+    env_file_encoding: str = 'UTF-8'
+    env_secrets_dir: str = '/var/run/secrets'
     env_type: str | None = 'production'  # development, production
     google_analytics_id: str | None = None
     language_code: str = 'en-us'
@@ -143,7 +146,7 @@ class AppSettings(BaseSettings):
         env_prefix = 'pda_'
 
 
-def load_settings(env_file_path: str = '.env', env_file_encoding: str = 'UTF-8',
+def load_settings(env_file_path: str = '/etc/pda/.env', env_file_encoding: str = 'UTF-8',
                   secrets_path: str | None = None) -> AppSettings:
     """ Loads an AppSettings instance based on the given environment file and secrets directory. """
 
@@ -240,7 +243,7 @@ def save_config(app_settings: AppSettings, config: dict[str, any]) -> bool:
 
 
 # Define the default environment file path to load settings from
-env_conf_path: str = os.getenv('PDA_ENV_FILE', str(ROOT_PATH / '.env'))
+env_conf_path: str = os.getenv('PDA_ENV_FILE', '/etc/pda/.env')
 
 # Load various Django settings from an environment file and the local environment
 settings: AppSettings = load_settings(env_conf_path)
