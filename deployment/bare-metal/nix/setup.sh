@@ -6,20 +6,38 @@ if ! . "deployment/bare-metal/nix/load_os_meta.sh"; then
   return 1
 fi
 
-# TODO: Only collect inputs from user and run config setup if the .env file does not exist
+# Load the default environment configuration values
+source ".env.tpl"
 
-# Collect inputs from the user
-. "deployment/bare-metal/nix/collect_inputs.sh"
+PDACLI_BUILD_CONF=${PDACLI_BUILD_CONF:-''}
+PDA_ENV_FILE=${PDA_ENV_FILE:-'.env'}
+PDA_ENV_FILE_ENCODING=${PDA_ENV_FILE_ENCODING:-'UTF-8'}
+PDA_ENV_SECRETS_DIR=${PDA_ENV_SECRETS_DIR:-'/run/secrets'}
+
+if [[ "$PDACLI_BUILD_CONF" == '' ]] && [[ ${#PDA_ENV_FILE} -gt 0 ]] && [ ! -f "$PDA_ENV_FILE" ]; then
+  PDACLI_BUILD_CONF='1'
+fi
+
+# Collect inputs from the user if the configuration builder has been activated
+if [[ "$PDACLI_BUILD_CONF" == '1' ]]; then
+  . "deployment/bare-metal/nix/collect_inputs.sh"
+else
+  echo "Skipping configuration builder."
+fi
 
 # Prepare the system for the project
 # shellcheck source=deployment/bare-metal/linux/debian/prepare.sh
 . "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO/prepare.sh"
 
-# Setup the environment and yaml configuration files
-. "deployment/bare-metal/nix/setup_config.sh"
+# Setup the environment and yaml configuration files if the configuration builder has been activated
+if [[ "$PDACLI_BUILD_CONF" == '1' ]]; then
+  . "deployment/bare-metal/nix/setup_config.sh"
+fi
 
 echo ""
 echo "The environment is ready to run!"
 echo ""
 echo "Please run the \"pda\" command to get started."
 echo ""
+
+export PDA_ENV_FILE PDA_ENV_FILE_ENCODING PDA_ENV_SECRETS_DIR

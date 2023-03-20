@@ -1,8 +1,5 @@
 #!/usr/bin/env bash
 
-# Load the default environment configuration values
-source ".env.tpl"
-
 # Create array to track which environment variables have been set
 PDACLI_ENV_VARS_SET=()
 
