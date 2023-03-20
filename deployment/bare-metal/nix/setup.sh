@@ -33,7 +33,7 @@ fi
 
 # Setup the environment and yaml configuration files if the configuration builder has been activated
 if [[ "$PDACLI_BUILD_CONF" == '1' ]]; then
-  . "deployment/bare-metal/nix/setup_config.sh"
+  . "deployment/bare-metal/nix/create_config.sh"
 fi
 
 # shellcheck source=.env.tpl
