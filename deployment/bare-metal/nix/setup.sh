@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 # Load OS meta
-if ! . "deployment/bare-metal/linux/shared/load_os_meta.sh"; then
+if ! . "deployment/bare-metal/nix/load_os_meta.sh"; then
   echo "Failed to match supported OS. Halting execution."
   return 1
 fi
@@ -19,7 +19,7 @@ fi
 . "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO/prepare.sh"
 
 # Setup the environment and yaml configuration files
-. "deployment/bare-metal/linux/shared/setup_config.sh"
+. "deployment/bare-metal/nix/setup_config.sh"
 
 echo ""
 echo "The environment is ready to run!"

@@ -52,7 +52,7 @@ if [[ $PDACLI_PLATFORM == 'bsd' ]]; then
 
 elif [[ $PDACLI_PLATFORM == 'linux' ]]; then
 
-  if [[ $PDACLI_OS == 'debian' ]] || [[ $PDACLI_OS == 'ubuntu' ]]; then
+  if [[ $PDACLI_OS == 'debian' ]] || [[ $PDACLI_OS == 'ubuntu' ]] || [[ $PDACLI_OS == 'kubuntu' ]]; then
     PDACLI_DISTRO='debian'
   else
     echo "Unsupported Linux distribution: $PDACLI_OS"

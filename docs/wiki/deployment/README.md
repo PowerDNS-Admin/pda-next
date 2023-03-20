@@ -8,7 +8,7 @@ To get started quickly with a simple development deployment, execute the followi
 ```
 git clone https://github.com/PowerDNS-Admin/pda-next.git
 cd pda-next
-source deployment/bare-metal/shared/setup.sh
+source deployment/bare-metal/nix/setup.sh
 ```
 
 ## Deployment Guides

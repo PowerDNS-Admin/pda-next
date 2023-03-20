@@ -4,6 +4,8 @@ PDA_SECRET_KEY=$(pda gen_salt -r)
 
 touch conf/config.yml
 
+# TODO: Only perform this if the file does not exist
+
 tee .env.test &> /dev/null <<EOF
 PDA_ACCOUNT_EMAIL_REQUIRED=1
 PDA_ADMIN_EMAIL=youremail@yourdomain.com

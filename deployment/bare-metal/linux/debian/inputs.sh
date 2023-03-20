@@ -1,3 +1,3 @@
 #!/usr/bin/env bash
 
-# TODO: Collect inputs from user
+# TODO: Only collect inputs from user if the .env file does not exist
