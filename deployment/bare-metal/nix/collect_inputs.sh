@@ -1,55 +1,66 @@
 #!/usr/bin/env bash
 
-# Create array to track which environment variables have been set
-PDACLI_ENV_VARS_SET=()
+PDACLI_ENV_TYPE='production'
+PDACLI_DB_ENGINE='sqlite'
 
-get_admin_contact () {
-  echo 'Enter the application administrator''s email and then press return ['"$PDA_ADMIN_EMAIL"']:'
-  read -r tmp1
-  tmp1=$(echo "$tmp1" | xargs)
-
-  echo 'Enter the application administrator''s full name and then press return ['"$PDA_ADMIN_NAME"']:'
-  read -r tmp2
-  tmp2=$(echo "$tmp2" | xargs)
-
-  if [[ ${#tmp1} -gt 0 ]] && [[ "$tmp1" != "$PDA_ADMIN_EMAIL" ]]; then
-    # shellcheck disable=SC2034
-    PDA_ADMIN_EMAIL="$tmp1"
-    PDACLI_ENV_VARS_SET+=("PDA_ADMIN_EMAIL")
-  fi
-
-  if [[ ${#tmp2} -gt 0 ]] && [[ "$tmp2" != "$PDA_ADMIN_NAME" ]]; then
-    # shellcheck disable=SC2034
-    PDA_ADMIN_NAME="$tmp2"
-    PDACLI_ENV_VARS_SET+=("PDA_ADMIN_NAME")
-  fi
-}
-
-get_app_email () {
-  echo 'Enter the from email address to be used when sending error reports and then press return ['"$PDA_ADMIN_FROM_EMAIL"']:'
+get_environment_type () {
+  echo "What type of environment is this?"
+  echo "  1) Production"
+  echo "  2) Development"
+  echo ""
+  echo "Enter your selection and then press return ['$PDACLI_ENV_TYPE']:"
   read -r tmp
   tmp=$(echo "$tmp" | xargs)
-
-  if [[ ${#tmp} -gt 0 ]] && [[ "$tmp" != "$PDA_ADMIN_FROM_EMAIL" ]]; then
-    # shellcheck disable=SC2034
-    PDA_ADMIN_FROM_EMAIL="$tmp"
-    PDACLI_ENV_VARS_SET+=("PDA_ADMIN_FROM_EMAIL")
-  fi
-}
-
-get_config_path () {
-  echo 'Enter the absolute or relative path to the application''s yaml config file and then press return ['"$PDA_CONFIG_PATH"']:'
-  read -r tmp
-  tmp=$(echo "$tmp" | xargs)
+  tmp=$(echo "$tmp" | tr '[:upper:]' '[:lower:]')
 
   if [[ ${#tmp} -gt 0 ]] && [[ "$tmp" != "$PDA_CONFIG_PATH" ]]; then
+
+    if [[ "$tmp" == '1' ]] || [[ "$tmp" == 'prod' ]]; then
+      tmp='production'
+    elif [[ "$tmp" == '2' ]] || [[ "$tmp" == 'dev' ]]; then
+      tmp='development'
+    fi
+
     # shellcheck disable=SC2034
-    PDA_CONFIG_PATH="$tmp"
-    PDACLI_ENV_VARS_SET+=("PDA_CONFIG_PATH")
+    PDACLI_ENV_TYPE="$tmp"
   fi
+
+  echo ""
+}
+
+get_db_engine () {
+  echo "Which database engine will you be using?"
+  echo "  1) MySQL"
+  echo "  2) PostgreSQL"
+  echo "  3) SQLite"
+  echo ""
+  echo "Enter your selection and then press return ['$PDACLI_DB_ENGINE']:"
+  read -r tmp
+  tmp=$(echo "$tmp" | xargs)
+  tmp=$(echo "$tmp" | tr '[:upper:]' '[:lower:]')
+
+  if [[ ${#tmp} -gt 0 ]] && [[ "$tmp" != "$PDA_CONFIG_PATH" ]]; then
+
+    if [[ "$tmp" == '1' ]] || [[ "$tmp" == 'mysql' ]]; then
+      tmp='mysql'
+    elif [[ "$tmp" == '2' ]] || [[ "$tmp" == 'pgsql' ]] || [[ "$tmp" == 'postgresql' ]]; then
+      tmp='postgres'
+    elif [[ "$tmp" == '3' ]] || [[ "$tmp" == 'sqlite3' ]]; then
+      tmp='sqlite'
+    fi
+
+    # shellcheck disable=SC2034
+    PDACLI_DB_ENGINE="$tmp"
+  fi
+
+  echo ""
 }
 
 # Collect inputs from the user
-get_app_email
-get_admin_contact
-get_config_path
+get_environment_type
+get_db_engine
+
+echo "Setup Configuration:"
+echo "  - Environment Type: $PDACLI_ENV_TYPE"
+echo "  - Database Engine: $PDACLI_DB_ENGINE"
+echo ""

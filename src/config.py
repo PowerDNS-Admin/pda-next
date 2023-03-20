@@ -114,7 +114,7 @@ class AppSettings(BaseSettings):
     secure_ssl_redirect: bool = True
     sentry_dsn: str = ''
     session_cookie_secure: bool = True
-    site_description: str = 'PowerDNS Admin is a web interface for PowerDNS'
+    site_description: str = 'A PowerDNS web interface with advanced features.'
     site_email: str = 'pda@yourdomain.com'
     site_from_email: str = 'pda@yourdomain.com'
     site_logo: str | None = None
