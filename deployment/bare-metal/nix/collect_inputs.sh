@@ -60,7 +60,7 @@ get_db_engine () {
 get_environment_type
 get_db_engine
 
-echo "Setup Configuration:"
+echo "Environment Configuration:"
 echo "  - Environment Type: $PDACLI_ENV_TYPE"
 echo "  - Database Engine: $PDACLI_DB_ENGINE"
 echo ""
