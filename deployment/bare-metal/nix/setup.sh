@@ -27,9 +27,14 @@ else
   echo "Skipping configuration builder."
 fi
 
-# Prepare the system for the project
-# shellcheck source=deployment/bare-metal/linux/debian/prepare.sh
-. "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO/prepare.sh"
+# Prepare the system for the project using an OS specific script if it exists, otherwise use a distribution script
+if [ -f "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_OS.sh" ]; then
+  # shellcheck source=deployment/bare-metal/linux/debian.sh
+  . "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_OS.sh"
+else
+  # shellcheck source=deployment/bare-metal/linux/debian.sh
+  . "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO.sh"
+fi
 
 # Setup the environment and yaml configuration files if the configuration builder has been activated
 if [[ "$PDACLI_BUILD_CONF" == '1' ]]; then
