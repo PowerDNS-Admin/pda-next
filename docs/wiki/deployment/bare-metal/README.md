@@ -4,7 +4,7 @@
 
 ### [BSD](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/bare-metal/bsd/README.md)
 
-- [FreeBSD](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/bare-metal/bsd/freebsd-linux.md)
+- [FreeBSD](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/bare-metal/bsd/freebsd.md)
 
 ### [Linux](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/deployment/bare-metal/linux/README.md)
 
