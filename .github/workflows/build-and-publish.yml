@@ -9,15 +9,10 @@ on:
       - '-main'
     tags:
       - 'v*.*.*'
-    paths-ignore:
-      - .github/**
-      - bin/**
-      - conf/**
-      - docs/**
-      - .env.tpl
-      - .gitignore
-      - LICENSE
-      - README.md
+    paths:
+      - deployment/**
+      - src/**
+      - setup.py
 
 jobs:
   build-and-push-docker-image:

@@ -21,20 +21,14 @@ on:
       - 'dependabot/**'
       - 'feature/**'
       - 'issue/**'
-    paths-ignore:
-      - .github/**
-      - bin/**
-      - conf/**
-      - docs/**
-      - src/locale/**
-      - src/requirements**
-      - src/static/css/**
-      - src/static/images/**
-      - src/.babelrc
-      - .env.tpl
-      - .gitignore
-      - LICENSE
-      - README.md
+    paths:
+      - !src/locale/**
+      - !src/requirements**
+      - !src/static/css/**
+      - !src/static/images/**
+      - !src/.babelrc
+      - src/**
+      - setup.py
   pull_request:
     # The branches below must be a subset of the branches above
     branches:
@@ -43,20 +37,14 @@ on:
       - 'dependabot/**'
       - 'feature/**'
       - 'issue/**'
-    paths-ignore:
-      - .github/**
-      - bin/**
-      - conf/**
-      - docs/**
-      - src/locale/**
-      - src/requirements**
-      - src/static/css/**
-      - src/static/images/**
-      - src/.babelrc
-      - .env.tpl
-      - .gitignore
-      - LICENSE
-      - README.md
+    paths:
+      - !src/locale/**
+      - !src/requirements**
+      - !src/static/css/**
+      - !src/static/images/**
+      - !src/.babelrc
+      - src/**
+      - setup.py
   schedule:
     - cron: '45 2 * * 2'
 
