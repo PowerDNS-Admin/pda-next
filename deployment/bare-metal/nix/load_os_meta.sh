@@ -79,5 +79,3 @@ if [[ $PDACLI_DISTRO == '' ]]; then
 fi
 
 PDACLI_DISTRO=$(echo "$PDACLI_DISTRO" | tr '[:upper:]' '[:lower:]')
-
-export PDACLI_DISTRO PDACLI_OS PDACLI_PLATFORM PDACLI_VER

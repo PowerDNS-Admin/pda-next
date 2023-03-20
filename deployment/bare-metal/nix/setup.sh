@@ -10,6 +10,8 @@ fi
 source ".env.tpl"
 
 PDACLI_BUILD_CONF=${PDACLI_BUILD_CONF:-''}
+PDACLI_PREPARE_ENV=${PDACLI_PREPARE_ENV:-'1'}
+PDACLI_LOAD_ENV=${PDACLI_LOAD_ENV:-'1'}
 PDA_ENV_FILE=${PDA_ENV_FILE:-'.env'}
 PDA_ENV_FILE_ENCODING=${PDA_ENV_FILE_ENCODING:-'UTF-8'}
 PDA_ENV_SECRETS_DIR=${PDA_ENV_SECRETS_DIR:-'/run/secrets'}
@@ -39,5 +41,3 @@ echo "The environment is ready to run!"
 echo ""
 echo "Please run the \"pda\" command to get started."
 echo ""
-
-export PDA_ENV_FILE PDA_ENV_FILE_ENCODING PDA_ENV_SECRETS_DIR

@@ -53,12 +53,3 @@ get_config_path () {
 get_app_email
 get_admin_contact
 get_config_path
-
-# Export the environment variables that have been set
-for var_name in "${PDACLI_ENV_VARS_SET[@]}"
-do
-  # shellcheck disable=SC2163
-   export "$var_name"
-done
-
-export PDACLI_ENV_VARS_SET
