@@ -3,7 +3,7 @@
 ## TL;DR
 
 To get started quickly with a simple deployment, execute the following commands on a *nix based system
-with `git` installed:
+with `bash` and `git` installed:
 
 ```
 git clone https://github.com/PowerDNS-Admin/pda-next.git
