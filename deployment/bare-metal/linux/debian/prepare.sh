@@ -19,8 +19,8 @@ PDACLI_PKGS=(build-essential python3 python3-dev python3-venv)
 #PDACLI_PKGS+=("'package-name1' 'package-name2' 'package-name3'")
 
 # Install missing system packages
-#$PDACLI_CMD_PREFIX apt update
-#$PDACLI_CMD_PREFIX apt-get -y --ignore-missing install "${PDACLI_PKGS[@]}"
+$PDACLI_CMD_PREFIX apt update
+$PDACLI_CMD_PREFIX apt-get -y --ignore-missing install "${PDACLI_PKGS[@]}"
 
 # Setup the Python virtual environment
 $PDACLI_ENV_PATH python3 -m venv venv
@@ -29,6 +29,6 @@ $PDACLI_ENV_PATH python3 -m venv venv
 . venv/bin/activate
 
 # Install the required pip modules based on the configuration in setup.py
-#$PDACLI_PIP_PATH install --editable .
+$PDACLI_PIP_PATH install --editable .
 
 export PDACLI_CMD_PREFIX PDACLI_ENV_PATH PDACLI_PIP_PATH PDACLI_PKGS
