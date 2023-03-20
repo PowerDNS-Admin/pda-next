@@ -18,6 +18,9 @@ else
   . "deployment/bare-metal/$PDACLI_PLATFORM/$PDACLI_DISTRO.sh"
 fi
 
+# Create a starting environment config file that can be updated by the app's `configure` command
+. "deployment/bare-metal/nix/create_config.sh"
+
 echo ""
 echo "The environment is ready to run!"
 echo ""

@@ -66,15 +66,13 @@ class AppSettings(BaseSettings):
     config_path: str = '/etc/pda/config.yml'
     csrf_cookie_secure: bool = True
     debug: bool = False
-    dev_server_address: str = '0.0.0.0'
-    dev_server_port: int = 8080
     db_engine: str = 'sqlite'  # mysql, postgresql, sqlite
     db_host: str | None = None
     db_name: str | None = None
     db_password: str | None = None
-    db_path: str = '/var/lib/pda/pda.db'
+    db_path: str | None = '/var/lib/pda/pda.db'
     db_port: int = 0
-    db_url: str = 'sqlite:///pda.db'
+    db_url: str | None = None
     db_user: str | None = None
     email_backend: str | None = None
     email_host: str = 'localhost'
@@ -87,6 +85,7 @@ class AppSettings(BaseSettings):
     email_timeout: int = 0
     email_use_ssl: bool = False
     email_use_tls: bool = True
+    env_type: str | None = 'production'  # development, production
     google_analytics_id: str | None = None
     language_code: str = 'en-us'
     language_cookie_name: str = 'pdns_admin_language'
@@ -113,6 +112,8 @@ class AppSettings(BaseSettings):
     secure_proxy_ssl_header_value: str = 'https'
     secure_ssl_redirect: bool = True
     sentry_dsn: str = ''
+    server_address: str = '0.0.0.0'
+    server_port: int = 8080
     session_cookie_secure: bool = True
     site_description: str = 'A PowerDNS web interface with advanced features.'
     site_email: str = 'pda@yourdomain.com'
@@ -184,6 +185,7 @@ def load_settings(env_file_path: str = '.env', env_file_encoding: str = 'UTF-8',
 
 def load_config(app_settings: AppSettings) -> AppSettings:
     """ Loads the app's configuration from the given configuration file. """
+    from yaml import YAMLError
 
     config_path: str | None = app_settings.config_path
 
@@ -196,15 +198,25 @@ def load_config(app_settings: AppSettings) -> AppSettings:
     if not config_path.startswith('/'):
         config_path = os.path.join(app_settings.root_path, config_path)
 
-    if not os.path.exists(config_path):
-        raise Exception(f'The given path for the configuration file does not exist: {config_path}')
-
-    if not os.path.isfile(config_path):
-        raise Exception(f'The given path for the configuration file is not a file: {config_path}')
-
-    with open(config_path, 'r') as f:
-        app_settings.config = yaml.load(f, Loader=yaml.FullLoader)
-        f.close()
+    try:
+        with open(config_path, 'r') as f:
+            app_settings.config = yaml.load(f, Loader=yaml.FullLoader)
+            f.close()
+    except FileNotFoundError:
+        # print(f'The given path for the configuration file does not exist: {config_path}')
+        pass
+    except IsADirectoryError:
+        # print(f'The given path for the configuration file is not a file: {config_path}')
+        pass
+    except PermissionError:
+        # print(f'Permission denied when trying to read the configuration file: {config_path}')
+        pass
+    except UnicodeDecodeError:
+        # print(f'Failed to decode the configuration file: {config_path}')
+        pass
+    except YAMLError as e:
+        # print(f'Failed to parse the configuration file "{config_path}": {e}')
+        pass
 
     return app_settings
 

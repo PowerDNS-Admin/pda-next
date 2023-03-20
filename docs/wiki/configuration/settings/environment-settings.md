@@ -435,7 +435,7 @@ The password to use for the database connection. This setting is only used if `P
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-#### PDA_DB_PATH | type = string
+#### PDA_DB_PATH | type = string | None
 
 Default: '/var/lib/pda/pda.db'
 
@@ -444,15 +444,15 @@ is not set.
 
 #### PDA_DB_PORT | type = int | None
 
-Default: None
+Default: 0
 
 The port to use for the database connection. This setting is only used if `PDA_DB_URL` is not set.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#databases for more information.
 
-#### PDA_DB_URL | type = string
+#### PDA_DB_URL | type = string | None
 
-Default: 'sqlite:////var/lib/pda/pda.db'
+Default: None
 
 Defines the database connection string to use for the application. Currently, there are three supported database
 engines: MySQL, PostgreSQL, and SQLite.
@@ -492,18 +492,6 @@ Determines whether the application should run in debug mode. If this is set to T
 display detailed error pages when an exception occurs.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#debug for more information.
-
-#### PDA_DEV_SERVER_ADDRESS | type = string
-
-Default: '0.0.0.0'
-
-The address that the development server should listen on.
-
-#### PDA_DEV_SERVER_PORT | type = int
-
-Default: 8080
-
-The port that the development server should listen on.
 
 #### PDA_EMAIL_BACKEND | type = string | None
 
@@ -612,6 +600,15 @@ Determines whether SSL should be used when connecting to the SMTP server that sh
 This setting is only used if `PDA_EMAIL_BACKEND` is set to `django.core.mail.backends.smtp.EmailBackend`.
 
 See https://docs.djangoproject.com/en/3.1/ref/settings/#email-use-ssl for more information.
+
+#### PDA_ENV_TYPE | type = string | None
+
+Default: 'production'
+
+The type of environment that the application is running in. This setting is used to determine which path to take
+in the course of various operations. For example, if this is set to 'development', then the application will use
+the built-in Django development server to serve the application. If this is set to 'production', then the
+application will use the Gunicorn HTTP/WSGI server to serve the application.
 
 #### PDA_GOOGLE_ANALYTICS_ID | type = string | None
 
@@ -791,6 +788,18 @@ Default: None
 
 The DSN that should be used to connect to Sentry. If this is not set, the application's logging will not be
 sent to Sentry. This setting is only used if `PDA_LOG_TO_SENTRY` is set to `True`.
+
+#### PDA_SERVER_ADDRESS | type = string
+
+Default: '0.0.0.0'
+
+The address that the server should bind to.
+
+#### PDA_SERVER_PORT | type = int
+
+Default: 8080
+
+The port that the server should bind to.
 
 #### PDA_SESSION_COOKIE_SECURE | type = bool
 

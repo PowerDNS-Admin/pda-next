@@ -4,13 +4,13 @@
 PDACLI_PKGS=(build-essential python3 python3-dev python3-venv)
 
 # Add additional packages based on the user's input
-if [[ "$PDACLI_ENV_TYPE" == 'production' ]]; then
+if [[ "$PDA_ENV_TYPE" == 'production' ]]; then
   PDACLI_PKGS+=(gunicorn)
 fi
 
-if [[ "$PDACLI_DB_ENGINE" == 'mysql' ]]; then
+if [[ "$PDA_DB_ENGINE" == 'mysql' ]]; then
   PDACLI_PKGS+=(libmysqlclient-dev)
-elif [[ "$PDACLI_DB_ENGINE" == 'postgres' ]]; then
+elif [[ "$PDA_DB_ENGINE" == 'postgres' ]]; then
   PDACLI_PKGS+=(libpq-dev)
 fi
 
@@ -25,7 +25,7 @@ $PDACLI_CMD_PREFIX apt update
 $PDACLI_CMD_PREFIX apt-get -y --ignore-missing install "${PDACLI_PKGS[@]}"
 
 # Setup Python virtual environment and activate it only if the environment type is development
-if [[ "$PDACLI_ENV_TYPE" == 'development' ]]; then
+if [[ "$PDA_ENV_TYPE" == 'development' ]]; then
   # Setup the Python virtual environment
   $(which env) python3 -m venv venv
 

@@ -1,14 +1,14 @@
 #!/usr/bin/env bash
 
-PDACLI_ENV_TYPE='production'
-PDACLI_DB_ENGINE='sqlite'
+PDA_ENV_TYPE='production'
+PDA_DB_ENGINE='sqlite'
 
 get_environment_type () {
   echo "What type of environment is this?"
   echo "  1) Production"
   echo "  2) Development"
   echo ""
-  echo "Enter your selection and then press return ['$PDACLI_ENV_TYPE']:"
+  echo "Enter your selection and then press return ['$PDA_ENV_TYPE']:"
   read -r tmp
   tmp=$(echo "$tmp" | xargs)
   tmp=$(echo "$tmp" | tr '[:upper:]' '[:lower:]')
@@ -22,7 +22,7 @@ get_environment_type () {
     fi
 
     # shellcheck disable=SC2034
-    PDACLI_ENV_TYPE="$tmp"
+    PDA_ENV_TYPE="$tmp"
   fi
 
   echo ""
@@ -34,7 +34,7 @@ get_db_engine () {
   echo "  2) PostgreSQL"
   echo "  3) SQLite"
   echo ""
-  echo "Enter your selection and then press return ['$PDACLI_DB_ENGINE']:"
+  echo "Enter your selection and then press return ['$PDA_DB_ENGINE']:"
   read -r tmp
   tmp=$(echo "$tmp" | xargs)
   tmp=$(echo "$tmp" | tr '[:upper:]' '[:lower:]')
@@ -50,7 +50,7 @@ get_db_engine () {
     fi
 
     # shellcheck disable=SC2034
-    PDACLI_DB_ENGINE="$tmp"
+    PDA_DB_ENGINE="$tmp"
   fi
 
   echo ""
@@ -61,6 +61,6 @@ get_environment_type
 get_db_engine
 
 echo "Environment Configuration:"
-echo "  - Environment Type: $PDACLI_ENV_TYPE"
-echo "  - Database Engine: $PDACLI_DB_ENGINE"
+echo "  - Environment Type: $PDA_ENV_TYPE"
+echo "  - Database Engine: $PDA_DB_ENGINE"
 echo ""
