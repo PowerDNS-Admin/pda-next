@@ -114,6 +114,7 @@ class AppSettings(BaseSettings):
     sentry_dsn: str = ''
     server_address: str = '0.0.0.0'
     server_port: int = 8080
+    server_type: str | None = 'gunicorn'  # gunicorn, uvicorn, django
     session_cookie_secure: bool = True
     site_description: str = 'A PowerDNS web interface with advanced features.'
     site_email: str = 'pda@yourdomain.com'
@@ -130,6 +131,8 @@ class AppSettings(BaseSettings):
     use_i18n: bool = True
     use_l10n: bool = True
     use_tz: bool = True
+    venv_enabled: bool = False
+    venv_path: str | None = 'venv'
 
     """ The following settings are automatically loaded at application startup. """
 

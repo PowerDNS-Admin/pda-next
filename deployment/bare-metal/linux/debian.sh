@@ -25,11 +25,11 @@ $PDACLI_CMD_PREFIX apt update
 $PDACLI_CMD_PREFIX apt-get -y --ignore-missing install "${PDACLI_PKGS[@]}"
 
 # Setup Python virtual environment and activate it only if the environment type is development
-if [[ "$PDA_ENV_TYPE" == 'development' ]]; then
-  # Setup the Python virtual environment
+if [[ "$PDA_USE_VENV" == '1' ]]; then
+  # Create a Python virtual environment
   $(which env) python3 -m venv venv
 
-  # Load the Python virtual environment
+  # Activate the Python virtual environment
   . venv/bin/activate
 fi
 

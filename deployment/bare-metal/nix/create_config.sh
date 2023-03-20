@@ -8,6 +8,9 @@ PDACLI_ENV_VARS_SET=(
   'PDA_DB_ENGINE'
   'PDA_ENV_TYPE'
   'PDA_SECRET_KEY'
+  'PDA_SERVER_TYPE'
+  'PDA_VENV_ENABLED'
+  'PDA_VENV_PATH'
 )
 
 # Generate a new secret_key setting value

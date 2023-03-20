@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
-PDA_ENV_TYPE='production'
 PDA_DB_ENGINE='sqlite'
+PDA_ENV_TYPE='production'
+PDA_SERVER_TYPE=${PDA_SERVER_TYPE:-'gunicorn'}
+PDA_VENV_ENABLED=${PDA_VENV_ENABLED:-0}
+PDA_VENV_PATH=${PDA_VENV_PATH:-'venv'}
 
 get_environment_type () {
   echo "What type of environment is this?"

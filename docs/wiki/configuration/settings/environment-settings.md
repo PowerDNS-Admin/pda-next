@@ -801,6 +801,17 @@ Default: 8080
 
 The port that the server should bind to.
 
+#### PDA_SERVER_TYPE | type = string | None
+
+Options: gunicorn, uvicorn, django
+Default: 'gunicorn'
+
+The type of server that should be used to serve the application. This setting is used to determine which
+server to run when executing the `pda run` command. The following values are supported:
+    - gunicorn
+    - uvicorn
+    - django
+
 #### PDA_SESSION_COOKIE_SECURE | type = bool
 
 Default: True
@@ -920,3 +931,19 @@ Default: True
 Determines whether the application should use timezones.
 
 See https://docs.djangoproject.com/en/3.1/topics/i18n/timezones/ for more information.
+
+#### PDA_VENV_ENABLED | type = bool
+
+Default: False
+
+Determines whether the application should use a virtual environment. If this is set to `True`, the environment
+setup scripts will attempt to create and activate a virtual environment. Additionally, the `pda run` command
+will attempt to activate the virtual environment before running the application.
+
+#### PDA_VENV_PATH | type = string | None
+
+Default: 'venv'
+
+The path to the virtual environment that should be used for the application. This setting is only used if
+`PDA_VENV_ENABLED` is set to `True`. Additionally, this is the path where a virtual environment will be created
+if one does not already exist.
