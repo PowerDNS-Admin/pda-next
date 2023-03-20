@@ -18,4 +18,4 @@ do
 done
 
 # Save the environment variables to the .env.dev file
-echo -e "$env_data" > .env.dev
+echo -e "$env_data" > "$PDA_ENV_FILE"
