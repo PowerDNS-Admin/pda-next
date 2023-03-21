@@ -27,10 +27,10 @@ similar to Docker-style secrets. To use this feature, you simply create a file w
 application setting you want to set and store it in the directory specified by the `env_secrets_dir` setting
 or the `PDA_ENV_SECRETS_DIR` environment variable.
 
-So for example, say you want to set the value of an application setting named `example_setting`.
+So for example, say you want to set the value of an application setting named `example_option`.
 Assuming that `env_secrets_dir` or `PDA_ENV_SECRETS_DIR` is set to `/var/run/secrets`, one would create a file
-named `example_setting` and store it in the `/var/run/secrets` directory. The contents of the file would be
-the value of the `example_setting` setting. The application will automatically detect the file and use its
+named `example_option` and store it in the `/var/run/secrets` directory. The contents of the file would be
+the value of the `example_option` setting. The application will automatically detect the file and use its
 contents as the value of the setting.
 
 ### [Application Settings](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md)
