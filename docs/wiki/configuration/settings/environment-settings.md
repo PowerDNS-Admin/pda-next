@@ -621,7 +621,7 @@ See https://docs.pydantic.dev/usage/settings/ for more information.
 
 #### PDA_ENV_SECRETS_DIR | type = string | None
 
-Default: '/var/run/secrets'
+Default: '/run/secrets'
 
 The path to the directory that should be used to load secrets from during application startup. This directory
 should contain files that contain values to be loaded into application settings. The name of the file should

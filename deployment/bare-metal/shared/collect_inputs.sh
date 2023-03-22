@@ -1,5 +1,6 @@
 #!/usr/bin/env bash
 
+# Configure the script defaults
 PDACLI_AUTOSTART_DEF='1'
 PDACLI_DB_ENGINE_DEF='sqlite'
 PDACLI_ENV_TYPE_DEF='production'
@@ -7,12 +8,17 @@ PDACLI_SERVER_TYPE_DEF='gunicorn'
 PDACLI_VENV_ENABLED_DEF=0
 PDACLI_VENV_PATH_DEF='venv'
 
+# Configure script variables from environment variables when provided
 PDACLI_AUTOSTART=${PDACLI_AUTOSTART:-"$PDACLI_AUTOSTART_DEF"}
 PDA_DB_ENGINE=${PDA_DB_ENGINE:-"$PDACLI_DB_ENGINE_DEF"}
 PDA_ENV_TYPE=${PDA_ENV_TYPE:-"$PDACLI_ENV_TYPE_DEF"}
 PDA_SERVER_TYPE=${PDA_SERVER_TYPE:-"$PDACLI_SERVER_TYPE_DEF"}
 PDA_VENV_ENABLED=${PDA_VENV_ENABLED:-"$PDACLI_VENV_ENABLED_DEF"}
 PDA_VENV_PATH=${PDA_VENV_PATH:-"$PDACLI_VENV_PATH_DEF"}
+
+################################################################################
+# Input Collection Methods
+################################################################################
 
 # Display the environment configuration
 display_configuration() {
@@ -22,8 +28,8 @@ display_configuration() {
   local venv_enabled="$YNLR"
 
   echo "Environment Configuration:"
-  echo "  - Setup Auto Start: $autostart"
   echo "  - Environment Type: $PDA_ENV_TYPE"
+  echo "  - Setup Auto Start: $autostart"
   echo "  - Database Engine: $PDA_DB_ENGINE"
   echo "  - Server Type: $PDA_SERVER_TYPE"
   echo "  - Virtual Environment Enabled: $venv_enabled"
@@ -243,6 +249,10 @@ get_venv_path() {
 
   return 0
 }
+
+################################################################################
+# Input Collection Workflow
+################################################################################
 
 # Configure the environment type
 get_environment_type

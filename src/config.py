@@ -87,7 +87,7 @@ class AppSettings(BaseSettings):
     email_use_tls: bool = True
     env_file: str = '/etc/pda/.env'
     env_file_encoding: str = 'UTF-8'
-    env_secrets_dir: str = '/var/run/secrets'
+    env_secrets_dir: str = '/run/secrets'
     env_type: str | None = 'production'  # development, production
     google_analytics_id: str | None = None
     language_code: str = 'en-us'
