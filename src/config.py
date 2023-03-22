@@ -115,9 +115,11 @@ class AppSettings(BaseSettings):
     secure_proxy_ssl_header_value: str = 'https'
     secure_ssl_redirect: bool = True
     sentry_dsn: str = ''
+
     server_address: str = '0.0.0.0'
     server_port: int = 8080
     server_type: str | None = 'gunicorn'  # gunicorn, uvicorn, django
+
     session_cookie_secure: bool = True
     site_description: str = 'A PowerDNS web interface with advanced features.'
     site_email: str = 'pda@yourdomain.com'
