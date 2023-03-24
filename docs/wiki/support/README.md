@@ -5,6 +5,8 @@
 **Looking for help?** PDA has a somewhat active community of fellow users that may be able to provide assistance.
 Just [start a discussion](https://github.com/PowerDNS-Admin/pda-next/discussions/new) right here on GitHub!
 
+Looking to chat with someone? Join our [Discord Server](https://discord.powerdnsadmin.org).
+
 Some general tips for engaging here on GitHub:
 
 * Register for a free [GitHub account](https://github.com/signup) if you haven't already.

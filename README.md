@@ -77,6 +77,8 @@ Please see our
 Please see our
 [Support Policy](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md).
 
+Looking to chat with someone? Join our [Discord Server](https://discord.powerdnsadmin.org).
+
 ## [Code of Conduct](https://github.com/PowerDNS-Admin/pda-next/blob/main/.github/CODE_OF_CONDUCT.md)
 
 Please see our

@@ -8,6 +8,6 @@ contact_links:
   - name: ❓ Discussion
     url: https://github.com/PowerDNS-Admin/pda-next/discussions
     about: "If you're just looking for help, try starting a discussion instead"
-  - name: 💬 Project Chat
-    url: https://mattermost.powerdnsadmin.org/
-    about: "Join our Mattermost chat to discuss the project with other users and developers"
+  - name: 💬 Discord Server
+    url: https://discord.powerdnsadmin.org
+    about: "Join our Discord server to discuss the project with other users and developers"

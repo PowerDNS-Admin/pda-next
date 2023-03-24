@@ -14,9 +14,9 @@ For information about the project such as feature planning, the roadmap, and mil
 
 ### [Support](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md)
 
-**Looking for help?** Please see the project's
-[Support Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md)
-for more information.
+**Looking for help?** Try taking a look at the project's
+[Support Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/support/README.md) or joining
+our [Discord Server](https://discord.powerdnsadmin.org).
 
 ### [Contributing](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/contributing/README.md)
 
