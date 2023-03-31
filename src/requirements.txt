@@ -109,7 +109,7 @@ pyyaml==6.0
     # via drf-spectacular
 qrcode==7.4.2
     # via django-allauth-2fa
-redis==4.5.1
+redis==4.5.4
     # via celery
 requests==2.28.2
     # via

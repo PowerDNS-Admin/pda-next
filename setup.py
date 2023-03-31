@@ -54,7 +54,7 @@ setup(
         'pytz==2022.7.1',
         'pyaml==21.10.1',
         'qrcode==7.4.2',
-        'redis==4.5.1',
+        'redis==4.5.4',
         'requests==2.28.2',
         'requests-oauthlib==1.3.1',
         'selenium==4.8.2',
