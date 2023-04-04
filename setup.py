@@ -12,7 +12,7 @@ setup(
         'bcrypt==4.0.1',
         'billiard==3.6.4.0',
         'celery[redis]==5.2.7',
-        'celery-progress==0.1.3',
+        'celery-progress==0.3',
         'certifi==2022.12.7',
         'cffi==1.15.1',
         'charset-normalizer==3.0.1',
