@@ -60,7 +60,7 @@ setup(
         'selenium==4.8.2',
         'sentry-sdk==1.15.0',
         'six==1.16.0',
-        'sqlparse==0.4.3',
+        'sqlparse==0.4.4',
         'typing-extensions==4.5.0',
         'uritemplate==4.1.1',
         'urllib3==1.26.14',
