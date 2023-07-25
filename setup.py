@@ -13,7 +13,7 @@ setup(
         'billiard==3.6.4.0',
         'celery[redis]==5.2.7',
         'celery-progress==0.1.3',
-        'certifi==2022.12.7',
+        'certifi==2023.7.22',
         'cffi==1.15.1',
         'charset-normalizer==3.0.1',
         'click==8.1.3',
