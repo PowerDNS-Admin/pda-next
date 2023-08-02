@@ -93,7 +93,7 @@ psycopg2-binary==2.9.5
     # via -r requirements.in
 pycparser==2.21
     # via cffi
-pyjwt[crypto]==2.6.0
+pyjwt[crypto]==2.8.0
     # via django-allauth
 pypng==0.20220715.0
     # via qrcode

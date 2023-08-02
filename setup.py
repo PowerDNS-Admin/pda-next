@@ -46,7 +46,7 @@ setup(
         'psycopg2-binary==2.9.5',
         'pycparser==2.21',
         'pydantic==1.10.2',
-        'pyjwt[crypto]==2.6.0',
+        'pyjwt[crypto]==2.8.0',
         'pypng==0.20220715.0',
         'pyrsistent==0.19.3',
         'python3-openid==3.2.0',
