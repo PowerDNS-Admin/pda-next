@@ -22,7 +22,7 @@ setup(
         'click-repl==0.2.0',
         'cryptography==39.0.1',
         'defusedxml==0.7.1',
-        'django==4.1.7',
+        'django==4.1.13',
         'django-allauth==0.52.0',
         'django-allauth-2fa==0.10.0',
         'django-anymail[mailgun]==9.0',
