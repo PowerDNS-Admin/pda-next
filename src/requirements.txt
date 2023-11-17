@@ -75,7 +75,7 @@ djangorestframework-api-key==2.3.0
     # via -r requirements.in
 dnspython==2.3.0
     # via -r requirements.in
-drf-spectacular==0.25.1
+drf-spectacular==0.26.5
     # via -r requirements.in
 idna==3.4
     # via requests
