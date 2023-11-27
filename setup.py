@@ -58,7 +58,7 @@ setup(
         'requests==2.28.2',
         'requests-oauthlib==1.3.1',
         'selenium==4.8.2',
-        'sentry-sdk==1.15.0',
+        'sentry-sdk==1.37.1',
         'six==1.16.0',
         'sqlparse==0.4.3',
         'typing-extensions==4.5.0',
