@@ -31,7 +31,7 @@ setup(
         'django-waffle==3.0.0',
         'djangorestframework==3.14.0',
         'djangorestframework-api-key==2.3.0',
-        'dnspython==2.3.0',
+        'dnspython==2.4.2',
         'dotenv-cli==3.1.0',
         'drf-spectacular==0.25.1',
         'gunicorn==20.1.0',

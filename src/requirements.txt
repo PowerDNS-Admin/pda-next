@@ -73,7 +73,7 @@ djangorestframework==3.14.0
     #   drf-spectacular
 djangorestframework-api-key==2.3.0
     # via -r requirements.in
-dnspython==2.3.0
+dnspython==2.4.2
     # via -r requirements.in
 drf-spectacular==0.25.1
     # via -r requirements.in
