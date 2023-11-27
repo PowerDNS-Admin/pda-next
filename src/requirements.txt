@@ -81,7 +81,7 @@ idna==3.4
     # via requests
 inflection==0.5.1
     # via drf-spectacular
-jsonschema==4.17.3
+jsonschema==4.20.0
     # via drf-spectacular
 kombu==5.2.4
     # via celery

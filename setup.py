@@ -38,7 +38,7 @@ setup(
         'idna==3.4',
         'inflection==0.5.1',
         'jinja2==3.1.2',
-        'jsonschema==4.17.3',
+        'jsonschema==4.20.0',
         'kombu==5.2.4',
         'mysql==0.0.3',
         'oauthlib==3.2.2',
