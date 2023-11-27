@@ -7,7 +7,7 @@ setup(
     install_requires=[
         'amqp==5.1.1',
         'asgiref==3.6.0',
-        'async-timeout==4.0.2',
+        'async-timeout==4.0.3',
         'attrs==22.2.0',
         'bcrypt==4.0.1',
         'billiard==3.6.4.0',
