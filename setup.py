@@ -11,7 +11,7 @@ setup(
         'attrs==22.2.0',
         'bcrypt==4.0.1',
         'billiard==3.6.4.0',
-        'celery[redis]==5.2.7',
+        'celery[redis]==5.3.6',
         'celery-progress==0.1.3',
         'certifi==2022.12.7',
         'cffi==1.15.1',
