@@ -9,7 +9,7 @@ setup(
         'asgiref==3.6.0',
         'async-timeout==4.0.2',
         'attrs==22.2.0',
-        'bcrypt==4.0.1',
+        'bcrypt==4.1.1',
         'billiard==3.6.4.0',
         'celery[redis]==5.2.7',
         'celery-progress==0.1.3',
