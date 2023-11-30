@@ -24,7 +24,7 @@ setup(
         'defusedxml==0.7.1',
         'django==4.1.7',
         'django-allauth==0.52.0',
-        'django-allauth-2fa==0.10.0',
+        'django-allauth-2fa==0.11.1',
         'django-anymail[mailgun]==9.0',
         'django-environ==0.9.0',
         'django-otp==1.1.4',
