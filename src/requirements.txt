@@ -59,7 +59,7 @@ django-allauth==0.52.0
     #   django-allauth-2fa
 django-allauth-2fa==0.10.0
     # via -r requirements.in
-django-anymail[mailgun]==9.0
+django-anymail[mailgun]==9.2
     # via -r requirements.in
 django-environ==0.9.0
     # via -r requirements.in
