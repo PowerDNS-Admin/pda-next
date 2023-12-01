@@ -105,7 +105,7 @@ pytz==2022.7.1
     # via
     #   celery
     #   djangorestframework
-pyyaml==6.0
+pyyaml==6.0.1
     # via drf-spectacular
 qrcode==7.4.2
     # via django-allauth-2fa
