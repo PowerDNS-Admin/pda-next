@@ -5,7 +5,7 @@ setup(
     version='0.1.0',
     package_dir={'': 'src'},
     install_requires=[
-        'amqp==5.1.1',
+        'amqp==5.2.0',
         'asgiref==3.6.0',
         'async-timeout==4.0.2',
         'attrs==22.2.0',
