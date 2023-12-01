@@ -77,7 +77,7 @@ dnspython==2.3.0
     # via -r requirements.in
 drf-spectacular==0.25.1
     # via -r requirements.in
-idna==3.4
+idna==3.6
     # via requests
 inflection==0.5.1
     # via drf-spectacular

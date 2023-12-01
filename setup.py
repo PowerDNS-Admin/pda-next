@@ -35,7 +35,7 @@ setup(
         'dotenv-cli==3.1.0',
         'drf-spectacular==0.25.1',
         'gunicorn==20.1.0',
-        'idna==3.4',
+        'idna==3.6',
         'inflection==0.5.1',
         'jinja2==3.1.2',
         'jsonschema==4.17.3',
