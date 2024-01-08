@@ -53,7 +53,7 @@ django==4.1.7
     #   django-otp
     #   djangorestframework
     #   drf-spectacular
-django-allauth==0.52.0
+django-allauth==0.60.0
     # via
     #   -r requirements.in
     #   django-allauth-2fa
