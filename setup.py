@@ -37,7 +37,7 @@ setup(
         'gunicorn==20.1.0',
         'idna==3.4',
         'inflection==0.5.1',
-        'jinja2==3.1.2',
+        'jinja2==3.1.3',
         'jsonschema==4.17.3',
         'kombu==5.2.4',
         'mysql==0.0.3',
