@@ -6,13 +6,41 @@ name: MegaLinter
 on:
   workflow_dispatch:
   push:
-    branches-ignore:
-      - "*"
-      - 'dev'
-      - 'master'
-      - "dependabot/**"
-      - 'feature/*'
-      - 'issue/**'
+    branches:
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
+    tags:
+      - '-v*.*.*'
+    paths:
+      - .github/**
+      - deployment/**
+      - docs/**
+      - src/**
+      - tests/**
+      - setup.py
+      - '*.md'
+  pull_request:
+    branches:
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
+    tags:
+      - '-v*.*.*'
+    paths:
+      - .github/**
+      - deployment/**
+      - docs/**
+      - src/**
+      - tests/**
+      - setup.py
+      - '*.md'
 
 env: # Comment env block if you do not want to apply fixes
   # Apply linter fixes configuration

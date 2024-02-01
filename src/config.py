@@ -118,7 +118,7 @@ class AppSettings(BaseSettings):
 
     server_address: str = '0.0.0.0'
     server_port: int = 8080
-    server_type: str | None = 'gunicorn'  # gunicorn, uvicorn, django
+    server_type: str | None = 'gunicorn'  # gunicorn, uvicorn, uwsgi, django
 
     session_cookie_secure: bool = True
     site_description: str = 'A PowerDNS web interface with advanced features.'

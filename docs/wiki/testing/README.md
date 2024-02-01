@@ -2,4 +2,4 @@
 
 ## Testing Guide
 
-Coming soon!
+Coming eventually!

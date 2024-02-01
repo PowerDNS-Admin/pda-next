@@ -2,4 +2,4 @@
 
 ## Project Releases
 
-Coming soon!
+Coming eventually!
