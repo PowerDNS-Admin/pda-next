@@ -33,17 +33,17 @@ named `example_option` and store it in the `/run/secrets` directory. The content
 the value of the `example_option` setting. The application will automatically detect the file and use its
 contents as the value of the setting.
 
-### [Application Settings](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md)
+### Application Settings
 
 To get an in-depth understanding of the many application settings available, see the
 [Application Settings Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/README.md).
 
-#### [Environment Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/environment-settings.md)
+#### Environment Configuration
 
 To view the alphabetical list of environment configuration settings, see the
 [Environment Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/environment-settings.md).
 
-#### [Runtime Configuration](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/runtime-settings.md)
+#### Runtime Configuration
 
 To view the alphabetical list of environment configuration settings, see the
 [Runtime Configuration Guide](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/configuration/settings/runtime-settings.md).

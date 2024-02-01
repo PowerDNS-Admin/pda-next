@@ -7,10 +7,6 @@ the product.
 
 ### Table of Contents
 
-- [Microservice Architecture](#microservice-architecture)
-  - [API Server](#api-server)
-  - [CLI Application](#cli-application)
-  - [Web Application](#web-application)
 - [Authentication](#authentication)
   - [Local](#local)
   - [LDAP](#ldap)
@@ -21,38 +17,9 @@ the product.
 - [Role Based Access Control (RBAC)](#role-based-access-control-rbac)
   - [Examples](#examples)
 
-### Microservice Architecture
-
-The next-gen PDA application makes use of microservice architecture by splitting the project into multiple components
-that can be individually deployed as desired. Currently, there are three components, the API server, the CLI
-application, and the web application. In the following sections, you will find a brief description of what each of
-these components contribute to the solution.
-
-#### API Server
-
-The API server is the core of the platform. It provides a common interface for consuming platform features through the
-use of HTTP APIs based on the OpenAPI (formerly Swagger) specification. This is the only component required to use the
-platform. All other components are tools to consume resources from the API server.
-
-#### CLI Application
-
-The CLI application is designed to provide basic deployment and administration capabilities. The deployment features
-are meant to aid in the environment setup for deploying the application. This would include common tasks such as system
-reconfiguration, package installation and validation, and application configuration.
-
-The administration features are meant to provide an easy way to get started with the API server. These features will
-provide basic facilities for managing the system level administrator accounts in the application database.
-
-#### Web Application
-
-The web application is designed to provide a modern, standards compliant web browser based administration tool for the
-API server. By design, this application is a client-side application that will communicate with the back-end purely
-through the API service. For this reason, this component is nothing more than a static JavaScript / HTML
-application that can be served up by any choice of web server solution.
-
 ### Authentication
 
-The API server will ultimately support numerous authentication mechanisms to adhere to the new key mission driver of
+The application will ultimately support numerous authentication mechanisms to adhere to the new key mission driver of
 reducing barrier to entry. One key enhancement that will be provided is the ability to configure required combinations
 of mechanisms in order to gain access to application features. A common example of this would be a credential based
 authentication mechanism paired with an SMS or OTP generator option. The purpose of this feature is to allow
@@ -73,7 +40,7 @@ otherwise.
 
 #### LDAP
 
-There really isn't much to be said here since this space has not seemingly changed in quite some time.
+The list of service providers below will be initially supported.
 
 Supported Providers:
 - Authentik
@@ -82,8 +49,7 @@ Supported Providers:
 
 #### OAuth
 
-To get things started by achieving feature parity to the legacy project, the list of service providers below will be
-initially supported.
+The list of service providers below will be initially supported.
 
 Supported Providers:
 - Authentik
@@ -115,8 +81,7 @@ Supported Providers:
 #### OTP
 
 At least a few options will ultimately be provided to support the use of token generator hardware devices as a method
-of authentication to the API. Typically, it goes without saying that this feature will be consumed directly through
-API server clients but is ultimately supported by the API server.
+of authentication to the application.
 
 Supported Providers:
 - SafeID?
