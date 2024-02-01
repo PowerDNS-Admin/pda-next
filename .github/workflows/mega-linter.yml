@@ -7,14 +7,14 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - 'dev'
-      - 'main'
-      - 'dependabot/**'
-      - 'feature/**'
-      - 'issue/**'
-      - 'release/**'
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
     tags:
-      - 'v*.*.*'
+      - '-v*.*.*'
     paths:
       - .github/**
       - deployment/**
@@ -25,14 +25,14 @@ on:
       - '*.md'
   pull_request:
     branches:
-      - 'dev'
-      - 'main'
-      - 'dependabot/**'
-      - 'feature/**'
-      - 'issue/**'
-      - 'release/**'
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
     tags:
-      - 'v*.*.*'
+      - '-v*.*.*'
     paths:
       - .github/**
       - deployment/**
