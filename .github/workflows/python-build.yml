@@ -1,0 +1,85 @@
+name: 'Python Build'
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - 'dev'
+      - 'main'
+      - 'dependabot/**'
+      - 'feature/**'
+      - 'issue/**'
+      - 'release/**'
+    tags:
+      - 'v*.*.*'
+    paths:
+      - src/**
+      - tests/**
+      - setup.py
+  pull_request:
+    branches:
+      - 'dev'
+      - 'main'
+      - 'dependabot/**'
+      - 'feature/**'
+      - 'issue/**'
+      - 'release/**'
+    tags:
+      - 'v*.*.*'
+    paths:
+      - src/**
+      - tests/**
+      - setup.py
+
+jobs:
+  test-build-package:
+    name: Test & Build Python Package
+    runs-on: ubuntu-20.04
+
+    steps:
+      # Checkout the repository
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Set up the environment to run Python
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.8'
+
+      # Set up the environment to run the latest Python build, test, and publish tools
+      - name: Set Up Environment
+        run: |
+          python3 -m pip install --upgrade pip
+          python3 -m pip install --upgrade setuptools
+          python3 -m pip install --upgrade wheel
+          python3 -m pip install --upgrade pytest
+          python3 -m pip install --upgrade twine
+
+      # Install the package from source
+      - name: Install Source Code
+        run: |
+          python3 -m pip install .
+
+      # Run the package tests
+      - name: Test Source Code
+        run: |
+          python3 -m pytest -v
+
+      # Build the package
+      - name: Build Package
+        run: |
+          python3 -m pip install --upgrade build
+          python3 -m build
+
+      # Check the distribution files with Twine
+      - name: Check Package
+        run: |
+          python3 -m twine check dist/*
+
+      # Store the distribution files as artifacts
+      - name: Upload Package
+        uses: actions/upload-artifact@v3
+        with:
+          name: python-package
+          path: dist/

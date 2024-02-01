@@ -92,9 +92,10 @@ provided, we'll ask for additional detail.)
 
 We're always looking for motivated individuals to join the maintainers team and help drive PDA's long-term development. Some of our most sought-after skills include:
 
-* Python development with a strong focus on the [Flask](https://flask.palletsprojects.com/) and [Django](https://www.djangoproject.com/) frameworks
+* Python development with a strong focus on the [Django](https://www.djangoproject.com/) and [Celery](https://github.com/celery/celery) frameworks
 * Expertise working with SQLite, MySQL, and/or PostgreSQL databases
-* Javascript & TypeScript proficiency
+* Javascript, TypeScript, and/or htmx proficiency
+* Bootstrap and/or Tailwind CSS experience
 * A knack for web application design (HTML & CSS)
 * Familiarity with git and software development best practices
 * Excellent attention to detail

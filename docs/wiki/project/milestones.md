@@ -2,4 +2,4 @@
 
 ## Project Milestones
 
-Coming soon!
+Coming eventually!
