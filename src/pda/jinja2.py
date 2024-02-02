@@ -1,5 +1,6 @@
 from django.templatetags.static import static
 from django.urls import reverse
+from django.utils import translation
 from inspect import getmembers, isfunction
 from jinja2 import Environment
 from lib.jinja import filters, tests
@@ -9,6 +10,10 @@ class JinjaEnvironment(Environment):
 
     def __init__(self, **kwargs):
         super(JinjaEnvironment, self).__init__(**kwargs)
+
+        self.add_extension('jinja2.ext.i18n')
+
+        self.install_gettext_translations(translation, newstyle=True)
 
         # Load filter definitions
         for item in getmembers(filters):

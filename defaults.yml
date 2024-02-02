@@ -1,0 +1,56 @@
+app:
+  name: pda
+  version: 0.1.0
+  cli:
+    entrypoint: pda
+  environment:
+    prefix: PDA
+    file: .env
+server:
+  address: 0.0.0.0
+  port: 8080
+  proxy_root: /
+  type: gunicorn # gunicorn, uvicorn, uwsgi, django
+  auto_reload: false
+  workers: 3
+  threads: 5
+  gunicorn:
+    log_level: info
+    timeout: 30
+  uvicorn:
+    log_level: info
+    keep_alive_timeout: 5
+    graceful_shutdown_timeout: 5
+  uwsgi:
+    request_timeout: 30
+db:
+  engine: sqlite
+  path: pda.db
+#  engine: mysql
+#  host: localhost
+#  port: 3306
+#  user: pda
+#  password: pda
+#  name: pda
+#  engine: postgresql
+#  host: localhost
+#  port: 5432
+#  user: pda
+#  password: pda
+#  name: pda
+#  schema: public
+cors:
+  allow_credentials: true
+  headers: ['*']
+  methods: ['*']
+  origins: ['127.0.0.1', 'localhost']
+csrf:
+  origins: ['http://127.0.0.1', 'http://localhost']
+web:
+  protocol: https # http, https
+  host: your-domain.com
+  port: 443
+paths:
+  root: $e{PWD}
+security:
+  secret_key: $e{PDA_SECRET_KEY}

@@ -1,0 +1,27 @@
+{% macro callout(type, msg, header) -%}
+    {% set type = type|default('info') %}
+    {% set msg = msg|default('No message was defined for this callout!') %}
+    <div class="callout callout-{{ type }}">
+        {% if header | length %}
+        <h5>{{ header }}</h5>
+        {% endif %}
+        <p>{{ msg }}</p>
+    </div>
+{%- endmacro -%}
+
+{% macro screen_size() -%}
+    <div class="callout callout-warning screen-size">
+        <h5>{{ gettext('Notice!') }}</h5>
+        <p>{{ gettext('This app is best to used with a larger screen. Try turning your device horizontally for an improved experience.') }}</p>
+    </div>
+{%- endmacro -%}
+
+{% macro form_errors(form) -%}
+{% if form.errors %}
+    <ul class="form-errors">
+    {% for error in form.errors.__all__ %}
+    <li>{{ error }}</li>
+    {% endfor %}
+    </ul>
+{% endif %}
+{%- endmacro -%}

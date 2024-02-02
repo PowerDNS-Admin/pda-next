@@ -1,14 +1,8 @@
 *.db
 *.pyc
 *~
-.DS_Store
 *.egg-info
 .env
-.env.dev
-.env.docker
-.env.local
-.env.production
+.env.*
 .idea
-conf/config.yml
-docs/_build
 venv
