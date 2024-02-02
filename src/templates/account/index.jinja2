@@ -40,6 +40,13 @@
                             </div>
                         {% endif %}
 
+                        <div class="callout callout-secondary">
+                            <p>{{ gettext('Want to change your account password?') }}</p>
+                            <button type="button" title="{{ gettext('Change Password') }}"
+                                    class="btn btn-danger btn-change-password">{{ gettext('Change Password') }}
+                            </button>
+                        </div>
+
                         <form id="frmEdit" action="" method="post">
                             {{ csrf_input }}
 
@@ -139,11 +146,13 @@
 
 {% block footer_scripts %}
     <script type="text/javascript">
-        let baseURI = '/account'
+        let baseURI = '{{ url('account:index') }}'
+        let changePasswordUri = '{{ url('account:password_change') }}'
         let btnCancel = null
         let btnAdd = null
         let btnEdit = null
         let btnDelete = null
+        let btnChangePassword = null
         let frmEdit = null
 
         let onBtnCancelClick = function (e) {
@@ -152,6 +161,9 @@
 
         let setupListeners = function () {
             btnCancel.bind('click', onBtnCancelClick)
+            btnChangePassword.bind('click', function (e) {
+                window.location = changePasswordUri
+            })
         }
 
         let setupValidation = function () {
@@ -169,6 +181,7 @@
 
         $(function () {
             btnCancel = $('.btn-cancel')
+            btnChangePassword = $('.btn-change-password')
             frmEdit = $('#frmEdit')
             setupListeners()
             setupValidation()
