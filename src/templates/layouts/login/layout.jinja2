@@ -1,0 +1,20 @@
+{% import 'layouts/shared/callouts.jinja2' as callout %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="description" content="{{ gettext('PowerDNS Admin DNS server management tool') }}">
+    <meta name="keywords"
+          content="{{ gettext('app, responsive, jquery, bootstrap, dashboard, admin, pda, dns, lookup, nameserver') }}">
+    <link rel="icon" type="image/x-icon" href="{{ static('node_modules/admin-lte/dist/img/favcon/favicon.ico') }}">
+    <title>{{ gettext('PowerDNS Admin') }} - {% block title %}{% endblock %}</title>
+    {% include 'layouts/login/head-styles.jinja2' %}
+    {% block html_head %}{% endblock %}
+</head>
+<body class="login-page" style="min-height: 466px;">
+{% block content %}{% endblock %}
+{% include 'layouts/login/footer-scripts.jinja2' %}
+{% block footer_scripts scoped %}{% endblock %}
+</body>
+</html>

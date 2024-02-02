@@ -1,0 +1,39 @@
+@import url('./shared.css');
+
+hr { background-color: #c9c6c6;}
+
+label.error { color: red; }
+
+ul.form-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+ul.form-errors li {
+    color: red;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.content-header h1 > i { font-size: 1.5rem; }
+
+table.records th, table.records td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+table.records th:last-child, table.records td:last-child {
+    text-align: center;
+}
+
+@media print {
+    table.records th:last-child, table.records td:last-child { display: none; }
+}
+
+/* Small devices (portrait tablets and large phones, 600px and up) */
+@media only screen and (min-width: 600px) {
+    .callout.screen-size {
+        display: none;
+    }
+}

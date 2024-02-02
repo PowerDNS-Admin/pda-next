@@ -1,0 +1,12 @@
+ul.form-errors {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    margin-bottom: 1em;
+}
+
+ul.form-errors li {
+    color: red;
+    font-size: 0.8rem;
+    font-weight: bold;
+}

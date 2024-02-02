@@ -1,0 +1,20 @@
+{% extends 'layouts/login/layout.jinja2' %}
+{% block title %}{{ gettext('Logout') }}{% endblock %}
+
+{% block content %}
+    <!-- Login Box -->
+    <div class="login-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="https://pda.com" target="_blank" class="h1">{{ gettext('<b>PowerDNS</b>Admin') }}</a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">{{ gettext('You have been logged out of the tool.') }}</p>
+                <p class="mb-1">
+                    <a href="{{ url('account:login') }}" title="{{ gettext('Login') }}">{{ gettext('Login Again') }}</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+{% endblock %}

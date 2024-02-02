@@ -1,0 +1,50 @@
+{% extends 'layouts/login/layout.jinja2' %}
+{% block title %}{{ gettext('Login') }}{% endblock %}
+
+{% block content %}
+    <!-- Login Box -->
+    <div class="login-box">
+        <div class="card card-outline card-primary">
+            <div class="card-header text-center">
+                <a href="https://pda.com" target="_blank" class="h1">{{ gettext('<b>PowerDNS</b>Admin') }}</a>
+            </div>
+            <div class="card-body">
+                <p class="login-box-msg">{{ gettext('Sign in to your account') }}</p>
+                {{ callout.form_errors(form) }}
+                <form action="?next=/" method="post" class="mb-2">
+                    {{ csrf_input }}
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" placeholder="{{ gettext('Username') }}" required autofocus
+                               autocapitalize="none" autocomplete="username" maxlength="150" name="username">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-id-badge"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="input-group mb-3">
+                        <input type="password" class="form-control" placeholder="{{ gettext('Password') }}" required
+                               autocomplete="current-password" name="password">
+                        <div class="input-group-append">
+                            <div class="input-group-text">
+                                <span class="fas fa-lock"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-8"></div>
+                        <div class="col-4">
+                            <button type="submit" class="btn btn-primary btn-block" title="{{ gettext('Login') }}">{{ gettext('Login') }}</button>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-12">
+                            <a href="{{ url('account:password_reset') }}" class="btn btn-link btn-block">{{ gettext('Forgot password?') }}</a>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /.login-box -->
+{% endblock %}
