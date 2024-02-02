@@ -1,0 +1,65 @@
+{% extends 'layouts/user/layout.jinja2' %}
+{% block title %}{{ gettext('Join Account') }}{% endblock %}
+
+{% block content %}
+    <!-- Content Wrapper. Contains page content -->
+    <div class="content-wrapper">
+        <!-- Content Header (Page header) -->
+        <section class="content-header">
+            <div class="container-fluid">
+                <div class="row mb-2">
+                    <div class="col-sm-6">
+                        <h1><i class="fas fa-building"></i> {{ gettext('Join Account') }}</h1>
+                    </div>
+                    <div class="col-sm-6">
+                        <ol class="breadcrumb float-sm-right">
+                            <li class="breadcrumb-item">
+                                <a href="{{ url('dashboard:index') }}"
+                                   title="{{ gettext('Dashboard') }}">{{ gettext('Dashboard') }}</a>
+                            </li>
+                            <li class="breadcrumb-item">
+                                <a href="{{ url('account:index') }}"
+                                   title="{{ gettext('Account') }}">{{ gettext('Account') }}</a>
+                            </li>
+                            <li class="breadcrumb-item active">{{ gettext('Join Account') }}</li>
+                        </ol>
+                    </div>
+                </div>
+            </div><!-- /.container-fluid -->
+        </section>
+
+        <!-- Main content -->
+        <section class="content">
+            <!-- /.content -->
+            <div class="container-fluid">
+
+                <div class="row">
+                    <div class="col-12">
+                        {{ callout.screen_size() }}
+                    </div>
+                </div>
+
+            </div><!-- /.container-fluid -->
+        </section>
+    </div>
+    <!-- /.content-wrapper -->
+{% endblock %}
+
+{% block footer_scripts %}
+    <script type="text/javascript">
+        let btnCancel = null
+
+        let onBtnCancelClick = function (e) {
+            window.location = '{{ url('account:index') }}'
+        }
+
+        let setupListeners = function () {
+            btnCancel.bind('click', onBtnCancelClick)
+        }
+
+        $(function () {
+            btnCancel = $('.btn-cancel')
+            setupListeners()
+        })
+    </script>
+{% endblock %}

@@ -30,7 +30,7 @@
                 </li>
                 <li class="nav-item d-none d-sm-inline-block">
                     <a href="{{ url('account:index') }}" class="nav-link" title="{{ gettext('Account') }}"><i
-                        class="nav-icon fas fa-user"></i> {{ gettext('Account') }}</a>
+                        class="nav-icon fas fa-building"></i> {{ gettext('Account') }}</a>
                 </li>
             </ul>
         </nav>
@@ -52,10 +52,10 @@
                 <div class="user-panel mt-3 pb-3 mb-3 d-flex">
                     <div class="info">
                         <span style="color: #FFF">
-                            <a href="{{ url('account:index') }}" title="{{ gettext('Account') }}"><i
-                                class="nav-icon fa-solid fa-user"></i> {{ gettext('Account') }}</a>
+                            <a href="{{ url('user:index') }}" title="{{ gettext('Profile') }}"><i
+                                class="nav-icon fa-solid fa-user"></i> {{ gettext('Profile') }}</a>
                             &nbsp;|&nbsp;
-                            <a href="{{ url('account:logout') }}" title="{{ gettext('Logout') }}"><i
+                            <a href="{{ url('user:logout') }}" title="{{ gettext('Logout') }}"><i
                                 class="nav-icon fa-solid fa-sign-out-alt"></i> {{ gettext('Logout') }}</a>
                         </span>
                     </div>
@@ -87,7 +87,7 @@
                         </li>
                         <li class="nav-item">
                             <a href="{{ url('account:index') }}" class="nav-link" title="{{ gettext('Account') }}">
-                                <i class="nav-icon fas fa-user"></i>
+                                <i class="nav-icon fas fa-building"></i>
                                 <p>{{ gettext('Account') }}</p>
                             </a>
                         </li>
