@@ -18,7 +18,7 @@ TEMPLATES_DIR = BASE_DIR / 'templates'
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = c.security.secret_key
+SECRET_KEY = c.security.secret_key().ref
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings.debug
@@ -95,11 +95,11 @@ DATABASES: dict = {}
 if c.db.engine == 'mysql':
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.mysql',
-        'HOST': c.db.host,
-        'PORT': c.db.port,
-        'USER': c.db.user,
-        'PASSWORD': c.db.password,
-        'NAME': c.db.name,
+        'HOST': c.db.host().ref,
+        'PORT': c.db.port().ref,
+        'USER': c.db.user().ref,
+        'PASSWORD': c.db.password().ref,
+        'NAME': c.db.name().ref,
         'OPTIONS': {
             'init_command': "SET sql_mode='STRICT_TRANS_TABLES'"
         },
@@ -108,12 +108,12 @@ if c.db.engine == 'mysql':
 elif c.db.engine == 'postgresql':
     DATABASES['default'] = {
         'ENGINE': 'django.db.backends.postgresql',
-        'HOST': c.db.host,
-        'PORT': c.db.port,
-        'USER': c.db.user,
-        'PASSWORD': c.db.password,
-        'NAME': c.db.name,
-        'SCHEMA': c.db.schema,
+        'HOST': c.db.host().ref,
+        'PORT': c.db.port().ref,
+        'USER': c.db.user().ref,
+        'PASSWORD': c.db.password().ref,
+        'NAME': c.db.name().ref,
+        'SCHEMA': c.db.schema().ref,
     }
 
 elif c.db.engine == 'sqlite':
@@ -122,6 +122,15 @@ elif c.db.engine == 'sqlite':
         'NAME': c.db.path().ref,
     }
 
+# Email Configuration
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = c.email.host().ref
+EMAIL_PORT = c.email.port().ref
+EMAIL_HOST_USER = c.email.user().ref
+EMAIL_HOST_PASSWORD = c.email.password().ref
+EMAIL_USE_SSL = c.email.ssl().ref
+EMAIL_USE_TLS = c.email.tls().ref
+DEFAULT_FROM_EMAIL = c.email.from_email().ref
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

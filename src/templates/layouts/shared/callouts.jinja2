@@ -16,11 +16,29 @@
     </div>
 {%- endmacro -%}
 
-{% macro form_errors(form) -%}
+{% macro form_errors(form, field_filter) -%}
 {% if form.errors %}
     <ul class="form-errors">
-    {% for error in form.errors.__all__ %}
-    <li>{{ error }}</li>
+    {% for field, errors in form.errors.items() if field == field_filter or not field_filter and field == '__all__' %}
+        {% if field == 'password2' %}
+        {% set label = 'Password' %}
+        {% elif field == '__all__' %}
+        {% set label = '' %}
+        {% else %}
+        {% set label = form[field].label.text %}
+        {% endif %}
+    <li>
+        {% if not field_filter and label %}
+        {{ label }}
+        {% endif %}
+        {% if errors %}
+        <ul>
+            {% for error in errors %}
+            <li>{{ error }}</li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </li>
     {% endfor %}
     </ul>
 {% endif %}

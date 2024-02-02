@@ -6,3 +6,5 @@
 .env.*
 .idea
 venv
+node_modules
+___*

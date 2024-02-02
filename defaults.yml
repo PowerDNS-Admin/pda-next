@@ -54,3 +54,11 @@ paths:
   root: $e{PWD}
 security:
   secret_key: $e{PDA_SECRET_KEY}
+email:
+  from_email: pda@your-domain.com
+  host: smtp.your-domain.com
+  port: 587
+  user: pda@your-domain.com
+  password: pda
+  ssl: false
+  tls: true
