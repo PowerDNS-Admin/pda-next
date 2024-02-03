@@ -4,7 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches:
-      - main-off
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
+    tags:
+      - '-v*.*.*'
 jobs:
   deployment_test_ubuntu_linux_2204:
     runs-on: [self-hosted, linux, x64]
