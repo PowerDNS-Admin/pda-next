@@ -43,7 +43,7 @@ def send_notification(notification_id: str) -> bool:
 
             for email in emails:
                 task_name = f'notifications.send_email({notification_id}, {email.pk})'
-                task = send_email.delay(notification.pk, email.pk)
+                task = send_email.delay(email.pk)
                 tg.create_task(task_name, task.id)
 
         if notification.format == Notification.FORMAT_ALL or notification.format == Notification.FORMAT_CALL:
@@ -51,7 +51,7 @@ def send_notification(notification_id: str) -> bool:
 
             for call in calls:
                 task_name = f'notifications.send_call({notification_id}, {call.pk})'
-                task = send_call.delay(notification.pk, call.pk)
+                task = send_call.delay(call.pk)
                 tg.create_task(task_name, task.id)
 
         if notification.format == Notification.FORMAT_ALL or notification.format == Notification.FORMAT_TEXT:
@@ -59,7 +59,7 @@ def send_notification(notification_id: str) -> bool:
 
             for text in texts:
                 task_name = f'notifications.send_text({notification_id}, {text.pk})'
-                task = send_text.delay(notification.pk, text.pk)
+                task = send_text.delay(text.pk)
                 tg.create_task(task_name, task.id)
 
         # Monitor the status of the notification sub-tasks
@@ -75,17 +75,29 @@ def send_notification(notification_id: str) -> bool:
 
 
 @celery.task(name='pda.notifications.send_email')
-def send_email(notification_id: str, email_id: str) -> bool:
+def send_email(email_id: str) -> bool:
+    from django.core.mail import EmailMultiAlternatives
+    from app import config
+    from apps.notifications.models import NotificationEmail, NotificationRecipient
+
+    email = NotificationEmail.objects.get(pk=email_id)
+    recipients = [r.email for r in NotificationRecipient.objects.filter(notification=email.notification)]
+
+    for recipient in recipients:
+        message = EmailMultiAlternatives(email.subject, email.text_body, config.email.from_email().ref, [recipient])
+        message.attach_alternative(email.html_body, 'text/html')
+        message.send()
+
     return True
 
 
 @celery.task(name='pda.notifications.send_call')
-def send_call(notification_id: str, call_id: str) -> bool:
+def send_call(call_id: str) -> bool:
     return True
 
 
 @celery.task(name='pda.notifications.send_text')
-def send_text(notification_id: str, text_id: str) -> bool:
+def send_text(text_id: str) -> bool:
     return True
 
 
