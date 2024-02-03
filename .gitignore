@@ -5,6 +5,7 @@
 .env
 .env.*
 .idea
+config.yml
 venv
 node_modules
 ___*
