@@ -57,6 +57,7 @@ def index(request: HttpRequest):
     return render(request, os.path.join(view_directory, 'index.jinja2'), params)
 
 
+@login_required
 def start(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -64,15 +65,32 @@ def start(request: HttpRequest):
     return render(request, os.path.join(view_directory, 'start.jinja2'))
 
 
+@login_required
 def create(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'create.jinja2'))
+    return render(request, os.path.join(view_directory, 'create/step1.jinja2'))
 
 
+@login_required
 def join(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'join.jinja2'))
+    return render(request, os.path.join(view_directory, 'join/step1.jinja2'))
+
+
+@login_required
+def invite(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'invite/index.jinja2'))
+
+
+def invite_view(request: HttpRequest, token: str):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'invite/view.jinja2'))

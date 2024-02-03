@@ -9,6 +9,19 @@ class Account(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE)
     is_setup = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class AccountDomain(models.Model):
+    uuid = models.UUIDField(default=None, null=True)
+    account = models.ForeignKey(Account, on_delete=models.CASCADE)
+    domain = models.CharField(max_length=255)
+    is_pending = models.BooleanField(default=True)
+    is_stopgap = models.BooleanField(default=False)
+    is_valid = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
 
 
 class AccountInvitation(models.Model):
@@ -37,3 +50,5 @@ class AccountUser(models.Model):
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     role = models.CharField(max_length=30)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

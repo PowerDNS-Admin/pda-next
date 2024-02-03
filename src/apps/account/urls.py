@@ -9,5 +9,8 @@ urlpatterns = [
     path('/', RedirectView.as_view(url='/account', permanent=False), name='index_redirect'),
     path('/start', views.start, name='start'),
     path('/create', views.create, name='create'),
+    path('/domains', views.create, name='domains'),
+    path('/invite', views.invite, name='invite'),
     path('/join', views.join, name='join'),
+    path('/join/verify/<str:token>', views.invite_view, name='join-verify'),
 ]

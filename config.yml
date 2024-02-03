@@ -43,13 +43,19 @@ cors:
   allow_credentials: true
   headers: ['*']
   methods: ['*']
-  origins: ['127.0.0.1', 'localhost']
+  origins: ['127.0.0.1', 'localhost', 'dev.powerdnsadmin.net', '*']
 csrf:
-  origins: ['http://127.0.0.1', 'http://localhost']
+  origins: ['http://127.0.0.1', 'http://localhost', 'https://dev.powerdnsadmin.net', 'https://*.pda.powerdnsadmin.net']
 web:
-  protocol: http # http, https
-  host: localhost
-  port: 80
+  name: PowerDNS Admin
+  protocol: https # http, https
+  host: pda.powerdnsadmin.net
+  port: 443
+  stopgap:
+    enabled: true
+    protocol: https # http, https
+    domain: pda.powerdnsadmin.net
+    port: 443
 paths:
   root: $e{PWD}
 security:

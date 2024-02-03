@@ -9,3 +9,5 @@ class User(models.Model):
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE)
     is_setup = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)

@@ -47,9 +47,15 @@ cors:
 csrf:
   origins: ['http://127.0.0.1', 'http://localhost']
 web:
+  name: PowerDNS Admin
   protocol: https # http, https
-  host: your-domain.com
+  host: pda.your-domain.com
   port: 443
+  stopgap:
+    enabled: true
+    protocol: https # http, https
+    domain: pda.your-domain.com
+    port: 443
 paths:
   root: $e{PWD}
 security:

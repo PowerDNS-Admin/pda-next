@@ -86,7 +86,7 @@ def index(request: HttpRequest):
         return redirect(reverse('user:index'))
 
     params: dict = {
-        'user': user,
+        'app_user': user,
         'countries': Country.objects.all(),
         'timezones': Timezone.objects.all(),
     }
@@ -111,6 +111,7 @@ def register(request: HttpRequest):
     return render(request, os.path.join(view_directory, 'register.jinja2'), {'form': form})
 
 
+@login_required
 def change_password(request: HttpRequest):
     import os
     from django.contrib.auth.forms import PasswordChangeForm
@@ -128,6 +129,7 @@ def change_password(request: HttpRequest):
     return render(request, os.path.join(view_directory, 'password_change.jinja2'), {'form': form})
 
 
+@login_required
 def change_password_done(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -145,6 +147,7 @@ def password_reset(request: HttpRequest):
 
         if form.is_valid():
             options = {
+                'domain_override': config.web.host().ref,
                 'subject_template_name': 'user/password_reset_subject.jinja2',
                 'email_template_name': 'user/password_reset_email_text.jinja2',
                 'html_email_template_name': 'user/password_reset_email_html.jinja2',

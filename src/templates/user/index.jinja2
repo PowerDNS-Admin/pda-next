@@ -33,7 +33,7 @@
                     <div class="col-12">
                         {{ callout.screen_size() }}
 
-                        {% if not user.id %}
+                        {% if not app_user.id %}
                             <div class="callout callout-danger">
                                 <h5>{{ gettext('Notice!') }}</h5>
                                 <p>{{ gettext('You must finish setting up your profile before you can access the features of this application.') }}</p>
@@ -76,7 +76,7 @@
                                                     <option value="">{{ gettext('Please select a country') }}</option>
                                                     {% for country in countries %}
                                                         <option value="{{ country.pk }}"
-                                                                {% if user.country == country %}selected{% endif %}>
+                                                                {% if app_user.country == country %}selected{% endif %}>
                                                             {{ country.name }}
                                                         </option>
                                                     {% endfor %}
@@ -93,7 +93,7 @@
                                                     <option value="">{{ gettext('Please select a timezone') }}</option>
                                                     {% for timezone in timezones %}
                                                         <option value="{{ timezone.pk }}"
-                                                                {% if user.timezone == timezone %}selected{% endif %}>
+                                                                {% if app_user.timezone == timezone %}selected{% endif %}>
                                                             {{ timezone.name }}
                                                         </option>
                                                     {% endfor %}

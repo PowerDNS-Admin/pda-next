@@ -23,6 +23,8 @@ SECRET_KEY = c.security.secret_key().ref
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = settings.debug
 
+SITE_NAME = c.web.name().ref
+
 ALLOWED_HOSTS = c.cors.origins().ref
 CSRF_TRUSTED_ORIGINS = c.csrf.origins().ref
 
@@ -195,7 +197,7 @@ APPEND_SLASH = False
 REMOVE_SLASH = True
 
 # Configure Authentication
-LOGIN_URL = '/account/login'
+LOGIN_URL = '/user/login'
 
 # Celery Configuration
 CELERY_RESULT_BACKEND = 'django-db'
