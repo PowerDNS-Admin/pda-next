@@ -70,15 +70,55 @@ def create(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'create/step1.jinja2'))
+    return render(request, os.path.join(view_directory, 'create/s1-org-meta.jinja2'))
 
 
 @login_required
-def join(request: HttpRequest):
+def create_domains(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'join/step1.jinja2'))
+    return render(request, os.path.join(view_directory, 'create/s2-domains.jinja2'))
+
+
+@login_required
+def create_invite(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'create/s3-invite.jinja2'))
+
+
+@login_required
+def create_done(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'create/s4-done.jinja2'))
+
+
+@login_required
+def domains(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'domains/index.jinja2'))
+
+
+@login_required
+def domain_add(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'domains/add.jinja2'))
+
+
+@login_required
+def domain_remove(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'domains/remove.jinja2'))
 
 
 @login_required
@@ -86,11 +126,36 @@ def invite(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'invite/index.jinja2'))
+    return render(request, os.path.join(view_directory, 'invite/s1-lookup.jinja2'))
 
 
-def invite_view(request: HttpRequest, token: str):
+@login_required
+def invite_done(request: HttpRequest):
     import os
     from django.shortcuts import render
 
-    return render(request, os.path.join(view_directory, 'invite/view.jinja2'))
+    return render(request, os.path.join(view_directory, 'invite/s2-done.jinja2'))
+
+
+@login_required
+def join(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'join/s1-lookup.jinja2'))
+
+
+@login_required
+def join_verify(request: HttpRequest, token: str = None):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'join/s2-verify.jinja2'))
+
+
+@login_required
+def join_done(request: HttpRequest):
+    import os
+    from django.shortcuts import render
+
+    return render(request, os.path.join(view_directory, 'join/s3-done.jinja2'))
