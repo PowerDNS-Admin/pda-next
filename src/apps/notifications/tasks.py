@@ -93,12 +93,36 @@ def send_email(email_id: str) -> bool:
 
 @celery.task(name='pda.notifications.send_call')
 def send_call(call_id: str) -> bool:
-    return True
+    from apps.twilio.tasks import send_call
+    from apps.notifications.models import NotificationCall, NotificationRecipient
+
+    call = NotificationCall.objects.get(pk=call_id)
+    recipients = [r.phone for r in NotificationRecipient.objects.filter(notification=call.notification)]
+
+    success = True
+
+    for recipient in recipients:
+        if not send_call(recipient, call.message):
+            success = False
+
+    return success
 
 
 @celery.task(name='pda.notifications.send_text')
 def send_text(text_id: str) -> bool:
-    return True
+    from apps.twilio.tasks import send_text
+    from apps.notifications.models import NotificationText, NotificationRecipient
+
+    text = NotificationText.objects.get(pk=text_id)
+    recipients = [r.phone for r in NotificationRecipient.objects.filter(notification=text.notification)]
+
+    success = True
+
+    for recipient in recipients:
+        if not send_text(recipient, text.sms_body):
+            success = False
+
+    return success
 
 
 @celery.task(name='pda.notifications.monitor_notification')

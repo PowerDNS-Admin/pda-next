@@ -9,6 +9,7 @@ class User(models.Model):
     user = models.ForeignKey(BaseUser, on_delete=models.SET_NULL, null=True, related_name='user_user')
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE)
+    phone = models.CharField(max_length=15, null=True)
     is_setup = models.BooleanField(default=False)
     created_by = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='user_created_by')
     created_at = models.DateTimeField(auto_now_add=True)

@@ -1,6 +1,6 @@
 from django.apps import AppConfig
 
 
-class NotificationsConfig(AppConfig):
+class TwilioConfig(AppConfig):
     default_auto_field = 'django.db.models.AutoField'
-    name = 'apps.notifications'
+    name = 'apps.twilio'

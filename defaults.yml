@@ -79,3 +79,13 @@ email:
   password: pda
   ssl: false
   tls: true
+twilio:
+  account_sid: ACXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
+  auth_token: your_auth_token
+  from_phone: +15555555555
+  messaging_service_sid: MGXXXXXXXX
+  say:
+    voice: Polly.Matthew-Neural
+    language: en-US
+  notification:
+    call_delay: 2
