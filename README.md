@@ -42,7 +42,7 @@ with `bash` and `git` installed:
 ```
 git clone https://github.com/PowerDNS-Admin/pda-next.git
 cd pda-next
-deployment/setup.sh
+deploy/setup.sh
 ```
 
 ## Project Documentation

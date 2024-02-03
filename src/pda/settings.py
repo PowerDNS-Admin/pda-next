@@ -42,6 +42,7 @@ INSTALLED_APPS = [
     'apps.account.apps.AccountConfig',
     'apps.dashboard.apps.DashboardConfig',
     'apps.data.apps.DataConfig',
+    'apps.notifications.apps.NotificationsConfig',
     'apps.user.apps.UserConfig',
 ]
 
@@ -191,7 +192,7 @@ STATIC_ROOT = ROOT_DIR / 'static'
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.1/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+DEFAULT_AUTO_FIELD = 'django.db.models.AutoField'
 
 APPEND_SLASH = False
 REMOVE_SLASH = True
@@ -201,5 +202,5 @@ LOGIN_URL = '/user/login'
 
 # Celery Configuration
 CELERY_RESULT_BACKEND = 'django-db'
-CELERY_BROKER_URL = 'redis://localhost:6379/0'
+CELERY_BROKER_URL = f'redis://{c.celery.broker.host}:{c.celery.broker.port}/{c.celery.broker.db}'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'

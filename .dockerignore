@@ -1,0 +1,16 @@
+*.db
+*.pyc
+*~
+*.egg-info
+.dockerignore
+.gitignore
+.env
+.env.*
+.idea
+**/node_modules
+.git
+.github
+deploy
+venv
+config.yml
+___*

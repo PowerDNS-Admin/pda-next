@@ -56,6 +56,17 @@ web:
     protocol: https # http, https
     domain: pda.your-domain.com
     port: 443
+celery:
+  backend:
+    engine: redis
+    host: localhost
+    port: 6379
+    db: 0
+  broker:
+    engine: redis
+    host: localhost
+    port: 6379
+    db: 0
 paths:
   root: $e{PWD}
 security:

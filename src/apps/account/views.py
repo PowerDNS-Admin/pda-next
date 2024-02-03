@@ -9,7 +9,6 @@ view_directory: str = 'account'
 @login_required
 def index(request: HttpRequest):
     import os
-    import uuid
     from django.shortcuts import redirect, render, reverse
     from apps.account.models import Account, AccountUser
     from apps.data.models import Country, Timezone
@@ -32,9 +31,6 @@ def index(request: HttpRequest):
         account.org_name = request.POST.get('org_name')
         account.country = Country.objects.get(pk=request.POST.get('country'))
         account.timezone = Timezone.objects.get(pk=request.POST.get('timezone'))
-
-        if account.uuid is None:
-            account.uuid = uuid.uuid4()
 
         account.is_setup = True
         account.save()

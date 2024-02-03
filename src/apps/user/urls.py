@@ -20,4 +20,5 @@ urlpatterns = [
     path('/reset-password/complete',
          PasswordResetCompleteView.as_view(template_name=f'{app_name}/password_reset_complete.jinja2'),
          name='password_reset_complete'),
+    path('/notifications-test', views.notification_test, name='notification_test'),
 ]

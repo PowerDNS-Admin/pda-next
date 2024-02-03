@@ -21,6 +21,65 @@ class PasswordResetConfirmView(BasePasswordResetConfirmView):
     template_name = 'user/password_reset_confirm.jinja2'
 
 
+def notification_test(request: HttpRequest):
+    from django.http import JsonResponse
+    from app import config
+    from apps.notifications.lib import NotificationManager
+    from apps.notifications.models import Notification
+    from apps.user.models import User
+
+    user = User.objects.get(user=request.user.id)
+
+    params = {
+        'label': 'Test Notification',
+        'notification_format': Notification.FORMAT_ALL,
+        'created_by': user,
+        'urgent': True,
+    }
+
+    notification = NotificationManager.create(**params)
+    notification.save()
+
+    email_params = {
+        'from_email': config.email.from_email().ref,
+        'subject': 'Test Notification',
+        'text_body': 'PowerDNS Admin\n\nThis is a test notification.',
+        'html_body': '<h2>PowerDNS Admin</h2><p>This is a test notification.</p>',
+    }
+
+    email = NotificationManager.create_email(notification, **email_params)
+    email.save()
+
+    call_params = {
+        'message': 'This is a test notification.',
+    }
+
+    call = NotificationManager.create_call(notification, **call_params)
+    call.save()
+
+    text_params = {
+        'sms_body': 'This is a test notification.',
+    }
+
+    text = NotificationManager.create_text(notification, **text_params)
+    text.save()
+
+    recipient = NotificationManager.create_email_recipient(notification, user.user.email)
+    recipient.save()
+
+    # Schedule the notification for sending ASAP if marked urgent
+    if notification.urgent:
+        from apps.notifications.tasks import send_notification
+        send_notification.delay(notification.pk)
+
+    # Otherwise, mark the notification as pending and let the scheduler handle it
+    else:
+        notification.status = Notification.STATUS_PENDING
+        notification.save()
+
+    return JsonResponse({'status': 'success'})
+
+
 def login(request: HttpRequest):
     import os
     from django.contrib.auth import authenticate
@@ -58,7 +117,6 @@ def login(request: HttpRequest):
 @login_required
 def index(request: HttpRequest):
     import os
-    import uuid
     from django.shortcuts import redirect, render, reverse
     from apps.user.models import User
     from apps.data.models import Country, Timezone
@@ -72,9 +130,6 @@ def index(request: HttpRequest):
     if request.method == 'POST':
         user.country = Country.objects.get(pk=request.POST.get('country'))
         user.timezone = Timezone.objects.get(pk=request.POST.get('timezone'))
-
-        if user.uuid is None:
-            user.uuid = uuid.uuid4()
 
         user.is_setup = True
         user.save()
