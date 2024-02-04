@@ -1,5 +1,3 @@
-import datetime
-
 from pda.celery import app as celery
 
 
