@@ -1,3 +1,5 @@
+import datetime
+
 from pda.celery import app as celery
 
 
@@ -76,51 +78,143 @@ def send_notification(notification_id: str) -> bool:
 
 @celery.task(name='pda.notifications.send_email')
 def send_email(email_id: str) -> bool:
+    from datetime import datetime, timezone
     from django.core.mail import EmailMultiAlternatives
     from app import config
-    from apps.notifications.models import NotificationEmail, NotificationRecipient
+    from apps.notifications.models import Notification, NotificationEmail, NotificationRecipient, NotificationLog
 
     email = NotificationEmail.objects.get(pk=email_id)
-    recipients = [r.email for r in NotificationRecipient.objects.filter(notification=email.notification)]
+    recipients = NotificationRecipient.objects.filter(notification=email.notification)
 
     for recipient in recipients:
-        message = EmailMultiAlternatives(email.subject, email.text_body, config.email.from_email().ref, [recipient])
-        message.attach_alternative(email.html_body, 'text/html')
-        message.send()
+
+        log_args = {
+            'notification': email.notification,
+            'recipient': recipient,
+            'format': Notification.FORMAT_EMAIL,
+            'status': NotificationLog.STATUS_SENT,
+        }
+
+        # Create the email message to be sent
+        email_args = [email.subject, email.text_body, config.email.from_email().ref, [recipient.email]]
+        message = EmailMultiAlternatives(*email_args)
+
+        # Provide an HTML formatted version if available
+        if email.html_body:
+            message.attach_alternative(email.html_body, 'text/html')
+
+        try:
+            message.send()
+        except Exception as e:
+            # Log the error
+            log_args['status'] = NotificationLog.STATUS_FAILED
+            log_args['data'] = str(e)
+            log = NotificationLog(**log_args)
+            log.save()
+            continue
+
+        # Log the success
+        log_args['sent_at'] = datetime.now(timezone.utc)
+        log = NotificationLog(**log_args)
+        log.save()
 
     return True
 
 
 @celery.task(name='pda.notifications.send_call')
 def send_call(call_id: str) -> bool:
+    from datetime import datetime, timezone
     from apps.twilio.tasks import send_call
-    from apps.notifications.models import NotificationCall, NotificationRecipient
+    from apps.notifications.models import Notification, NotificationCall, NotificationRecipient, NotificationLog
 
     call = NotificationCall.objects.get(pk=call_id)
-    recipients = [r.phone for r in NotificationRecipient.objects.filter(notification=call.notification)]
+    recipients = NotificationRecipient.objects.filter(notification=call.notification)
 
     success = True
 
     for recipient in recipients:
-        if not send_call(recipient, call.message):
+
+        log_args = {
+            'notification': call.notification,
+            'recipient': recipient,
+            'format': Notification.FORMAT_CALL,
+            'status': NotificationLog.STATUS_SENT,
+        }
+
+        try:
+            success, result = send_call(recipient.phone, call.message)
+
+            if not success:
+                # Log the error
+                log_args['status'] = NotificationLog.STATUS_FAILED
+                log_args['data'] = str(result)
+                log = NotificationLog(**log_args)
+                log.save()
+                success = False
+                continue
+
+        except Exception as e:
+            # Log the error
+            log_args['status'] = NotificationLog.STATUS_FAILED
+            log_args['data'] = str(e)
+            log = NotificationLog(**log_args)
+            log.save()
             success = False
+            continue
+
+        # Log the success
+        log_args['sent_at'] = datetime.now(timezone.utc)
+        log = NotificationLog(**log_args)
+        log.save()
 
     return success
 
 
 @celery.task(name='pda.notifications.send_text')
 def send_text(text_id: str) -> bool:
+    from datetime import datetime, timezone
     from apps.twilio.tasks import send_text
-    from apps.notifications.models import NotificationText, NotificationRecipient
+    from apps.notifications.models import Notification, NotificationText, NotificationRecipient, NotificationLog
 
     text = NotificationText.objects.get(pk=text_id)
-    recipients = [r.phone for r in NotificationRecipient.objects.filter(notification=text.notification)]
+    recipients = NotificationRecipient.objects.filter(notification=text.notification)
 
     success = True
 
     for recipient in recipients:
-        if not send_text(recipient, text.sms_body):
+
+        log_args = {
+            'notification': text.notification,
+            'recipient': recipient,
+            'format': Notification.FORMAT_TEXT,
+            'status': NotificationLog.STATUS_SENT,
+        }
+
+        try:
+            success, result = send_text(recipient.phone, text.sms_body)
+
+            if not success:
+                # Log the error
+                log_args['status'] = NotificationLog.STATUS_FAILED
+                log_args['data'] = str(result)
+                log = NotificationLog(**log_args)
+                log.save()
+                success = False
+                continue
+
+        except Exception as e:
+            # Log the error
+            log_args['status'] = NotificationLog.STATUS_FAILED
+            log_args['data'] = str(e)
+            log = NotificationLog(**log_args)
+            log.save()
             success = False
+            continue
+
+        # Log the success
+        log_args['sent_at'] = datetime.now(timezone.utc)
+        log = NotificationLog(**log_args)
+        log.save()
 
     return success
 

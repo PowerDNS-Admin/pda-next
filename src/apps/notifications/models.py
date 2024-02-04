@@ -187,11 +187,6 @@ class NotificationText(models.Model):
 
 
 class NotificationRecipient(models.Model):
-    STATUS_PENDING = 0
-    STATUS_SENDING = 1
-    STATUS_SENT = 2
-    STATUS_FAILED = 3
-
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
     email = models.EmailField(null=True)
@@ -199,6 +194,21 @@ class NotificationRecipient(models.Model):
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='notificationrecipient_user')
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
                                    related_name='notificationrecipient_crated_by')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+
+class NotificationLog(models.Model):
+    STATUS_PENDING = 0
+    STATUS_SENDING = 1
+    STATUS_SENT = 2
+    STATUS_FAILED = 3
+
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4)
+    notification = models.ForeignKey(Notification, on_delete=models.CASCADE)
+    recipient = models.ForeignKey(NotificationRecipient, on_delete=models.CASCADE)
+    format = models.IntegerField(default=Notification.FORMAT_ALL)
+    data = models.TextField(null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     sent_at = models.DateTimeField(null=True)

@@ -65,9 +65,8 @@ def notification_test(request: HttpRequest):
     text.save()
 
     recipient = NotificationManager.create_email_recipient(notification, user.user.email)
-    recipient.save()
-
-    recipient = NotificationManager.create_phone_recipient(notification, user.phone)
+    recipient.phone = user.phone
+    recipient.user = user
     recipient.save()
 
     # Schedule the notification for sending ASAP if marked urgent

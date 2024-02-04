@@ -1,11 +1,13 @@
+from typing import Union
 from pda.celery import app as celery
+from twilio.rest.api.v2010.account.call import CallInstance
+from twilio.rest.api.v2010.account.message import MessageInstance
 
 
 @celery.task(name='pda.twilio.send_call')
-def send_call(to_phone: str, message: str) -> bool:
+def send_call(to_phone: str, message: str) -> tuple[bool, Union[str, Exception, CallInstance, None]]:
     from loguru import logger
     from twilio.rest import Client
-    from twilio.rest.api.v2010.account.call import CallInstance
     from twilio.twiml.voice_response import VoiceResponse
     from app import config
 
@@ -30,7 +32,7 @@ def send_call(to_phone: str, message: str) -> bool:
         )
     except Exception as e:
         logger.error(f'Error sending text message: {e}')
-        return False
+        return False, e
 
     failed_statuses = [
         CallInstance.Status.FAILED,
@@ -41,16 +43,15 @@ def send_call(to_phone: str, message: str) -> bool:
 
     if result.status in failed_statuses:
         logger.error(f'Call failed with status: {result.status}')
-        return False
+        return False, result
 
-    return True
+    return True, None
 
 
 @celery.task(name='pda.twilio.send_text')
-def send_text(to_phone: str, message: str) -> bool:
+def send_text(to_phone: str, message: str) -> tuple[bool, Union[str, Exception, MessageInstance, None]]:
     from loguru import logger
     from twilio.rest import Client
-    from twilio.rest.api.v2010.account.message import MessageInstance
     from app import config
 
     client: Client = Client(config.twilio.account_sid().ref, config.twilio.auth_token().ref)
@@ -63,7 +64,7 @@ def send_text(to_phone: str, message: str) -> bool:
         )
     except Exception as e:
         logger.error(f'Error sending text message: {e}')
-        return False
+        return False, e
 
     failed_statuses = [
         MessageInstance.Status.FAILED,
@@ -73,6 +74,6 @@ def send_text(to_phone: str, message: str) -> bool:
 
     if result.status in failed_statuses:
         logger.error(f'Call failed with status: {result.status}')
-        return False
+        return False, result
 
-    return True
+    return True, None
