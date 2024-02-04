@@ -1,9 +1,11 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
+from django.contrib.auth.forms import PasswordResetForm as BasePasswordResetForm
 from django.contrib.auth.views import (
     PasswordChangeView as BasePasswordChangeView,
     PasswordResetConfirmView as BasePasswordResetConfirmView
 )
+from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest
 from django.urls import reverse_lazy
 
@@ -13,12 +15,93 @@ view_directory: str = 'user'
 
 class PasswordChangeView(BasePasswordChangeView):
     success_url = reverse_lazy('user:password_change_done')
-    template_name = 'user/password_change.jinja2'
+    template_name = 'user/password/change.jinja2'
 
 
 class PasswordResetConfirmView(BasePasswordResetConfirmView):
     success_url = reverse_lazy('user:password_reset_complete')
-    template_name = 'user/password_reset_confirm.jinja2'
+    template_name = 'user/password/reset_confirm.jinja2'
+
+
+class PasswordResetForm(BasePasswordResetForm):
+
+    def send_mail(
+            self,
+            subject_template_name,
+            email_template_name,
+            context,
+            from_email,
+            to_email,
+            html_email_template_name=None,
+    ):
+        """
+        Send a django.core.mail.EmailMultiAlternatives to `to_email`.
+        """
+        from django.template import loader
+        from app import config
+        from apps.notifications.lib import NotificationManager
+        from apps.notifications.models import Notification
+        from apps.notifications.tasks import send_notification
+
+        # Load email subject from template
+        subject = loader.render_to_string(subject_template_name, context)
+        # Remove newlines within subject
+        subject = "".join(subject.splitlines())
+
+        # Load email body from templates
+        body_text = loader.render_to_string(email_template_name, context)
+        body_html = None
+
+        if html_email_template_name is not None:
+            # Load email HTML body from template
+            body_html = loader.render_to_string(html_email_template_name, context)
+
+        params = {
+            'label': f'{config.web.name} User Password Reset',
+            'notification_format': Notification.FORMAT_EMAIL,
+            'created_by': None,
+            'urgent': True,
+        }
+
+        notification = NotificationManager.create(**params)
+        notification.save()
+
+        email_params = {
+            'from_email': config.email.from_email().ref,
+            'subject': subject,
+            'text_body': body_text,
+            'html_body': body_html,
+        }
+
+        email = NotificationManager.create_email(notification, **email_params)
+        email.save()
+
+        recipient = NotificationManager.create_email_recipient(notification, to_email)
+        recipient.save()
+
+        # Schedule the notification for immediate sending
+        send_notification.delay(notification.pk)
+
+    def save(
+            self,
+            domain_override=None,
+            subject_template_name='user/password/reset_email_subject.jinja2',
+            email_template_name='user/password/reset_email_text.jinja2',
+            use_https=False,
+            token_generator=default_token_generator,
+            from_email=None,
+            request=None,
+            html_email_template_name='user/password/reset_email_html.jinja2',
+            extra_email_context=None,
+    ):
+        """
+        Generate a one-use only link for resetting password and send it to the
+        user.
+        """
+        super().save(domain_override=domain_override, subject_template_name=subject_template_name,
+                     email_template_name=email_template_name, use_https=use_https, token_generator=token_generator,
+                     from_email=from_email, request=request, html_email_template_name=html_email_template_name,
+                     extra_email_context=extra_email_context)
 
 
 def notification_test(request: HttpRequest):
@@ -183,19 +266,18 @@ def change_password(request: HttpRequest):
     else:
         form = PasswordChangeForm(request.user)
 
-    return render(request, os.path.join(view_directory, 'password_change.jinja2'), {'form': form})
+    return render(request, os.path.join(view_directory, 'password/change.jinja2'), {'form': form})
 
 
 @login_required
 def change_password_done(request: HttpRequest):
     import os
     from django.shortcuts import render
-    return render(request, os.path.join(view_directory, 'password_change_done.jinja2'))
+    return render(request, os.path.join(view_directory, 'password/change_done.jinja2'))
 
 
 def password_reset(request: HttpRequest):
     import os
-    from django.contrib.auth.forms import PasswordResetForm
     from django.shortcuts import redirect, render
     from app import config
 
@@ -205,19 +287,17 @@ def password_reset(request: HttpRequest):
         if form.is_valid():
             options = {
                 'domain_override': config.web.host().ref,
-                'subject_template_name': 'user/password_reset_subject.jinja2',
-                'email_template_name': 'user/password_reset_email_text.jinja2',
-                'html_email_template_name': 'user/password_reset_email_html.jinja2',
                 'use_https': config.web.protocol().ref == 'https',
                 'from_email': config.email.from_email().ref,
                 'request': request,
+                'extra_email_context': {'config': config},
             }
             form.save(**options)
             return redirect(reverse_lazy('user:password_reset_done'))
     else:
         form = PasswordResetForm()
 
-    return render(request, os.path.join(view_directory, 'password_reset.jinja2'), {'form': form})
+    return render(request, os.path.join(view_directory, 'password/reset.jinja2'), {'form': form})
 
 
 def password_reset_confirm(request: HttpRequest):
@@ -234,4 +314,4 @@ def password_reset_confirm(request: HttpRequest):
     else:
         form = SetPasswordForm(request.user)
 
-    return render(request, os.path.join(view_directory, 'password_reset_confirm.jinja2'), {'form': form})
+    return render(request, os.path.join(view_directory, 'password/reset_confirm.jinja2'), {'form': form})

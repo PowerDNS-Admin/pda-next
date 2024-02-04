@@ -1,0 +1,19 @@
+{% if config.web.protocol == 'http' and config.web.port == 80 or config.web.protocol == 'https' and config.web.port == 443 %}
+{% set url = config.web.url + url('user:password_reset_confirm', args=[uid, token]) %}
+{% else %}
+{% set url = config.web.url_with_port + url('user:password_reset_confirm', args=[uid, token]) %}
+{% endif %}
+<p style="font-weight: bold;">{{ gettext('Hi ') + user.first_name }},</p>
+
+<p style="margin-top: 15px;">{{ gettext('You\'re receiving this email because someone requested a password reset for your user at ' + config.web.name + '.') }}</p>
+
+<p style="margin-top: 25px;">{{ gettext('If this was not you, then you can ignore this email but take precaution.') }}</p>
+
+<p style="margin-top: 25px;">{{ gettext('If you did request this action, please navigate to the following page to choose a new password:') }}</p>
+<p><a href="{{ url }}">{{ url }}</a></p>
+
+<p style="margin-top: 15px;">{{ gettext('Your username, in case you’ve forgotten:') }} <strong>{{ user.get_username() }}</strong></p>
+
+<p style="margin-top: 30px;">{{ gettext('Thanks for using our service!') }}</p>
+
+<p style="margin-top: 10px;">{{ gettext('The ' + config.web.name + ' Team') }}</p>

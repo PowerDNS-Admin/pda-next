@@ -51,6 +51,8 @@ web:
   protocol: https # http, https
   host: pda.your-domain.com
   port: 443
+  url: https://pda.your-domain.com
+  url_with_port: https://pda.your-domain.com:443
   stopgap:
     enabled: true
     protocol: https # http, https
