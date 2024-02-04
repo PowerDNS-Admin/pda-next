@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
+    'django.contrib.sites',
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'apps.account.apps.AccountConfig',
@@ -56,6 +57,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
+
+AUTHENTICATION_BACKENDS = ['apps.user.auth.backends.EmailOrUsernameModelBackend']
 
 ROOT_URLCONF = 'pda.urls'
 
@@ -204,3 +207,6 @@ LOGIN_URL = '/user/login'
 CELERY_RESULT_BACKEND = 'django-db'
 CELERY_BROKER_URL = f'redis://{c.celery.broker.host}:{c.celery.broker.port}/{c.celery.broker.db}'
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+# Set Up Django Sites
+SITE_ID = 1

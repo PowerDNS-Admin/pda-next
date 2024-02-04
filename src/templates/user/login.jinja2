@@ -5,19 +5,21 @@
     <!-- Login Box -->
     <div class="login-box">
         <div class="card card-outline card-primary">
-            <div class="card-header text-center">
-                <a href="https://powerdnsadmin.org" target="_blank" class="h1">{{ gettext('<b>PowerDNS</b>Admin') }}</a>
-            </div>
+            {{ layout_callout.login_card_header() }}
             <div class="card-body">
-                <p class="login-box-msg">{{ gettext('Sign in to your user') }}</p>
+                <p class="login-box-msg">{{ gettext('Sign in to your user profile') }}</p>
                 <form action="?next=/" method="post" class="mb-2">
                     {{ csrf_input }}
                     <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ gettext('Username') }}" required autofocus
-                               autocapitalize="none" autocomplete="username" maxlength="150" name="username">
+                        <input type="text" class="form-control" placeholder="{{ gettext('Username or Email') }}"
+                               required autofocus autocapitalize="none" autocomplete="username" maxlength="150"
+                               name="username">
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-id-badge"></span>
+                            </div>
+                            <div class="input-group-text">
+                                <span class="fas fa-envelope"></span>
                             </div>
                         </div>
                     </div>
@@ -36,16 +38,19 @@
                     <div class="row">
                         <div class="col-8"></div>
                         <div class="col-4">
-                            <button type="submit" class="btn btn-primary btn-block" title="{{ gettext('Login') }}">{{ gettext('Login') }}</button>
+                            <button type="submit" class="btn btn-primary btn-block"
+                                    title="{{ gettext('Login') }}">{{ gettext('Login') }}</button>
                         </div>
                     </div>
                     <div class="row">
                         <div class="col-12">
                             <p class="mb-1">
-                                <a href="{{ url('user:password_reset') }}" class="btn btn-link btn-block" title="{{ gettext('Reset Password') }}">{{ gettext('Forgot password?') }}</a>
+                                <a href="{{ url('user:password_reset') }}" class="btn btn-link btn-block"
+                                   title="{{ gettext('Reset Password') }}">{{ gettext('Forgot password?') }}</a>
                             </p>
                             <p class="mb-0">
-                                <a href="{{ url('user:register') }}" class="btn btn-link btn-block" title="{{ gettext('Register new user') }}">{{ gettext('Register a new user') }}</a>
+                                <a href="{{ url('user:register') }}" class="btn btn-link btn-block"
+                                   title="{{ gettext('Register new user') }}">{{ gettext('Register a new user') }}</a>
                             </p>
                         </div>
                     </div>
