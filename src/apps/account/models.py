@@ -34,6 +34,7 @@ class AccountUser(models.Model):
     ROLE_OWNER = 'owner'
     ROLE_ADMIN = 'admin'
     ROLE_USER = 'user'
+    ROLES = [ROLE_OWNER, ROLE_ADMIN, ROLE_USER]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
@@ -55,6 +56,8 @@ class AccountInvitation(models.Model):
     STATUS_EXPIRED = 'expired'
     STATUS_INVALID = 'invalid'
     STATUS_DELETED = 'deleted'
+    STATUSES = [STATUS_DRAFT, STATUS_PENDING, STATUS_ACCEPTED, STATUS_REJECTED, STATUS_CANCELED, STATUS_EXPIRED,
+                STATUS_INVALID, STATUS_DELETED]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
