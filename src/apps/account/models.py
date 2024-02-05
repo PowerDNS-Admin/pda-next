@@ -6,23 +6,43 @@ from apps.user.models import User
 class Account(models.Model):
     from apps.data.models import Country, Timezone
 
+    STATUS_DRAFT = 'draft'
+    STATUS_PENDING_VERIFICATION = 'pending-verification'
+    STATUS_PENDING_APPROVAL = 'pending-approval'
+    STATUS_PENDING_SETUP = 'pending-setup'
+    STATUS_ACTIVE = 'active'
+    STATUS_INACTIVE = 'inactive'
+    STATUS_LOCKED = 'locked'
+    STATUS_DELETED = 'deleted'
+    STATUSES = [STATUS_DRAFT, STATUS_PENDING_VERIFICATION, STATUS_PENDING_APPROVAL, STATUS_PENDING_SETUP, STATUS_ACTIVE,
+                STATUS_INACTIVE, STATUS_LOCKED, STATUS_DELETED]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     org_name = models.CharField(max_length=30, null=True)
     country = models.ForeignKey(Country, on_delete=models.CASCADE)
     timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE)
-    is_setup = models.BooleanField(default=False)
+    status = models.CharField(max_length=30, default=STATUS_DRAFT)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
 
 
 class AccountDomain(models.Model):
+    STATUS_DRAFT = 'draft'
+    STATUS_PENDING_VERIFICATION = 'pending-verification'
+    STATUS_PENDING_APPROVAL = 'pending-approval'
+    STATUS_ACTIVE = 'active'
+    STATUS_INACTIVE = 'inactive'
+    STATUS_LOCKED = 'locked'
+    STATUS_DELETED = 'deleted'
+    STATUSES = [STATUS_DRAFT, STATUS_PENDING_VERIFICATION, STATUS_PENDING_APPROVAL, STATUS_ACTIVE, STATUS_INACTIVE,
+                STATUS_LOCKED, STATUS_DELETED]
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     domain = models.CharField(max_length=255)
-    is_pending = models.BooleanField(default=True)
+    status = models.CharField(max_length=30, default=STATUS_DRAFT)
     is_stopgap = models.BooleanField(default=False)
-    is_valid = models.BooleanField(default=False)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)

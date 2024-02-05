@@ -13,9 +13,10 @@ class User(AbstractUser):
     STATUS_PENDING_SETUP = 'pending-setup'
     STATUS_ACTIVE = 'active'
     STATUS_INACTIVE = 'inactive'
+    STATUS_LOCKED = 'locked'
     STATUS_DELETED = 'deleted'
     STATUSES = [STATUS_DRAFT, STATUS_PENDING_VERIFICATION, STATUS_PENDING_APPROVAL, STATUS_PENDING_SETUP, STATUS_ACTIVE,
-                STATUS_INACTIVE, STATUS_DELETED]
+                STATUS_INACTIVE, STATUS_LOCKED, STATUS_DELETED]
 
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)

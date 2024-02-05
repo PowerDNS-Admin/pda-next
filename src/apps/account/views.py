@@ -1,7 +1,7 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
-from app.decorators.request import verify_user, verify_account
+from app.decorators.request import verify_user, has_account
 
 UserModel = get_user_model()
 view_directory: str = 'account'
@@ -9,7 +9,7 @@ view_directory: str = 'account'
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def index(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -70,7 +70,7 @@ def create_done(request: HttpRequest):
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def domains(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -80,7 +80,7 @@ def domains(request: HttpRequest):
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def domain_add(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -90,7 +90,7 @@ def domain_add(request: HttpRequest):
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def domain_remove(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -100,7 +100,7 @@ def domain_remove(request: HttpRequest):
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def invite(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -110,7 +110,7 @@ def invite(request: HttpRequest):
 
 @login_required
 @verify_user
-@verify_account
+@has_account
 def invite_done(request: HttpRequest):
     import os
     from django.shortcuts import render

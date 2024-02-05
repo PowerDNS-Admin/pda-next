@@ -17,17 +17,26 @@ def verify_user(func):
         if user.status == User.STATUS_PENDING_SETUP:
             return redirect(reverse('user:index'))
 
+        if user.status == User.STATUS_INACTIVE:
+            return redirect(reverse('user:inactive'))
+
+        if user.status == User.STATUS_LOCKED:
+            return redirect(reverse('user:locked'))
+
+        if user.status == User.STATUS_DELETED:
+            return redirect(reverse('user:deleted'))
+
         return func(request, *args, **kwargs)
 
     return wrapper
 
 
-def verify_account(func):
+def has_account(func):
     """ This decorator is used to verify that the user is linked to at least one account. """
 
     def wrapper(request, *args, **kwargs):
         from django.shortcuts import redirect, reverse
-        from apps.account.models import Account, AccountUser
+        from apps.account.models import AccountUser
         from apps.user.models import User
 
         user: User = request.user
