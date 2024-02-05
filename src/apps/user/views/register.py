@@ -9,7 +9,7 @@ view_directory: str = 'user/register'
 def register(request: HttpRequest):
     import os
     from django.shortcuts import redirect, render
-    from ..forms import RegistrationForm
+    from apps.user.forms.register import RegistrationForm
 
     if request.method == 'POST':
         form = RegistrationForm(request.POST)

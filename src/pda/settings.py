@@ -81,7 +81,7 @@ TEMPLATES = [
     },
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [TEMPLATES_DIR, ],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -212,3 +212,6 @@ CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
 
 # Set Up Django Sites
 SITE_ID = 1
+
+# Configure Django Forms
+FORM_RENDERER = 'django.forms.renderers.TemplatesSetting'

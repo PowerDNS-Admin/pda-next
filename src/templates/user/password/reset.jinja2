@@ -11,21 +11,8 @@
                 <p class="login-box-msg">{{ gettext('Please provide the username or an email address associated with your user profile.') }}</p>
                 <form action="" method="post" class="mb-2">
                     {{ csrf_input }}
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" name="username" autocomplete="username"
-                               autocapitalize="none" required autofocus  maxlength="254"
-                               placeholder="{{ gettext('Username or Email Address') }}"
-                               value="{{ form.username.data|no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-id-badge"></span>
-                            </div>
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
-                    {{ callout.form_errors(form, 'email') }}
+                    {{ form.username }}
+                    {{ callout.form_errors(form, 'username') }}
                     {{ callout.form_errors(form) }}
                     <div class="row">
                         <div class="col-12">

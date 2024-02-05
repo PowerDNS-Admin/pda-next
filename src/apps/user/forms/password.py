@@ -1,38 +1,7 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm, UsernameField
-from django.contrib.auth.models import User
 from django.contrib.auth.tokens import default_token_generator
 from django.http import HttpRequest
-from django.utils.translation import gettext_lazy as _
-
-
-class RegistrationForm(UserCreationForm):
-    """docstring for RegistrationForm"""
-    from django import forms
-    first_name = forms.CharField(max_length=30, required=True)
-    last_name = forms.CharField(max_length=50, required=True)
-    email = forms.EmailField(required=True)
-    terms = forms.CheckboxInput()
-
-    class Meta:
-        model = User
-        fields = (
-            'first_name',
-            'last_name',
-            'email',
-            'username',
-            'password1',
-            'password2',
-        )
-
-    def save(self, commit=True):
-        user = super(RegistrationForm, self).save(commit=False)
-        user.email = self.cleaned_data['email']
-        user.first_name = self.cleaned_data['first_name']
-        user.last_name = self.cleaned_data['last_name']
-        if commit:
-            user.save()
-        return user
+from app.forms.fields import UsernameField
 
 
 class PasswordResetForm(forms.Form):
@@ -40,12 +9,7 @@ class PasswordResetForm(forms.Form):
     _request: HttpRequest
     """The HttpRequest object associated with this form."""
 
-    username = UsernameField(
-        label=_('Username or Email'),
-        required=True,
-        max_length=254,
-        widget=forms.TextInput(attrs={'autocomplete': 'username'}),
-    )
+    username = UsernameField()
 
     def send_mail(
             self,

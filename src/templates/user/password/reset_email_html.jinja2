@@ -1,4 +1,4 @@
-{% set url = protocol + '://' + domain + url('user:password_reset_confirm', args=[uid, token]) %}
+{% set url = protocol + '://' + domain + url('user:password.reset_confirm', args=[uid, token]) %}
 <p style="font-weight: bold;">{{ gettext('Hi ') + user.first_name }},</p>
 
 <p style="margin-top: 15px;">{{ gettext('You\'re receiving this email because someone requested a password reset for your user at ' + site_name + '.') }}</p>

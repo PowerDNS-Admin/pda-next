@@ -9,7 +9,7 @@ from django.contrib.auth.views import (
 from django.http import HttpRequest
 from django.urls import reverse_lazy
 from app.decorators.request import verify_user
-from apps.user.forms import PasswordResetForm
+from apps.user.forms.password import PasswordResetForm
 
 UserModel = get_user_model()
 view_directory: str = 'user/password'

@@ -15,9 +15,9 @@ class LogoutView(BaseLogoutView):
 def login(request: HttpRequest):
     import os
     from django.contrib.auth import authenticate
-    from django.contrib.auth.forms import AuthenticationForm
     from django.shortcuts import redirect, render, reverse
     from loguru import logger
+    from apps.user.forms.auth import AuthenticationForm
 
     if request.user.is_authenticated:
         return redirect(reverse('user:index'))

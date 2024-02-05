@@ -10,31 +10,12 @@
                 <p class="login-box-msg">{{ gettext('Sign in to your user profile') }}</p>
                 <form action="?next=/" method="post" class="mb-2">
                     {{ csrf_input }}
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ gettext('Username or Email') }}"
-                               required autofocus autocapitalize="none" autocomplete="username" maxlength="150"
-                               name="username">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-id-badge"></span>
-                            </div>
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
+                    {{ form.username }}
                     {{ callout.form_errors(form, 'username') }}
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="{{ gettext('Password') }}" required
-                               autocomplete="current-password" name="password">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
+                    {{ form.password }}
                     {{ callout.form_errors(form, 'password') }}
                     {{ callout.form_errors(form) }}
+
                     <div class="row">
                         <div class="col-8"></div>
                         <div class="col-4">
@@ -42,10 +23,11 @@
                                     title="{{ gettext('Login') }}">{{ gettext('Login') }}</button>
                         </div>
                     </div>
+
                     <div class="row">
                         <div class="col-12">
                             <p class="mb-1">
-                                <a href="{{ url('user:password_reset') }}" class="btn btn-link btn-block"
+                                <a href="{{ url('user:password.reset') }}" class="btn btn-link btn-block"
                                    title="{{ gettext('Reset Password') }}">{{ gettext('Forgot password?') }}</a>
                             </p>
                             <p class="mb-0">

@@ -7,93 +7,51 @@
         <div class="card card-outline card-primary">
             {{ layout_callout.login_card_header() }}
             <div class="card-body">
-                <p class="login-box-msg">{{ gettext('Register a new user') }}</p>
+                <p class="login-box-msg">{{ gettext('Register a new user profile') }}</p>
                 <form action="" method="post" class="mb-2">
                     {{ csrf_input }}
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ gettext('First / Given Name') }}" name="first_name"
-                        required autofocus autocapitalize="words" value="{{ form.first_name.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{ form.first_name }}
                     {{ callout.form_errors(form, 'first_name') }}
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ gettext('Last / Family Name') }}" name="last_name"
-                        required autofocus autocapitalize="words" value="{{ form.last_name.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-user"></span>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{ form.last_name }}
                     {{ callout.form_errors(form, 'last_name') }}
-                    <div class="input-group mb-3">
-                        <input type="email" class="form-control" placeholder="{{ gettext('Email') }}" name="email" required
-                        autocomplete="on" autocapitalize="none" value="{{ form.email.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-envelope"></span>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{ form.email }}
                     {{ callout.form_errors(form, 'email') }}
-                    <div class="input-group mb-3">
-                        <input type="text" class="form-control" placeholder="{{ gettext('Username') }}"
-                               name="username" required autocomplete="on" autocapitalize="none"
-                               value="{{ form.username.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-id-badge"></span>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{ form.username }}
                     {{ callout.form_errors(form, 'userrname') }}
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="{{ gettext('Password') }}"
-                               name="password1" required autocomplete="on" autocapitalize="none"
-                               value="{{ form.password1.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
-                        </div>
-                    </div>
+
+                    {{ form.password1 }}
                     {{ callout.form_errors(form, 'password1') }}
-                    <div class="input-group mb-3">
-                        <input type="password" class="form-control" placeholder="{{ gettext('Confirm Password') }}"
-                               required name="password2" autocomplete="off" autocapitalize="none"
-                               value="{{ form.password2.data | no_value }}">
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
+
+                    {{ form.password2 }}
+                    {{ callout.form_errors(form, 'password2') }}
+
+                    <div class="row">
+                        <div class="col-12">
+                            {{ form.terms }}
+                            {{ callout.form_errors(form, 'terms') }}
                         </div>
                     </div>
-                    {{ callout.form_errors(form, 'password2') }}
+
                     <div class="row">
-                        <div class="col-8">
-                            <div class="icheck-primary">
-                                <input type="checkbox" id="agreeTerms" name="terms" value="1"{% if form.terms %} checked{% endif %}>
-                                <label for="agreeTerms">
-                                    {{ gettext('I agree to the') }} <a href="/terms-of-use" target="_blank" title="{{ gettext('Terms of Use') }}">{{ gettext('Terms of Use') }}</a>.
-                                </label>
-                            </div>
-                        </div>
-                        <div class="col-4">
+                        <div class="col-12">{{ callout.form_errors(form) }}</div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block" title="{{ gettext('Register User') }}">{{ gettext('Register') }}</button>
                         </div>
                     </div>
-                    {{ callout.form_errors(form, 'terms') }}
-                    {{ callout.form_errors(form) }}
+
                 </form>
                 <p class="mb-1">
                     <a href="{{ url('user:login') }}" class="btn btn-link btn-block" title="{{ gettext('Login') }}">{{ gettext('I already have an user') }}</a>
                 </p>
                 <p class="mb-0">
-                    <a href="{{ url('user:password_reset') }}" class="btn btn-link btn-block" title="{{ gettext('Reset Password') }}">{{ gettext('Forgot password?') }}</a>
+                    <a href="{{ url('user:password.reset') }}" class="btn btn-link btn-block" title="{{ gettext('Reset Password') }}">{{ gettext('Forgot password?') }}</a>
                 </p>
             </div>
         </div>

@@ -1,0 +1,4 @@
+<div class="icheck-primary">
+    {% include 'app/forms/widgets/input.jinja2' %}
+    {% if 'label' in widget.attrs %}<label for="{{ widget.attrs['id'] }}">{{ widget.attrs['label'] }}</label>{% endif %}
+</div>
