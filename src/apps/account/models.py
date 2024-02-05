@@ -25,6 +25,9 @@ class Account(models.Model):
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
+    domains = models.ManyToManyField('AccountDomain', related_name='account_domains')
+    users = models.ManyToManyField('AccountUser', related_name='account_users')
+    invitations = models.ManyToManyField('AccountInvitation', related_name='account_invitations')
 
 
 class AccountDomain(models.Model):
