@@ -5,7 +5,7 @@ from apps.user.models import User
 
 @login_required
 def index(request):
-    user = User.objects.filter(user=request.user).first()
+    user: User = request.user
 
     if user is None or user.pk and not user.is_setup:
         return redirect(reverse('user:index'))

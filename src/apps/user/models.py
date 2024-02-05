@@ -1,14 +1,13 @@
 import uuid
 from django.db import models
-from django.contrib.auth.models import User as BaseUser
+from django.contrib.auth.models import AbstractUser
 from apps.data.models import Country, Timezone
 
 
-class User(models.Model):
+class User(AbstractUser):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
-    user = models.ForeignKey(BaseUser, on_delete=models.SET_NULL, null=True, related_name='user_user')
-    country = models.ForeignKey(Country, on_delete=models.CASCADE)
-    timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE)
+    country = models.ForeignKey(Country, on_delete=models.CASCADE, null=True)
+    timezone = models.ForeignKey(Timezone, on_delete=models.CASCADE, null=True)
     phone = models.CharField(max_length=15, null=True)
     is_setup = models.BooleanField(default=False)
     created_by = models.ForeignKey('User', on_delete=models.SET_NULL, null=True, related_name='user_created_by')

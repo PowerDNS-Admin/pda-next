@@ -14,7 +14,7 @@ def index(request: HttpRequest):
     from apps.data.models import Country, Timezone
     from apps.user.models import User
 
-    user: User = User.objects.filter(user=request.user).first()
+    user: User = request.user
 
     link: AccountUser = AccountUser.objects.filter(user=user).first()
 

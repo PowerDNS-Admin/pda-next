@@ -29,7 +29,7 @@ def notification_test(request: HttpRequest):
     from apps.notifications.models import Notification
     from apps.user.models import User
 
-    user = User.objects.get(user=request.user.id)
+    user: User = request.user
 
     params = {
         'label': 'Test Notification',
@@ -65,7 +65,7 @@ def notification_test(request: HttpRequest):
     text = NotificationManager.create_text(notification, **text_params)
     text.save()
 
-    recipient = NotificationManager.create_email_recipient(notification, user.user.email)
+    recipient = NotificationManager.create_email_recipient(notification, user.email)
     recipient.phone = user.phone
     recipient.user = user
     recipient.save()
@@ -124,11 +124,11 @@ def index(request: HttpRequest):
     from apps.user.models import User
     from apps.data.models import Country, Timezone
 
-    user: User = User.objects.filter(user=request.user).first()
+    user: User = User.objects.filter(pk=request.user.pk).first()
     exists: bool = user is not None
 
     if user is None:
-        user = User(user=request.user)
+        user = request.user
 
     if request.method == 'POST':
         user.country = Country.objects.get(pk=request.POST.get('country'))

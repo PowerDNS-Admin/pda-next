@@ -60,6 +60,8 @@ MIDDLEWARE = [
 
 AUTHENTICATION_BACKENDS = ['apps.user.auth.backends.EmailOrUsernameModelBackend']
 
+AUTH_USER_MODEL = 'user.User'
+
 ROOT_URLCONF = 'pda.urls'
 
 TEMPLATES = [
