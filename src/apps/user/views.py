@@ -6,6 +6,7 @@ from django.contrib.auth.views import (
 )
 from django.http import HttpRequest
 from django.urls import reverse_lazy
+from app.decorators.request import verify_user
 from apps.user.forms import PasswordResetForm
 
 UserModel = get_user_model()
@@ -134,7 +135,7 @@ def index(request: HttpRequest):
         user.country = Country.objects.get(pk=request.POST.get('country'))
         user.timezone = Timezone.objects.get(pk=request.POST.get('timezone'))
 
-        user.is_setup = True
+        user.status = User.STATUS_ACTIVE
         user.save()
 
         if exists:
@@ -155,6 +156,7 @@ def index(request: HttpRequest):
 def register(request: HttpRequest):
     import os
     from django.shortcuts import redirect, render
+    from apps.user.models import User
     from .forms import RegistrationForm
 
     if request.method == 'POST':
@@ -162,6 +164,8 @@ def register(request: HttpRequest):
 
         if form.is_valid():
             user = form.save()
+            user.status = User.STATUS_PENDING_SETUP
+            user.save()
             return redirect(reverse_lazy('user:index'))
     else:
         form = RegistrationForm()
@@ -170,6 +174,7 @@ def register(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def change_password(request: HttpRequest):
     import os
     from django.contrib.auth.forms import PasswordChangeForm
@@ -188,6 +193,7 @@ def change_password(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def change_password_done(request: HttpRequest):
     import os
     from django.shortcuts import render

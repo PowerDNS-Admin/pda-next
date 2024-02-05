@@ -1,51 +1,21 @@
 from django.contrib.auth import get_user_model
 from django.contrib.auth.decorators import login_required
 from django.http import HttpRequest
+from app.decorators.request import verify_user, verify_account
 
 UserModel = get_user_model()
 view_directory: str = 'account'
 
 
 @login_required
+@verify_user
+@verify_account
 def index(request: HttpRequest):
     import os
-    from django.shortcuts import redirect, render, reverse
-    from apps.account.models import Account, AccountUser
+    from django.shortcuts import render
     from apps.data.models import Country, Timezone
-    from apps.user.models import User
-
-    user: User = request.user
-
-    link: AccountUser = AccountUser.objects.filter(user=user).first()
-
-    if link is None:
-        return redirect(reverse('account:start'))
-
-    account: Account = Account.objects.filter(pk=link.account.id).first()
-    exists: bool = account is not None
-
-    if account is None:
-        account = Account()
-
-    if request.method == 'POST':
-        account.org_name = request.POST.get('org_name')
-        account.country = Country.objects.get(pk=request.POST.get('country'))
-        account.timezone = Timezone.objects.get(pk=request.POST.get('timezone'))
-
-        account.is_setup = True
-        account.save()
-
-        link = AccountUser(account=account, user=user, role='owner')
-        link.save()
-
-        if exists:
-            return redirect(reverse('account:index'))
-
-        # Send the user to the second step of account setup (not implemented yet)
-        return redirect(reverse('account:index'))
 
     params: dict = {
-        'account': account,
         'countries': Country.objects.all(),
         'timezones': Timezone.objects.all(),
     }
@@ -54,6 +24,7 @@ def index(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def start(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -62,6 +33,7 @@ def start(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def create(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -70,6 +42,7 @@ def create(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def create_domains(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -78,6 +51,7 @@ def create_domains(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def create_invite(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -86,6 +60,7 @@ def create_invite(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def create_done(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -94,6 +69,8 @@ def create_done(request: HttpRequest):
 
 
 @login_required
+@verify_user
+@verify_account
 def domains(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -102,6 +79,8 @@ def domains(request: HttpRequest):
 
 
 @login_required
+@verify_user
+@verify_account
 def domain_add(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -110,6 +89,8 @@ def domain_add(request: HttpRequest):
 
 
 @login_required
+@verify_user
+@verify_account
 def domain_remove(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -118,6 +99,8 @@ def domain_remove(request: HttpRequest):
 
 
 @login_required
+@verify_user
+@verify_account
 def invite(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -126,6 +109,8 @@ def invite(request: HttpRequest):
 
 
 @login_required
+@verify_user
+@verify_account
 def invite_done(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -134,6 +119,7 @@ def invite_done(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def join(request: HttpRequest):
     import os
     from django.shortcuts import render
@@ -142,6 +128,7 @@ def join(request: HttpRequest):
 
 
 @login_required
+@verify_user
 def join_verify(request: HttpRequest, token: str = None):
     import os
     from django.shortcuts import render
@@ -150,6 +137,7 @@ def join_verify(request: HttpRequest, token: str = None):
 
 
 @login_required
+@verify_user
 def join_done(request: HttpRequest):
     import os
     from django.shortcuts import render
