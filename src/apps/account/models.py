@@ -53,10 +53,14 @@ class AccountInvitation(models.Model):
 class AccountUser(models.Model):
     from apps.user.models import User
 
+    ROLE_OWNER = 'owner'
+    ROLE_ADMIN = 'admin'
+    ROLE_USER = 'user'
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4)
     account = models.ForeignKey(Account, on_delete=models.CASCADE)
     user = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='accountuser_user')
-    role = models.CharField(max_length=30)
+    role = models.CharField(max_length=30, default=ROLE_USER)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, related_name='accountuser_created_by')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
