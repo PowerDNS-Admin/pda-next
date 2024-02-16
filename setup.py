@@ -20,7 +20,7 @@ setup(
         'click-didyoumean==0.3.0',
         'click-plugins==1.1.1',
         'click-repl==0.2.0',
-        'cryptography==39.0.1',
+        'cryptography==42.0.2',
         'defusedxml==0.7.1',
         'django==4.1.7',
         'django-allauth==0.52.0',
