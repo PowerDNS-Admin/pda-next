@@ -4,8 +4,7 @@
 #
 #    pip-compile requirements/prod-requirements.in
 #
-gunicorn==20.1.0
-    # via -r requirements/prod-requirements.in
-
-# The following packages are considered to be unsafe in a requirements file:
-# setuptools
+gunicorn==23.0.0
+    # via -r prod-requirements.in
+packaging==24.2
+    # via gunicorn
