@@ -63,7 +63,7 @@ setup(
         'sqlparse==0.4.3',
         'typing-extensions==4.5.0',
         'uritemplate==4.1.1',
-        'urllib3==1.26.14',
+        'urllib3==2.5.0',
         'vine==5.0.0',
         'wcwidth==0.2.6',
     ],
