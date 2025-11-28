@@ -1,0 +1,123 @@
+services:
+
+  redis:
+    image: redis:8.0.1
+    container_name: pda_redis
+    hostname: redis
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - redis:/data
+    networks:
+      - pda
+    healthcheck:
+      test: [ 'CMD', 'redis-cli', '--raw', 'incr', 'ping' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      start_interval: 5s
+
+  proxy:
+    image: nginx:1.27
+    container_name: pda_proxy
+    hostname: pda_proxy
+    restart: unless-stopped
+    env_file: .env
+    volumes:
+      - ./deploy/docker/nginx/certs:/etc/nginx/certs
+      - ./deploy/docker/nginx/conf/proxy.conf.template:/etc/nginx/templates/default.conf.template
+      - ./var/log/nginx:/var/log/nginx
+    ports:
+      - "${PDA_SERVICE_IP}:80:80"
+      - "${PDA_SERVICE_IP}:443:443"
+    networks:
+      - pda
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://pda_proxy:80' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      start_interval: 5s
+
+  api:
+    image: powerdnsadmin/pda-api:latest
+    container_name: pda_api
+    hostname: pda_api
+    restart: unless-stopped
+    command: python3 -m uvicorn --host 0.0.0.0 --port 8081 --root-path / --log-level debug --access-log --proxy-headers --reload api:app
+    build:
+      context: .
+      dockerfile: ./deploy/docker/api/Dockerfile
+    depends_on:
+      - redis
+    env_file: .env
+    volumes:
+      - ./config:/srv/app/config
+    networks:
+      - pda
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://pda_api:8081/status' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      start_interval: 5s
+
+  worker:
+    image: powerdnsadmin/pda-api:latest
+    container_name: pda_worker
+    hostname: pda_worker
+    restart: unless-stopped
+    command: python3 -m celery -A worker.app worker --beat --loglevel debug
+    build:
+      context: .
+      dockerfile: ./deploy/docker/api/Dockerfile
+    depends_on:
+      - redis
+    env_file: .env
+    volumes:
+      - ./config:/srv/app/config
+    networks:
+      - pda
+    healthcheck:
+      test: [ 'CMD-SHELL', 'celery', '-A', 'worker.app', 'inspect', 'ping', '--destination', 'celery@$$HOSTNAME' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      start_interval: 5s
+    stop_signal: SIGTERM
+    stop_grace_period: 900s
+
+  web:
+    image: powerdnsadmin/pda-web:latest
+    restart: unless-stopped
+    container_name: pda_web
+    hostname: pda_web
+    build:
+      context: ./
+      dockerfile: ./deploy/docker/web/Dockerfile
+    env_file: .env
+    volumes:
+      - ./src-ui:/srv/app
+      - ./deploy/docker/nginx/conf/web.conf:/etc/nginx/sites-enabled/default.conf
+      - ./var/log/nginx:/var/log/nginx
+    networks:
+      - pda
+    healthcheck:
+      test: [ 'CMD', 'curl', '-f', 'http://pda_web:8000' ]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 15s
+      start_interval: 5s
+
+volumes:
+  redis:
+
+networks:
+  pda:
+    external: false
+    name: pda

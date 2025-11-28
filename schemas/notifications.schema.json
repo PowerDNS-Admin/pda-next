@@ -1,0 +1,374 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "PDA Notifications Configuration Schema",
+  "description": "Schema validating a single document inside the multi-document PDA notifications YAML configuration.",
+  "type": "object",
+  "additionalProperties": false,
+
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether this notification definition is active. Optional; defaults to false when omitted."
+    },
+
+    "label": {
+      "type": "string",
+      "description": "Human-friendly name for this notification configuration."
+    },
+
+    "criteria": {
+      "type": "object",
+      "description": "Specifies the triggering conditions that must match for this notification to execute.",
+      "additionalProperties": false,
+      "properties": {
+        "category": {
+          "type": "array",
+          "description": "List of category identifiers that trigger notifications.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "alert",
+              "task_received",
+              "task_revoked",
+              "task_rejected",
+              "task_pre_run",
+              "task_post_run",
+              "task_success",
+              "task_retry",
+              "task_failed",
+              "task_internal_error",
+              "task_unknown"
+            ]
+          }
+        },
+        "task": {
+          "type": "array",
+          "description": "List of task names that may trigger notifications.",
+          "items": {
+            "type": "string",
+            "enum": [
+              "pda.alert",
+              "pda.cache_cleaner",
+              "pda.mail",
+              "pda.mail.send",
+              "pda.test",
+              "pda.test.exception",
+              "pda.test.exception_retry",
+              "report.account_activity",
+              "report.active_loan_reconciliation",
+              "report.crypto_activity",
+              "report.new_symbol",
+              "report.symbol_price_change",
+              "report.trade_reconciliation",
+              "report.trading_activity",
+              "service.bloomberg.requests.fulfill",
+              "service.bloomberg.capture_trades",
+              "service.coinbase.notification.order_complete",
+              "service.coinbase.sync.ref_data",
+              "service.global.capture_trades",
+              "service.kraken.notification.order_complete",
+              "service.kraken.sync.ref_data",
+              "sync.data"
+            ]
+          }
+        },
+        "meta": {
+          "type": "object",
+          "description": "Arbitrary metadata used for matching additional conditions. Keys unrestricted; values must be simple scalars or arrays of scalars.",
+          "additionalProperties": {
+            "oneOf": [
+              { "type": "string" },
+              { "type": "integer" },
+              { "type": "number" },
+              { "type": "boolean" },
+              {
+                "type": "array",
+                "items": {
+                  "oneOf": [
+                    { "type": "string" },
+                    { "type": "integer" },
+                    { "type": "number" }
+                  ]
+                }
+              }
+            ]
+          }
+        }
+      }
+    },
+
+    "services": {
+      "type": "array",
+      "description": "List of notification delivery services (mail, msteams, twilio, etc).",
+      "items": {
+        "allOf": [
+          { "$ref": "#/$defs/serviceBase" },
+          {
+            "if": {
+              "properties": { "name": { "const": "mail" } }
+            },
+            "then": {
+              "properties": {
+                "recipients": {
+                  "type": "array",
+                  "description": "Recipient list for mail notifications.",
+                  "items": {
+                    "type": "object",
+                    "description": "A recipient within a delivery service (email address, phone number, webhook, etc).",
+                    "additionalProperties": false,
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether this recipient is enabled. Defaults to true.",
+                        "default": true
+                      },
+
+                      "label": {
+                        "type": "string",
+                        "description": "Human-friendly label for this notification recipient."
+                      },
+
+                      "name": {
+                        "type": "string",
+                        "description": "Recipient’s human name (used by mail and twilio services)."
+                      },
+
+                      "email": {
+                        "type": "string",
+                        "description": "Email address for mail recipients.",
+                        "pattern": "^[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$"
+                      },
+
+                      "schedules": {
+                        "type": "array",
+                        "description": "Optional schedules controlling when this recipient should receive notifications.",
+                        "items": { "$ref": "#/$defs/schedule" }
+                      }
+                    },
+                    "required": ["label", "email"]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": { "name": { "const": "msteams" } }
+            },
+            "then": {
+              "properties": {
+                "recipients": {
+                  "type": "array",
+                  "description": "Recipient list for Microsoft Teams channel notifications.",
+                  "items": {
+                    "type": "object",
+                    "description": "A Microsoft Teams channel recipient.",
+                    "additionalProperties": false,
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether this recipient is enabled. Defaults to true.",
+                        "default": true
+                      },
+
+                      "label": {
+                        "type": "string",
+                        "description": "Human-friendly label for this notification recipient."
+                      },
+
+                      "webhook": {
+                        "type": "string",
+                        "description": "Webhook identifier for Teams or other webhook-based services."
+                      },
+
+                      "schedules": {
+                        "type": "array",
+                        "description": "Optional schedules controlling when this recipient should receive notifications.",
+                        "items": { "$ref": "#/$defs/schedule" }
+                      }
+                    },
+                    "required": ["label", "webhook"]
+                  }
+                }
+              }
+            }
+          },
+          {
+            "if": {
+              "properties": { "name": { "const": "twilio" } }
+            },
+            "then": {
+              "properties": {
+                "recipients": {
+                  "type": "array",
+                  "description": "Recipient list for Twilio voice / message notifications.",
+                  "items": {
+                    "type": "object",
+                    "description": "A Twilio voice/message recipient.",
+                    "additionalProperties": false,
+                    "properties": {
+                      "enabled": {
+                        "type": "boolean",
+                        "description": "Whether this recipient is enabled. Defaults to true.",
+                        "default": true
+                      },
+
+                      "label": {
+                        "type": "string",
+                        "description": "Human-friendly label for this notification recipient."
+                      },
+
+                      "name": {
+                        "type": "string",
+                        "description": "Recipient’s human name (used by mail and twilio services)."
+                      },
+
+                      "number": {
+                        "type": "string",
+                        "description": "E.164 formatted phone number for SMS/voice recipients.",
+                        "pattern": "^\\+[1-9]\\d{7,14}$"
+                      },
+
+                      "types": {
+                        "type": "array",
+                        "description": "What delivery types should be used for the notification on Twilio (e.g. 'voice', 'message').",
+                        "items": {
+                          "type": "string",
+                          "enum": ["voice", "message"]
+                        }
+                      },
+
+                      "schedules": {
+                        "type": "array",
+                        "description": "Optional schedules controlling when this recipient should receive notifications.",
+                        "items": { "$ref": "#/$defs/schedule" }
+                      }
+                    },
+                    "required": ["label", "name", "number", "types"]
+                  }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+
+  "required": [
+    "label",
+    "services"
+  ],
+
+  "$defs": {
+
+    "serviceBase": {
+      "type": "object",
+      "description": "A notification delivery service definition.",
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Service identifier, e.g. 'mail', 'msteams', 'twilio'.",
+          "enum": ["mail", "msteams", "twilio"]
+        },
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this service is enabled for this notification definition. Defaults to true.",
+          "default": true
+        }
+      },
+      "required": ["name", "recipients"]
+    },
+
+    "schedule": {
+      "type": "object",
+      "description": "A schedule specifying allowed delivery windows for notification recipients.",
+      "additionalProperties": false,
+      "properties": {
+        "label": {
+          "type": "string",
+          "description": "Human-friendly name for this recipient schedule."
+        },
+
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether this recipient notification schedule is enabled. Defaults to true.",
+          "default": true
+        },
+
+        "timezone": {
+          "type": "string",
+          "description": "IANA timezone name to be used for interpreting this schedule's dates and times.",
+          "pattern": "^[A-Za-z]+(?:/[A-Za-z_]+)+$",
+          "default": "Etc/UTC"
+        },
+
+        "dates": {
+          "type": "array",
+          "description": "Optional list of dates/times to restrict notification delivery to with this schedule.",
+          "items": { "$ref": "#/$defs/date_range" },
+          "default": null
+        },
+
+        "times": {
+          "type": "array",
+          "description": "Optional list of times to restrict notification delivery to with this schedule.",
+          "items": { "$ref": "#/$defs/time_range" },
+          "default": null
+        }
+      },
+      "required": ["label"]
+    },
+
+    "date_range": {
+      "type": "object",
+      "description": "Represents delivery date/time restrictions. Any property can be excluded to assume values. For example, excluding start will assume any date/time on or before the specified end and via versa.",
+      "additionalProperties": false,
+      "properties": {
+        "start": {
+          "type": "string",
+          "description": "Start date (YYYY-MM-DD) or date/time (YYYY-MM-DD HH[:MM][:SS] am/pm). Exclude to assume all dates or before the date/time defined by the end property.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}( ([1-9]|1[0-2])(:\\d{2})?(:\\d{2})? (am|pm))?$",
+          "default": null
+        },
+        "end": {
+          "type": "string",
+          "description": "End date (YYYY-MM-DD) or date/time (YYYY-MM-DD HH[:MM][:SS] am/pm). Exclude to assume all dates or after the date/time defined by the start property.",
+          "pattern": "^\\d{4}-\\d{2}-\\d{2}( ([1-9]|1[0-2])(:\\d{2})?(:\\d{2})? (am|pm))?$",
+          "default": null
+        }
+      }
+    },
+
+    "time_range": {
+      "type": "object",
+      "description": "Represents delivery time restrictions on certain weekdays with specific time ranges. Any property can be excluded to assume values. For example, excluding days will assume all days of the week. Excluding start will assume all time of the day until the specified end and via versa.",
+      "additionalProperties": false,
+      "properties": {
+        "days": {
+          "type": "array",
+          "description": "List of weekdays the time range applies to. Exclude to assume all days.",
+          "items": {
+            "type": "string",
+            "enum": ["sunday", "monday", "tuesday", "wednesday", "thursday", "friday", "saturday"],
+            "pattern": "^(monday|tuesday|wednesday|thursday|friday|saturday|sunday)$"
+          },
+          "default": null
+        },
+        "start": {
+          "type": "string",
+          "description": "Start time, 12-hour format with optional minutes/seconds (e.g. '8 am', '5:30 pm', '11:59:59 pm'). Exclude to assume all time of a day or to the time specified by the end property if included.",
+          "pattern": "^([1-9]|1[0-2])(:[0-5][0-9]){0,2} ?(am|pm)$",
+          "default": null
+        },
+        "end": {
+          "type": "string",
+          "description": "End time, 12-hour format with optional minutes/seconds (e.g. '8 am', '5:30 pm', '11:59:59 pm'). Exclude to assume all time of a day or after the time specified by the start property if included.",
+          "pattern": "^([1-9]|1[0-2])(:[0-5][0-9]){0,2} ?(am|pm)$",
+          "default": null
+        }
+      }
+    }
+  }
+}

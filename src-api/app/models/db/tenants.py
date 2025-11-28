@@ -1,0 +1,91 @@
+"""
+PDA Tenant Database Models
+
+This file defines the database models associated with tenant functionality.
+"""
+import uuid
+from datetime import datetime
+from sqlalchemy import DateTime, String, Uuid, text, ForeignKey
+from sqlalchemy.orm import Mapped, mapped_column, relationship
+from app.models.base import BaseSqlModel
+
+
+class Tenant(BaseSqlModel):
+    """Represents a tenant."""
+
+    __tablename__ = 'pda_tenants'
+    """Defines the database table name."""
+
+    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    """The unique identifier of the record."""
+
+    name: Mapped[str] = mapped_column(String, nullable=False)
+    """The name of the tenant."""
+
+    fqdn: Mapped[str] = mapped_column(String, nullable=True)
+    """The FQDN for the tenant UI."""
+
+    stopgap_domain_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_stopgap_domains.id'), nullable=True)
+    """The unique identifier of the associated stopgap domain."""
+
+    stopgap_hostname: Mapped[str] = mapped_column(String, nullable=True)
+    """The hostname used within the associated stopgap domain."""
+
+    created_at: Mapped[DateTime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
+    )
+    """The timestamp representing when the record was created."""
+
+    updated_at: Mapped[DateTime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
+        server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
+    )
+    """The timestamp representing when the record was last updated."""
+
+    stopgap_domain = relationship('StopgapDomain', back_populates='tenants')
+    """The stopgap domain associated with the tenant."""
+
+    auth_users = relationship('User', back_populates='tenant')
+    """A list of auth users associated with the tenant."""
+
+    auth_user_authenticators = relationship('UserAuthenticator', back_populates='tenant')
+    """A list of auth user authenticators associated with the tenant."""
+
+    auth_sessions = relationship('Session', back_populates='tenant')
+    """A list of auth sessions associated with the tenant."""
+
+    auth_clients = relationship('Client', back_populates='tenant')
+    """A list of auth clients associated with the tenant."""
+
+    auth_access_tokens = relationship('AccessToken', back_populates='tenant')
+    """A list of auth access tokens associated with the tenant."""
+
+    auth_refresh_tokens = relationship('RefreshToken', back_populates='tenant')
+    """A list of auth refresh tokens associated with the tenant."""
+
+    servers = relationship('Server', back_populates='tenant')
+    """A list of servers associated with the tenant."""
+
+    auto_primaries = relationship('ServerAutoPrimary', back_populates='tenant')
+    """A list of server auto primary registrations associated with the tenant."""
+
+    views = relationship('View', back_populates='tenant')
+    """A list of views associated with the tenant."""
+
+    view_zones = relationship('ViewZone', back_populates='tenant')
+    """A list of view zones associated with the tenant."""
+
+    view_networks = relationship('ViewNetwork', back_populates='tenant')
+    """A list of view networks associated with the tenant."""
+
+    crypto_keys = relationship('CryptoKey', back_populates='tenant')
+    """A list of cryptographic keys associated with the tenant."""
+
+    tsig_keys = relationship('TsigKey', back_populates='tenant')
+    """A list of TSIG keys associated with the tenant."""
+
+    azones = relationship('AZone', back_populates='tenant')
+    """A list of authoritative zones associated with the tenant."""
+
+    rzones = relationship('RZone', back_populates='tenant')
+    """A list of recursive zones associated with the tenant."""

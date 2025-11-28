@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/task-schedule-dynamic.schema.json",
+  "title": "Task Schedule Entry",
+  "description": "Schema for PDA task schedule entries with per-task validation and IDE-friendly descriptions.",
+  "type": "object",
+  "required": ["enabled", "key", "name", "task"],
+  "properties": {
+    "enabled": {
+      "type": "boolean",
+      "description": "Whether this scheduled task is active or disabled."
+    },
+    "key": {
+      "type": "string",
+      "description": "Unique identifier for the task, often matching the task path in dot notation."
+    },
+    "name": {
+      "type": "string",
+      "description": "Human-readable name of the scheduled task."
+    },
+    "task": {
+      "type": "string",
+      "description": "Fully qualified function or method name to execute."
+    },
+    "at": {
+      "type": "array",
+      "description": "Array of cron expressions or human-readable times with optional timezones.",
+      "items": {
+        "type": "string",
+        "examples": ["'0 1 * * * America/Indiana/Indianapolis'", "'4:30 PM America/Indiana/Indianapolis'"]
+      }
+    },
+    "kwargs": {
+      "type": "object",
+      "description": "Optional dictionary of keyword arguments to pass to the task."
+    },
+    "options": {
+      "type": "object",
+      "description": "Optional task options such as retry policies."
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": { "task": { "pattern": "^report\\." } }
+      },
+      "then": {
+        "properties": {
+          "kwargs": {
+            "type": "object",
+            "description": "Keyword arguments specific to report tasks.",
+            "properties": {
+              "conf": {
+                "type": "object",
+                "description": "Configuration settings for the report task.",
+                "properties": {
+                  "mail": {
+                    "type": "object",
+                    "description": "Email configuration for the report output.",
+                    "properties": {
+                      "template_path": { "type": "string", "description": "Path to the email template for the report." },
+                      "mail_to": {
+                        "type": "array",
+                        "description": "List of email recipients for the report.",
+                        "items": { "type": "string", "description": "Recipient email in 'Name <email>' format." }
+                      }
+                    },
+                    "required": ["template_path", "mail_to"]
+                  },
+                  "report": {
+                    "type": "object",
+                    "description": "Optional filters and settings specific to the report generation.",
+                    "properties": {
+                      "filters": {
+                        "type": "object",
+                        "description": "Time range or other filters applied to the report data.",
+                        "properties": {
+                          "start": { "type": "string", "format": "date-time", "description": "Start datetime for the report filter." },
+                          "end": { "type": "string", "format": "date-time", "description": "End datetime for the report filter." }
+                        }
+                      },
+                      "crypto_filters": {
+                        "type": "object",
+                        "description": "Optional filters specific to cryptocurrency data.",
+                        "properties": {
+                          "start": { "type": "string", "format": "date-time", "description": "Start datetime for crypto filter." },
+                          "end": { "type": "string", "format": "date-time", "description": "End datetime for crypto filter." }
+                        }
+                      }
+                    }
+                  },
+                  "lte_threshold": {
+                    "type": "number",
+                    "description": "Lower threshold for reporting metrics (e.g., symbol price changes)."
+                  },
+                  "gte_threshold": {
+                    "type": "number",
+                    "description": "Upper threshold for reporting metrics."
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "task": { "pattern": "^service\\." } }
+      },
+      "then": {
+        "properties": {
+          "kwargs": {
+            "type": ["object", "null"],
+            "description": "Optional kwargs for service tasks, including configuration.",
+            "properties": {
+              "conf": { "type": "object", "description": "Service-specific configuration settings." }
+            }
+          }
+        }
+      }
+    },
+    {
+      "if": {
+        "properties": { "task": { "pattern": "^pda\\." } }
+      },
+      "then": {
+        "properties": {
+          "options": {
+            "type": "object",
+            "description": "Optional PDA scheduled task options.",
+            "properties": {
+              "retry_policy": {
+                "type": "object",
+                "description": "Retry configuration for PDA scheduled tasks.",
+                "properties": {
+                  "max_retries": { "type": "integer", "minimum": 0, "description": "Maximum number of retry attempts." },
+                  "interval_start": { "type": "integer", "minimum": 0, "description": "Seconds to wait before the first retry." }
+                },
+                "required": ["max_retries"]
+              }
+            }
+          }
+        }
+      }
+    }
+  ]
+}

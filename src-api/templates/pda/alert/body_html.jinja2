@@ -1,0 +1,17 @@
+<html lang="en">
+<head></head>
+<body>
+{% include 'shared/mail/header.jinja2' %}
+<table style="font-size: 1.2em; font-weight: bold; font-family: Arial, serif; color: #FFFFFF; width: 100%; min-width: 500px; margin-bottom: 15px; border: 0;" cellpadding="10" align="left" valign="middle" border="0">
+    <tbody>
+        <tr style="background-color: #ef0909; border:0;">
+            <td height="30" style="text-align: center; vertical-align: middle; border: 0;" valign="middle">
+                {{ title }}
+            </td>
+        </tr>
+    </tbody>
+</table>
+{{ message_html }}
+{% include 'shared/mail/footer.jinja2' %}
+</body>
+</html>
