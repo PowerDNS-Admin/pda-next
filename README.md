@@ -95,7 +95,7 @@ Please see our
 
 ## License
 
-This project is released under the MIT license. For additional
+This project is released under the Attribution-NonCommercial 4.0 International license. For additional
 information, [see the full license](https://github.com/PowerDNS-Admin/pda-next/blob/main/LICENSE).
 
 ## Donate
