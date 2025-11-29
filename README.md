@@ -1,6 +1,6 @@
 # PDA-Next
 
-A PowerDNS web interface with advanced features.
+An advanced management and monitoring tool for the PowerDNS software suite.
 
 ***WARNING: This project is a work in progress and is NOT ready for production use!***
 
@@ -14,35 +14,57 @@ an official release announcement before using this project.
 
 ## Features
 
-- Provides forward and reverse zone management
-- Provides zone templating features
-- Provides user management with role based access control
-- Provides zone specific access control
-- Provides activity logging
-- Authentication:
-    - Local User Support
-    - SAML Support
-    - LDAP Support: OpenLDAP / Active Directory
-    - OAuth Support: Google / GitHub / Azure / OpenID
-- Two-factor authentication support (TOTP)
-- PowerDNS server configuration & statistics monitoring
-- DynDNS2 protocol support
+- Full Featured API
+  - Provides a full API that drives browser-based client application.
+  - All functionality provided directly through API allowing service providers to build their own client applications.
+  - OpenAPI / Swagger UI support baked in for all API endpoints.
+  - Python SDK in the works to ease automation and integration with the API.
+- Multi-Tenancy
+  - Allows service providers to provide shared access to PowerDNS server instances.
+  - Allows service providers to provide shared access of DNS zones to allow for offerings such as dynamic DNS.
+  - Allows tenants to bring their own DNS servers and external OAuth authentication services.
+  - Allows tenants to use configure stopgap and custom domains for API and browser client application white labeling.
+- Multi-Server Management
+  - Provides the ability to manage multiple PowerDNS authoritative servers in all modes.
+  - Provides the ability to manage multiple PowerDNS recursive servers.
+  - Planned support for managing the PowerDNS dnsdist proxy server.
+- Zone Management
+  - Supports forward and reverse zone management.
+  - Supports catalog zone management.
+  - Supports management of experimental zone views feature.
+  - Supports zone templating for easy zone set up.
+  - Supports assigning zones to specific servers.
+  - DynDNS2 protocol support
+- Advanced Authentication & Permissions System
+  - API supports authentication by OAuth clients and traditional user sessions.
+  - Supports OAuth client registrations at system, tenant, and user levels.
+  - Supports both role-based permissions assignment as well as granular resource based permission assignment.
+  - Planned support for authenticating users via third-party OAuth services.
+- User / API Security
+  - Supports all standard multifactor authentication (MFA) mechanisms including WebAuthn (hardware keys),
+  TOTP (software authenticators), and OTP (SMS / Email).
+  - Supports locking API sessions to originating IP addresses to mitigate session / OAuth token hijacking.
+- Auditing
+  - Detailed auditing baked in to every action taken.
+- Monitoring
+  - Supports extraction and monitoring of server configuration, statistics, and cache metrics.
+  - Provides Prometheus-style metrics via the API including direct relay of DNS server metrics.
+  - Provides Zabbix Sender reporting capabilities for task execution monitoring.
 - Easy IPv6 PTR record editing
-- Provides an API for zone and record management among other features
-- Provides full IDN/Punycode support
+- Provides IDN/Punycode support
 
 For additional information on features, please see the
 [Project Features](https://github.com/PowerDNS-Admin/pda-next/blob/main/docs/wiki/project/features.md) document.
 
 ## TL;DR
 
-To get started quickly with a simple deployment, execute the following commands on a *nix based system
-with `bash` and `git` installed:
+To get started quickly with a simple local development deployment, execute the following commands on a *nix based
+system with `bash` and `git` installed:
 
 ```
 git clone https://github.com/PowerDNS-Admin/pda-next.git
 cd pda-next
-deployment/setup.sh
+deploy/start.sh
 ```
 
 ## Project Documentation
@@ -95,7 +117,10 @@ Please see our
 
 ## License
 
-This project is released under the Attribution-NonCommercial 4.0 International license. For additional
+This project is released under the Attribution-NonCommercial 4.0 International license. Don't worry though, we're working on provisions for both free and paid
+commercial licensing as well!
+
+For additional
 information, [see the full license](https://github.com/PowerDNS-Admin/pda-next/blob/main/LICENSE).
 
 ## Donate
