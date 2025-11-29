@@ -1,0 +1,12 @@
+__pycache__
+.app.env
+.env
+celerybeat-schedule
+config.yml
+notifications.yml
+schedules.yml
+src-ui/.env
+src-ui/.env.local
+src-ui/package-lock.json
+src-ui/dist
+src-ui/node_modules

@@ -1,0 +1,24 @@
+---
+name: Deployment Testing
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - '-dev'
+      - '-main'
+      - '-dependabot/**'
+      - '-feature/**'
+      - '-issue/**'
+      - '-release/**'
+    tags:
+      - '-v*.*.*'
+jobs:
+  deployment_test_ubuntu_linux_2204:
+    runs-on: [self-hosted, linux, x64]
+    environment: testing
+    concurrency:
+      group: deployment_test_ubuntu_linux_2204
+      cancel-in-progress: true
+    steps:
+      - name: Repository Checkout
+        uses: actions/checkout@v3

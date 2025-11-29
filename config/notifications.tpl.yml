@@ -1,0 +1,207 @@
+# yaml-language-server: $schema=./schemas/notifications.schema.json
+enabled: true
+label: Critical Task Monitoring
+criteria:
+  category:
+    - alert
+    - task_retry
+    - task_failed
+  task:
+    - sync.data
+    - report.trading_activity
+    - report.crypto_activity
+    - report.account_activity
+  meta:
+    arbitrary_string_array_attribute_1:
+      - value 1
+      - value 2
+    arbitrary_integer_array_attribute_2:
+      - 100
+      - 200
+    arbitrary_integer_attribute_3: 202
+    arbitrary_float_attribute_4: 100.5
+    arbitrary_boolean_attribute_5: true
+    arbitrary_string_attribute_6: value
+services:
+  - enabled: true
+    name: mail
+    recipients:
+      - enabled: true
+        label: Your Name's Work Email
+        schedules:
+          - enabled: true
+            label: November Schedule
+            timezone: America/Indiana/Indianapolis
+            dates:
+              - start: '2025-11-01 7 am'
+                end: '2025-11-30 6:30 pm'
+            times:
+              - days:
+                  - monday
+                  - tuesday
+                  - wednesday
+                  - thursday
+                  - friday
+                start: '7 am'
+                end: '6:30 pm'
+        name: Your Name
+        email: your.name@domain.com
+      - enabled: true
+        label: Your Name's Work Email
+        schedules:
+          - enabled: true
+            label: Work Hours
+            timezone: America/Indiana/Indianapolis
+            times:
+              - days:
+                  - monday
+                  - tuesday
+                  - wednesday
+                  - thursday
+                  - friday
+                start: '8 am'
+                end: '5 pm'
+        name: Your Name
+        email: your.name@domain.com
+  - enabled: true
+    name: msteams
+    recipients:
+      - enabled: true
+        label: Microsoft Teams Notifications Channel
+        schedules:
+          - enabled: true
+            label: November Office Hours
+            timezone: America/Indiana/Indianapolis
+            dates:
+              - start: '2025-11-01'
+                end: '2025-11-30'
+            times:
+              - days:
+                  - monday
+                  - tuesday
+                  - wednesday
+                  - thursday
+                  - friday
+                start: '8 am'
+                end: '5 pm'
+        webhook: WEBHOOK_ID_HERE
+  - enabled: true
+    name: twilio
+    recipients:
+      - enabled: true
+        label: Your Name's Mobile
+        schedules:
+          - enabled: true
+            label: Work Hours
+            timezone: America/Indiana/Indianapolis
+            times:
+              - days:
+                  - monday
+                  - tuesday
+                  - wednesday
+                  - thursday
+                  - friday
+                start: '8 am'
+                end: '5 pm'
+          - enabled: true
+            label: December On-Call Weekend
+            timezone: America/Indiana/Indianapolis
+            dates:
+              - start: '2025-12-01'
+                end: '2025-12-30'
+            times:
+              - days:
+                  - monday
+                start: '12 am'
+                end: '8 am'
+              - days:
+                  - friday
+                start: '5 pm'
+                end: '11:59:59 pm'
+              - days:
+                  - saturday
+                  - sunday
+                start: '12 am'
+                end: '11:59:59 pm'
+        name: Your Name
+        number: '+18005555555'
+        types:
+          - voice
+          - message
+      - enabled: true
+        label: Your Name's Mobile
+        schedules:
+          - enabled: true
+            label: Work Hours
+            timezone: America/Indiana/Indianapolis
+            times:
+              - days:
+                  - monday
+                  - tuesday
+                  - wednesday
+                  - thursday
+                  - friday
+                start: '8 am'
+                end: '5 pm'
+        name: Your Name
+        number: '+18885555555'
+        types:
+          - message
+---
+label: Critical Report Monitoring
+criteria:
+  category:
+    - alert
+    - task_failed
+    - task_internal_error
+  task:
+    - report.active_loan_reconciliation
+    - report.new_symbol
+    - report.symbol_price_change
+services:
+  - name: mail
+    recipients:
+      - label: Your Name's Work Email
+        name: Your Name
+        email: your.name@domain.com
+---
+label: Trading / Crypto Activity Report Monitoring
+criteria:
+  category:
+    - alert
+    - task_failed
+    - task_internal_error
+  task:
+    - report.crypto_activity
+    - report.trading_activity
+services:
+  - name: mail
+    recipients:
+      - label: Reuben Flack's Work Email
+        name: Reuben Flack
+        email: your.name@domain.com
+      - label: Your Name's Work Email
+        name: Your Name
+        email: your.name@domain.com
+---
+label: Account Activity Report Monitoring
+criteria:
+  category:
+    - alert
+    - task_failed
+    - task_internal_error
+  task:
+    - report.account_activity
+services:
+  - name: mail
+    recipients:
+      - label: Your Name's Work Email
+        name: Your Name
+        email: your.name@domain.com
+  - name: twilio
+    recipients:
+      - label: Your Name's Mobile
+        name: Your Name
+        number: '+18555555555'
+        types:
+          - voice

@@ -1,0 +1,18 @@
+{% if settings.env in ['qa', 'dev', 'local'] %}
+    {% if settings.env == 'qa' %}
+        {% set mode = 'QA' %}
+    {% elif settings.env == 'dev' %}
+        {% set mode = 'Development' %}
+    {% elif settings.env == 'local' %}
+        {% set mode = 'Local' %}
+    {% endif %}
+    <table style="font-size: 1.2em; font-weight: bold; font-family: Arial, serif; color: #FFFFFF; width: 100%; min-width: 500px; margin-bottom: 10px; border: 0;" cellpadding="10" align="left" valign="middle" border="0">
+        <tbody>
+            <tr style="background-color: #ef0909; border:0;">
+                <td height="30" style="text-align: center; vertical-align: middle; border: 0;" valign="middle">
+                    *** {{ mode }} Version ***
+                </td>
+            </tr>
+        </tbody>
+    </table>
+{% endif %}

@@ -1,0 +1,739 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://example.com/schemas/myapp-config.schema.json",
+  "title": "PDA Configuration",
+  "description": "Schema for validating the PDA's YAML configuration file.",
+  "type": "object",
+  "properties": {
+    "api": {
+      "type": "object",
+      "description": "This object provides configuration and metadata for the API app provided the PDA.",
+      "properties": {
+        "metadata": {
+          "type": "object",
+          "description": "The object provides the metadata configuration for the HTTP API provided by the app.",
+          "properties": {
+            "tags": {
+              "type": "array",
+              "description": "This property defines a list of API metadata tag objects that describe each resource tag.",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the API metadata tag."
+                  },
+                  "description": {
+                    "type": "string",
+                    "description": "The description of the API metadata tag."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "runtime": {
+          "type": "object",
+          "description": "This object provides configuration for the API app provided by the PDA.",
+          "properties": {
+            "init": {
+              "type": "object",
+              "description": "This object defines the configuration of app and database initialization.",
+              "properties": {
+                "repeat": {
+                  "type": "boolean",
+                  "description": "Whether the app initialization process should be repeated on an interval.",
+                  "default": false
+                },
+                "repeat_interval": {
+                  "type": "integer",
+                  "description": "Seconds between repeated app initializations if enabled.",
+                  "default": 300,
+                  "minimum": 0.5,
+                  "maximum": 31536000
+                },
+                "repeat_recovery_interval": {
+                  "type": "integer",
+                  "description": "Seconds to wait before checking updated app configuration when repeating initialization has been disabled.",
+                  "default": 300,
+                  "minimum": 0.5,
+                  "maximum": 31536000
+                },
+                "init_db": {
+                  "type": "boolean",
+                  "description": "Initialize the database during startup.",
+                  "default": false
+                },
+                "repeat_db": {
+                  "type": "boolean",
+                  "description": "Whether the database initialization process should be repeated on an interval.",
+                  "default": false
+                },
+                "repeat_db_interval": {
+                  "type": "integer",
+                  "description": "Seconds between repeated database initialization if enabled.",
+                  "default": 300,
+                  "minimum": 0.5,
+                  "maximum": 31536000
+                },
+                "repeat_db_recovery_interval": {
+                  "type": "integer",
+                  "description": "Seconds to wait before checking updated app configuration when repeating database initialization has been disabled.",
+                  "default": 300,
+                  "minimum": 0.5,
+                  "maximum": 31536000
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "app": {
+      "type": "object",
+      "description": "Provides metadata, author, and environment configuration data for the PDA application.",
+      "properties": {
+        "name": {
+          "type": "string",
+          "description": "Provides the name of the application.",
+          "default": "pda"
+        },
+        "version": {
+          "type": "string",
+          "description": "Provides the version of the application.",
+          "default": "0.1.0",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$"
+        },
+        "summary": {
+          "type": "string",
+          "description": "Provides a summary of the application.",
+          "default": "A PowerDNS web interface with advanced management and automation features."
+        },
+        "timezone": {
+          "type": "string",
+          "description": "Provides the native timezone of the app.",
+          "default": "Etc/UTC",
+          "pattern": "^(Africa|America|Antarctica|Arctic|Asia|Atlantic|Australia|Europe|Indian|Pacific)\/[A-Za-z_]+(?:\/[A-Za-z_]+)*$"
+        },
+        "timezone_code": {
+          "type": "string",
+          "description": "Provides the native timezone of the app by 3-letter code.",
+          "default": "UTC",
+          "pattern": "\\b(?:[A-Z]{2,4}|UTC|GMT)\\b"
+        },
+        "secret_key": {
+          "type": "string",
+          "description": "The secret key used for data encryption.",
+          "default": null
+        },
+        "author": {
+          "type": "object",
+          "description": "Provides information about the app author.",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "The name of the app author.",
+              "default": "PowerDNS Admin"
+            },
+            "email": {
+              "type": "string",
+              "description": "The email address of the app author.",
+              "default": "admin@powerdnsadmin.org",
+              "pattern": "^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$"
+            },
+            "url": {
+              "type": "string",
+              "description": "The URL of the app author's website.",
+              "default": "https://powerdnsadmin.org",
+              "pattern": "^(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+            }
+          }
+        },
+        "environment": {
+          "type": "object",
+          "description": "Defines the app's environment configuration.",
+          "properties": {
+            "name": {
+              "type": "string",
+              "description": "Environment name (e.g., 'local', 'dev', 'qa', 'prod').",
+              "default": "prod",
+              "enum": [
+                "prod",
+                "staging",
+                "dev",
+                "local"
+              ]
+            },
+            "prefix": {
+              "type": "string",
+              "description": "Defines the name prefix to search for when loading app settings from environment variables.",
+              "default": "PDA",
+              "pattern": "^[A-Z0-9]+$"
+            },
+            "file": {
+              "type": "string",
+              "description": "Defines the environment setting file to load by default when loading app settings from environment variables.",
+              "default": ".app.env",
+              "pattern": "^\\.[a-z0-9]+\\.env$"
+            },
+            "urls": {
+              "type": "object",
+              "description": "Defines various URLs related to the specific environment.",
+              "properties": {
+                "api": {
+                  "type": "string",
+                  "description": "Defines the environment specific URL to the API application.",
+                  "default": null,
+                  "pattern": "^(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                },
+                "web": {
+                  "type": "string",
+                  "description": "Defines the environment specific URL to the web application.",
+                  "default": null,
+                  "pattern": "^(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()@:%_\\+.~#?&//=]*)$"
+                }
+              }
+            }
+          }
+        },
+        "metadata": {
+          "type": "object",
+          "description": "Provides metadata about the app.",
+          "properties": {
+            "description": {
+              "type": "string",
+              "description": "The description of the app.",
+              "default": "The PDA API provides an interface for task execution and monitoring."
+            }
+          }
+        }
+      },
+      "required": ["secret_key"]
+    },
+    "celery": {
+      "type": "object",
+      "description": "Provides configuration for the Celery worker process of the PDA app.",
+      "properties": {
+        "broker": {
+          "type": "object",
+          "description": "Provides configuration information for the broker to be used with Celery.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Provides the connection URL for the broker to be used with Celery.",
+              "default": "redis://redis:6379/0",
+              "pattern": "^rediss?://(?:(?<username>[^:]+):(?<password>[^@]+)@)?(?<host>[^:/]+)(?::(?<port>\\d+))?(?:/(?<database>\\d+))?$"
+            }
+          }
+        },
+        "backend": {
+          "type": "object",
+          "description": "Provides configuration information for the backend to be used with Celery.",
+          "properties": {
+            "url": {
+              "type": "string",
+              "description": "Provides the connection URL for the backend to be used with Celery.",
+              "default": "redis://redis:6379/0",
+              "pattern": "^rediss?://(?:(?<username>[^:]+):(?<password>[^@]+)@)?(?<host>[^:/]+)(?::(?<port>\\d+))?(?:/(?<database>\\d+))?$"
+            }
+          }
+        }
+      }
+    },
+    "db": {
+      "type": "object",
+      "description": "Provides connection information for database connections.",
+      "properties": {
+        "mysql": {
+          "type": "object",
+          "description": "Provides connection information for the app's MySQL database connection.",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "MySQL server hostname or IP address.",
+              "default": "localhost",
+              "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+            },
+            "port": {
+              "type": "integer",
+              "description": "MySQL server port.",
+              "default": 3306,
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "username": {
+              "type": "string",
+              "description": "MySQL database username."
+            },
+            "password": {
+              "type": "string",
+              "description": "MySQL database password."
+            },
+            "database": {
+              "type": "string",
+              "description": "MySQL database name.",
+              "pattern": "^[a-zA-Z_][a-zA-Z0-9_]*$"
+            }
+          },
+          "required": [
+            "username",
+            "password",
+            "database"
+          ]
+        },
+        "redis": {
+          "type": "object",
+          "description": "Provides connection information for the app's Redis key-store connection.",
+          "properties": {
+            "host": {
+              "type": "string",
+              "description": "Redis server hostname or IP address.",
+              "default": "redis",
+              "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+            },
+            "port": {
+              "type": "integer",
+              "description": "Redis server port.",
+              "default": 6379,
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "database": {
+              "type": "integer",
+              "description": "Redis server database index.",
+              "default": 0,
+              "minimum": 0,
+              "maximum": 1024
+            }
+          }
+        },
+        "sql_url": {
+          "type": "string",
+          "description": "The connection URI for a supported asynchronous SQL storage driver.",
+          "default": "sqlite+aiosqlite:///./pda.db"
+        }
+      }
+    },
+    "logging": {
+      "type": "object",
+      "description": "Logging configuration and alerting options.",
+      "properties": {
+        "level": {
+          "type": "string",
+          "description": "PDA app minimum logging verbosity level.",
+          "enum": [
+            "trace",
+            "debug",
+            "info",
+            "warn",
+            "error",
+            "critical"
+          ],
+          "default": "info"
+        }
+      }
+    },
+    "mail": {
+      "type": "object",
+      "description": "SMTP email sending configuration.",
+      "properties": {
+        "servers": {
+          "type": "array",
+          "description": "A list of server configurations to be used for sending mail with the order determining priority.",
+          "items": {
+            "type": "object",
+            "description": "A SMTP server configuration object.",
+            "properties": {
+              "alias": {
+                "type": "string",
+                "description": "A unique alias for the server configuration that will be used in logging."
+              },
+              "host": {
+                "type": "string",
+                "description": "SMTP server hostname.",
+                "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+              },
+              "port": {
+                "type": "integer",
+                "description": "SMTP server port.",
+                "default": 25,
+                "minimum": 1,
+                "maximum": 65535
+              },
+              "tls": {
+                "type": "boolean",
+                "description": "Whether the connection should use STARTTLS.",
+                "default": false
+              },
+              "ssl": {
+                "type": "boolean",
+                "description": "Whether the connection should use SSL.",
+                "default": false
+              },
+              "local_hostname": {
+                "type": "string",
+                "description": "The local hostname to use for sent emails.",
+                "default": null,
+                "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+              },
+              "source_address": {
+                "type": "array",
+                "description": "The INET socket configuration to use for the connection from address.",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "timeout": {
+                "type": "integer",
+                "description": "The number of seconds to wait before considering server connection a failure. Null for no timeout.",
+                "default": 60,
+                "minimum": 0,
+                "maximum": 3600
+              },
+              "key_file": {
+                "type": "string",
+                "description": "The key file to use with SSL connections.",
+                "default": null,
+                "pattern": "^(/*[^/ ]*)+/?$"
+              },
+              "cert_file": {
+                "type": "string",
+                "description": "The certificate file to use with SSL connections.",
+                "default": null,
+                "pattern": "^(/*[^/ ]*)+/?$"
+              },
+              "username": {
+                "type": "string",
+                "description": "SMTP username (email address)."
+              },
+              "password": {
+                "type": "string",
+                "description": "SMTP password or app-specific token."
+              },
+              "from_address": {
+                "type": "string",
+                "description": "Sender email address optionally in the \"Name <name@domain.com>\" format.",
+                "pattern": "^([a-zA-Z0-9\\s]+\\s<[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,}>|[a-zA-Z0-9._%+\\-]+@[a-zA-Z0-9.\\-]+\\.[a-zA-Z]{2,})$",
+                "examples": [
+                  "Admin <admin@domain.com>",
+                  "admin@domain.com"
+                ]
+              },
+              "throttle": {
+                "type": "object",
+                "description": "The server throttling configuration object.",
+                "properties": {
+                  "threshold": {
+                    "type": "integer",
+                    "description": "The number of emails that can be sent within the throttle period.",
+                    "default": 5,
+                    "minimum": 1
+                  },
+                  "period": {
+                    "type": "number",
+                    "description": "The number of seconds that determine the window of time which the threshold can be met.",
+                    "default": 30,
+                    "minimum": 1
+                  },
+                  "mode": {
+                    "type": "string",
+                    "description": "The throttle mode to use. Can be either sleep or raise for waiting or raising an exception to move to the next available server.",
+                    "default": "sleep",
+                    "enum": [
+                      "sleep",
+                      "raise"
+                    ]
+                  },
+                  "key": {
+                    "type": "string",
+                    "description": "The unique throttle key to use for tracking history in the throttle registry.",
+                    "default": null
+                  },
+                  "backoff_strategy": {
+                    "type": "string",
+                    "description": "The strategy to use for throttling back-offs. Can be fixed or exponential.",
+                    "default": "fixed",
+                    "enum": [
+                      "fixed",
+                      "exponential"
+                    ]
+                  },
+                  "backoff_base": {
+                    "type": "number",
+                    "description": "The fractional seconds to use as a backoff base for fixed and exponential strategies.",
+                    "default": 1,
+                    "minimum": 1
+                  },
+                  "backoff_cap": {
+                    "type": "number",
+                    "description": "The fractional seconds to use as a maximum backoff limit for the exponential strategy.",
+                    "default": 60,
+                    "minimum": 1
+                  },
+                  "jitter": {
+                    "type": "boolean",
+                    "description": "Whether to add jitter to the backoff wait time for fixed and exponential strategies.",
+                    "default": false
+                  }
+                }
+              }
+            },
+            "required": [
+              "alias",
+              "host"
+            ]
+          }
+        }
+      }
+    },
+    "notifications": {
+      "type": "object",
+      "description": "Configuration related to sending notifications.",
+      "properties": {
+        "mail": {
+          "type": "object",
+          "description": "Mail notification settings.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether mail-based notifications should be enabled.",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "microsoft_teams": {
+          "type": "object",
+          "description": "Microsoft Teams notification settings.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether Microsoft Teams notifications should be enabled.",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        },
+        "twilio": {
+          "type": "object",
+          "description": "Twilio notification settings.",
+          "properties": {
+            "enabled": {
+              "type": "boolean",
+              "description": "Whether Twilio notifications should be enabled.",
+              "default": false
+            }
+          },
+          "additionalProperties": false
+        }
+      }
+    },
+    "paths": {
+      "type": "object",
+      "description": "Provides configuration for filesystem paths used by the app.",
+      "properties": {
+        "templates": {
+          "type": "string",
+          "description": "Provides the base filesystem path for app template files.",
+          "default": "src/templates",
+          "pattern": "^(/*[^/ ]*)+/?$"
+        }
+      }
+    },
+    "server": {
+      "type": "object",
+      "description": "Application server and middleware configuration.",
+      "properties": {
+        "proxy_root": {
+          "type": "string",
+          "description": "Provides the relative root URI path for the API server as it relates to the app's proxy server.",
+          "default": "/",
+          "pattern": " /([^/]+)/([^/]+)"
+        },
+        "middleware": {
+          "type": "array",
+          "description": "List of middleware components to load.",
+          "items": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Full import path of middleware class."
+              },
+              "config": {
+                "type": "object",
+                "description": "Configuration options for this middleware.",
+                "additionalProperties": true
+              }
+            },
+            "required": [
+              "name"
+            ]
+          }
+        }
+      }
+    },
+    "services": {
+      "type": "object",
+      "description": "Third-party service integrations (Bloomberg, Coinbase, Kraken, Microsoft, Zabbix, etc.).",
+      "properties": {
+        "twilio": {
+          "type": "object",
+          "description": "Twilio service configuration.",
+          "default": null,
+          "properties": {
+            "api": {
+              "type": "object",
+              "description": "Provides API configurations for Twilio live and test environments.",
+              "properties": {
+                "live": {
+                  "type": "object",
+                  "description": "Provides API configuration for the live Twilio environment.",
+                  "properties": {
+                    "account_sid": {
+                      "type": "string",
+                      "description": "Provides the account SID for the live Twilio environment."
+                    },
+                    "auth_token": {
+                      "type": "string",
+                      "description": "Provides the account auth token for the live Twilio environment."
+                    }
+                  },
+                  "required": ["account_sid", "auth_token"],
+                  "additionalProperties": false
+                },
+                "test": {
+                  "type": "object",
+                  "description": "Provides API configuration for the test Twilio environment.",
+                  "properties": {
+                    "account_sid": {
+                      "type": "string",
+                      "description": "Provides the account SID for the test Twilio environment."
+                    },
+                    "auth_token": {
+                      "type": "string",
+                      "description": "Provides the account auth token for the test Twilio environment."
+                    }
+                  },
+                  "required": ["account_sid", "auth_token"],
+                  "additionalProperties": false
+                }
+              },
+              "required": ["live", "test"],
+              "additionalProperties": false
+            },
+            "numbers": {
+              "type": "array",
+              "description": "A list of numbers available on the account.",
+              "items": {
+                "type": "object",
+                "description": "A configuration for a number available on the account.",
+                "properties": {
+                  "sid": {
+                    "type": "string",
+                    "description": "The number's Twilio SID."
+                  },
+                  "number": {
+                    "type": "string",
+                    "description": "The number in E164 format. Example: +18005555555",
+                    "pattern": "^\\+[1-9]\\d{1,14}$",
+                    "examples": ["+1800555555", "+865555555555"]
+                  },
+                  "voice": {
+                    "type": "boolean",
+                    "description": "Indicates if voice services are available on this number.",
+                    "default": false
+                  },
+                  "sms": {
+                    "type": "boolean",
+                    "description": "Indicates if SMS services are available on this number.",
+                    "default": false
+                  },
+                  "mms": {
+                    "type": "boolean",
+                    "description": "Indicates if MMS services are available on this number.",
+                    "default": false
+                  },
+                  "fax": {
+                    "type": "boolean",
+                    "description": "Indicates if fax services are available on this number.",
+                    "default": false
+                  }
+                },
+                "required": ["sid", "number", "voice", "sms"],
+                "additionalProperties": false
+              }
+            }
+          },
+          "required": ["api", "numbers"],
+          "additionalProperties": false
+        },
+        "zabbix": {
+          "type": "object",
+          "description": "Zabbix server trapper configuration.",
+          "properties": {
+            "hostname": {
+              "type": "string",
+              "description": "Zabbix server trapper hostname or IP address.",
+              "default": "zabbix",
+              "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+            },
+            "port": {
+              "type": "integer",
+              "description": "Zabbix server trapper port number.",
+              "default": 10051,
+              "minimum": 1,
+              "maximum": 65535
+            },
+            "send_interval": {
+              "type": "integer",
+              "description": "Zabbix server trapper minimum send delay in seconds.",
+              "default": 1,
+              "minimum": 1,
+              "maximum": 3600
+            },
+            "default_node_name": {
+              "type": "string",
+              "description": "Zabbix server trapper default node name used for send payloads.",
+              "default": "pda",
+              "pattern": "^([a-zA-Z0-9-]+\\\\.)*[a-zA-Z0-9-]+$|^((25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\\\\.){3}(25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)$"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "tasks": {
+      "type": "object",
+      "description": "Task orchestration and scheduling configuration.",
+      "properties": {
+        "enabled": {
+          "type": "boolean",
+          "description": "Whether the PDA task scheduler is enabled.",
+          "default": true
+        },
+        "scheduler": {
+          "type": "object",
+          "description": "Controls scheduler tick and lifetime behavior.",
+          "properties": {
+            "tick_interval": {
+              "type": "integer",
+              "description": "Seconds between scheduler ticks.",
+              "default": 30,
+              "minimum": 1
+            },
+            "max_schedule_lifetime": {
+              "type": "integer",
+              "description": "Maximum time for schedule data to live before being reloaded.",
+              "default": 30,
+              "minimum": 1,
+              "maximum": 2628000
+            }
+          }
+        }
+      }
+    },
+    "additionalProperties": false
+  },
+  "additionalProperties": false
+}
