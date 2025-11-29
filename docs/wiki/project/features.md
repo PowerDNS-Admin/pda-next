@@ -5,6 +5,8 @@
 The purpose of this document is to provide some explanation about key platform features that really drive the value of
 the product.
 
+**NOTICE!** This document is not up-to-date with the latest feature set plans!
+
 ### Table of Contents
 
 - [Authentication](#authentication)
