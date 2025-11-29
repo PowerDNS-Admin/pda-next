@@ -2,7 +2,7 @@ from enum import Enum
 from pydantic import Field
 from typing import Optional, Union
 from lib.services.microsoft.adaptivecards import ElementTypes, ContainerStyleEnum
-from models.base import BaseModel
+from models import BaseModel
 
 
 class MessageActionType(str, Enum):

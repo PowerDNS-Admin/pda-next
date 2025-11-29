@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Response, Depends, Form, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
 from lib.api.dependencies import get_db_session
-from models.api.auth import UserSchema
+from models.api.auth import UserApi
 from routers.root import router_responses
 
 router = APIRouter(
@@ -10,15 +10,16 @@ router = APIRouter(
 )
 
 
-@router.post('/login', response_model=UserSchema)
+@router.post('/login', response_model=UserApi)
 async def login(
         response: Response,
         session:AsyncSession = Depends(get_db_session),
         username: str = Form(...),
         password: str = Form(...),
-) -> UserSchema:
+) -> UserApi:
     from lib.security import COOKIE_NAME
-    from models.db.auth import UserStatusEnum, User, Session
+    from models.db.auth import User, Session
+    from models.enums import UserStatusEnum
 
     # Delete any existing session cookie
     # FIXME: The following cookie delete isn't functioning
@@ -57,7 +58,7 @@ async def login(
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, reason)
 
     # Create the user schema from the database user
-    user = UserSchema.model_validate(db_user)
+    user = UserApi.model_validate(db_user)
 
     # TODO: Create a secure session cookie mechanism
 

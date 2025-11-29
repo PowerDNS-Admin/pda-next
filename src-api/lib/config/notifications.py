@@ -1,4 +1,4 @@
-from models.base import BaseConfig
+from models import BaseConfig
 
 
 class NotificationsConfig(BaseConfig):

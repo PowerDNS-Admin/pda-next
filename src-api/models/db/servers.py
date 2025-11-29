@@ -5,23 +5,10 @@ This file defines the database models associated with DNS server functionality.
 """
 import uuid
 from datetime import datetime
-from enum import Enum
 from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.base import BaseSqlModel
-
-
-class ServerTypeEnum(str, Enum):
-    """Defines the different types of DNS servers there can be."""
-
-    AUTHORITATIVE = "AUTHORITATIVE"
-    """Represents the authoritative DNS server type."""
-
-    RECURSIVE = "RECURSIVE"
-    """Represents the recursive DNS server type."""
-
-    PROXY = "PROXY"
-    """Represents the load-balancing proxy DNS server type."""
+from models.db import BaseSqlModel
+from models.enums import ServerTypeEnum
 
 
 class Server(BaseSqlModel):

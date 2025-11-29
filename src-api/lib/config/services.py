@@ -1,5 +1,5 @@
 from typing import Optional
-from models.base import BaseConfig
+from models import BaseConfig
 
 
 class ServicesConfig(BaseConfig):

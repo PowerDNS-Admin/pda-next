@@ -1,6 +1,6 @@
 from enum import Enum
 from typing import Optional
-from models.base import BaseConfig
+from models import BaseConfig
 
 
 class EnvironmentEnum(str, Enum):

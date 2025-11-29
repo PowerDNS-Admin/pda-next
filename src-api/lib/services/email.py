@@ -8,7 +8,7 @@ from email.mime.text import MIMEText
 from enum import Enum
 from pydantic import ConfigDict, Field, computed_field
 from typing import Optional, Union
-from models.base import BaseModel
+from models import BaseModel
 
 MESSAGE_TYPES = Union[EmailMessage, MIMEApplication, MIMEAudio, MIMEImage, MIMEMessage, MIMEMultipart, MIMEText]
 

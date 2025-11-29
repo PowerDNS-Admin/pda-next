@@ -7,7 +7,7 @@ from pydantic import PrivateAttr, ConfigDict, model_validator
 from typing import Any, Optional, Union
 from zoneinfo import ZoneInfo
 from lib.enums import NotificationCategoryEnum
-from models.base import BaseModel
+from models import BaseModel
 
 UTC_TZ = ZoneInfo('UTC')
 BLOCK_STYLES = ("font-family: monospace, Consolas, 'Courier New', sans-serif; background-color: #f4f4f4; "

@@ -2,7 +2,7 @@ import uuid
 from pydantic import Field
 from typing import Optional, Union
 from lib.mail import EmailSendRecipientResponse
-from models.base import BaseModel
+from models import BaseModel
 
 
 class MailServiceSendRequest(BaseModel):

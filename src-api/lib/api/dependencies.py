@@ -2,16 +2,16 @@ from fastapi import Depends, Request, HTTPException, status
 from fastapi.security import OAuth2PasswordBearer
 from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
-from models.api.auth import UserSchema, ClientSchema
+from models.api.auth import UserApi, ClientApi
 
 oauth2_scheme_password = OAuth2PasswordBearer(tokenUrl='v1/token')
 
 
-async def validate_user_token_placeholder(token: str) -> UserSchema:
+async def validate_user_token_placeholder(token: str) -> UserApi:
     pass
 
 
-async def validate_user_from_cookie(token: str) -> UserSchema:
+async def validate_user_from_cookie(token: str) -> UserApi:
     pass
 
 
@@ -22,7 +22,7 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def get_principal(request: Request, bearer_token: str = Depends(oauth2_scheme_password)) \
-        -> UserSchema | ClientSchema:
+        -> UserApi | ClientApi:
     from loguru import logger
     from jose import JWTError, jwt
     from app import config

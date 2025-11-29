@@ -1,7 +1,7 @@
 from enum import Enum
 from pydantic import Field
 from typing import Optional, Union
-from models.base import BaseModel
+from models import BaseModel
 
 
 class ItemTypeEnum(str, Enum):

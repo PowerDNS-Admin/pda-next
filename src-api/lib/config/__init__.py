@@ -9,7 +9,7 @@ from lib.config.paths import PathsConfig
 from lib.config.server import ServerConfig
 from lib.config.services import ServicesConfig
 from lib.config.tasks import TasksConfig
-from models.base import BaseConfig
+from models import BaseConfig
 
 
 class Config(BaseConfig):

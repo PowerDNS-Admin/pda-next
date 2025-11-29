@@ -209,7 +209,7 @@ class SignalHandler:
         from sqlalchemy.orm import Session
         from sqlalchemy.orm.exc import UnmappedInstanceError
         from uuid import UUID
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         stmt = select(TaskJob).where(TaskJob.id == UUID(task_id))
         session = Session(self.mysql_client.engine)
@@ -255,7 +255,8 @@ class SignalHandler:
         from sqlalchemy.exc import InvalidRequestError
         from sqlalchemy.orm import Session
         from sqlalchemy.orm.exc import UnmappedInstanceError
-        from models.db.tasks import TaskJobStatusEnum, TaskJobActivity
+        from models.db.tasks import TaskJobActivity
+        from models.enums import TaskJobStatusEnum
 
         session = Session(self.mysql_client.engine)
         session.add(task_job)
@@ -300,7 +301,7 @@ class SignalHandler:
         from app import initialize, notifications
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskReceivedEvent
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 
@@ -327,7 +328,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskRevokedEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 
@@ -378,7 +379,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskPreRunEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         self.start_capture()
 
@@ -452,7 +453,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskRetryEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 
@@ -497,7 +498,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskInternalErrorEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 
@@ -529,7 +530,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskSuccessEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 
@@ -561,7 +562,7 @@ class SignalHandler:
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskFailedEvent
         from lib.services.zabbix import ZabbixMetric
-        from models.db.tasks import TaskJobStatusEnum
+        from models.enums import TaskJobStatusEnum
 
         initialize()
 

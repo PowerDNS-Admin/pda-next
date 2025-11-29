@@ -7,7 +7,7 @@ import uuid
 from datetime import datetime
 from sqlalchemy import DateTime, Integer, String, TEXT, Uuid, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.base import BaseSqlModel
+from models.db import BaseSqlModel
 
 
 class StopgapDomain(BaseSqlModel):

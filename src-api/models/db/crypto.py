@@ -5,23 +5,10 @@ This file defines the database models associated with DNSSEC crypto functionalit
 """
 import uuid
 from datetime import datetime
-from enum import Enum
 from sqlalchemy import Boolean, DateTime, Integer, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.base import BaseSqlModel
-
-
-class CryptoKeyTypeEnum(str, Enum):
-    """Defines the different types of DNSSEC cryptographic keys there can be."""
-
-    KSK = "KSK"
-    """DNSSEC Key Signing Key (KSK) type."""
-
-    ZSK = "ZSK"
-    """DNSSEC Zone Signing Key (ZSK) type."""
-
-    CSK = "CSK"
-    """DNSSEC Combined Signing Key (CSK) type."""
+from models.db import BaseSqlModel
+from models.enums import CryptoKeyTypeEnum
 
 
 class CryptoKey(BaseSqlModel):

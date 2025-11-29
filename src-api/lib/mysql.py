@@ -3,7 +3,8 @@ from sqlalchemy.ext.asyncio import create_async_engine, async_sessionmaker, Asyn
 from sqlalchemy.orm import Session
 from typing import Union
 from lib.config.db import MySQLDatabaseConnection
-from models.base import BaseSqlModel, BaseModel
+from models import BaseModel
+from models.db import BaseSqlModel
 
 
 class MysqlDbConfig(BaseModel):

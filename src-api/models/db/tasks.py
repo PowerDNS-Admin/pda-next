@@ -5,35 +5,11 @@ This file defines the database models associated with task functionality.
 """
 import uuid
 from datetime import datetime
-from enum import Enum
 from sqlalchemy import DateTime, DECIMAL, Integer, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from models.base import BaseSqlModel
-
-
-class TaskJobStatusEnum(str, Enum):
-    """Defines the different task job statuses."""
-    received = "received"
-    """When a task job has been received but not yet started."""
-
-    revoked = "revoked"
-    """When a task job has been revoked before completion."""
-
-    running = "running"
-    """When a task job is actively running."""
-
-    retry = "retry"
-    """When a task job has failed to complete successfully and is awaiting another attempt."""
-
-    success = "success"
-    """When a task job has completed successfully."""
-
-    failed = "failed"
-    """When a task job has failed permanently having exhausted any available retry attempts."""
-
-    internal_error = "internal_error"
-    """When a task job has failed permanently from having an internal error."""
+from models.db import BaseSqlModel
+from models.enums import TaskJobStatusEnum
 
 
 class TaskJob(BaseSqlModel):

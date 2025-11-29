@@ -5,46 +5,13 @@ This file defines the database models associated with authentication functionali
 """
 import uuid
 from datetime import datetime
-from enum import Enum
 from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from models.api.auth import UserSchema
-from models.base import BaseSqlModel
-
-
-class UserStatusEnum(str, Enum):
-    """Defines the different statuses a user can have."""
-    pending = 'pending'
-    """Indicates a new user that has not yet been confirmed by an admin or had an invite sent."""
-
-    invited = 'invited'
-    """Indicates a new user that has had an invite sent but not yet confirmed by the admin or the user."""
-
-    active = 'active'
-    """Indicates a user that is active and fully confirmed."""
-
-    suspended = 'suspended'
-    """Indicates a user that is currently suspended."""
-
-    disabled = 'disabled'
-    """Indicates a user that is currently disabled."""
-
-
-class AuthenticatorTypeEnum(str, Enum):
-    """Defines the different authenticator types a user can have."""
-    WEBAUTHN = 'WEBAUTHN'
-    """A WebAuthn authenticator type."""
-
-    TOTP = 'TOTP'
-    """A time-based one-time password authenticator type."""
-
-    SMS = 'SMS'
-    """A SMS-based one-time password authenticator type."""
-
-    EMAIL = 'EMAIL'
-    """A email-based one-time password authenticator type."""
+from models.api.auth import UserApi
+from models.db import BaseSqlModel
+from models.enums import UserStatusEnum, AuthenticatorTypeEnum
 
 
 class User(BaseSqlModel):
@@ -217,7 +184,7 @@ class Session(BaseSqlModel):
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
-    async def create_session(session: AsyncSession, user: UserSchema) -> 'Session':
+    async def create_session(session: AsyncSession, user: UserApi) -> 'Session':
         """Creates an auth session and returns it."""
         import json
         from datetime import timedelta, timezone

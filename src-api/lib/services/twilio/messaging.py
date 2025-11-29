@@ -1,6 +1,6 @@
 from pydantic import Field
 from typing import Optional
-from models.base import BaseModel
+from models import BaseModel
 
 
 class SMSMessage(BaseModel):

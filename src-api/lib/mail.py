@@ -2,7 +2,7 @@ from smtplib import SMTP
 from typing import Optional, Union
 from lib.config.mail import MailConfig
 from lib.services.email import MESSAGE_TYPES
-from models.base import BaseModel
+from models import BaseModel
 
 
 class SmtpClientException(Exception):

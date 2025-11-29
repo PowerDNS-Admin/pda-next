@@ -8,7 +8,7 @@ from lib.enums import (
     NotificationCategoryEnum, TwilioNotificationTypeEnum, NotificationServiceEnum
 )
 from lib.notifications.events import ALL_EVENTS
-from models.base import BaseModel
+from models import BaseModel
 
 UTC_TZ = ZoneInfo('UTC')
 
