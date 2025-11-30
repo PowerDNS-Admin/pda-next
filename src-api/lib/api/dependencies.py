@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator
 from uuid import UUID
 
 from fastapi import Depends, Request, Form, HTTPException, status
@@ -24,11 +24,15 @@ async def get_principal(
 ) -> UserSchema | ClientSchema:
     from datetime import datetime, timezone
     from jose import JWTError, jwt
+    from loguru import logger
     from app import config
     from lib.security import ALGORITHM, COOKIE_NAME
     from models.db.auth import Session, Client
 
     required_scopes = set(scopes.scopes)
+
+    # TODO: Implement support for granular resource level permissions
+    logger.critical('Route principal helper needs permissions finished!')
 
     # Attempt OAuth Bearer Token Authentication
     if bearer_token:

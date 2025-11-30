@@ -61,12 +61,11 @@ async def db_test(session: AsyncSession = Depends(get_db_session)) -> JSONRespon
 @router.get('/auth/create-client', response_model=ClientSchema)
 async def auth_create_client(session: AsyncSession = Depends(get_db_session)) -> ClientSchema:
     """Creates an auth client."""
-    import json
     from models.db.auth import Client
 
     db_client = Client(
         name='Test Client',
-        scopes=json.dumps(['audit:*', 'zone:*']),
+        scopes=['audit:*', 'zone:*'],
     )
 
     db_client.secret = 'testtest'
@@ -106,7 +105,6 @@ async def auth_test_client(
             PermissionEnum.auth_user_read.value,
             PermissionEnum.auth_user_update.value,
         ]),
-        #principal2: UserSchema | ClientSchema = Depends(get_principal),
 ) -> UserSchema | ClientSchema:
     from loguru import logger
     logger.warning(principal)

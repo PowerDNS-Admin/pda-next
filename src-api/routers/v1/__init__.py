@@ -63,8 +63,6 @@ async def token_refresh(
     from lib.api.oauth import create_access_token
     from models.db.auth import Client, RefreshToken
 
-    # TODO: Finish implementation and testing of OAuth2 refresh token flow
-
     # Retrieve the referenced client
     client = await Client.get_by_id(session, client_id)
 
@@ -91,7 +89,7 @@ async def token_refresh(
         jwt_payload['scope'] = scope
 
     # TODO: Handle scope changes
-    logger.warning(f'OAuth Refresh Token Requested Scopes: {scope}')
+    logger.critical('Token refresh endpoint needs permissions finished!')
 
     # Create the JWT access token
     access_token = create_access_token(jwt_payload)

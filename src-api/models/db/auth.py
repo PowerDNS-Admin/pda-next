@@ -396,7 +396,7 @@ class RefreshToken(BaseSqlModel):
         if client_id != self.client_id:
             return False
 
-        if self.expires_at < datetime.now(tz=timezone.utc):
+        if self.expires_at.replace(tzinfo=timezone.utc) < datetime.now(tz=timezone.utc):
             return False
 
         return True
