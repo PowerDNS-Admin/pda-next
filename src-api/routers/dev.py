@@ -1,8 +1,12 @@
-from fastapi import APIRouter, Request, Depends
+from typing_extensions import Annotated
+
+from fastapi import APIRouter, Request, Depends, Security
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from lib.api.dependencies import get_db_session, get_principal
 from models.api.auth import UserSchema, ClientSchema
+from models.enums import PermissionEnum
 from routers.root import router_responses
 
 router = APIRouter(
@@ -96,7 +100,14 @@ async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> U
 
 
 @router.get('/auth/test/client', response_model=UserSchema | ClientSchema)
-async def auth_test_client(principal: UserSchema | ClientSchema = Depends(get_principal)) -> UserSchema | ClientSchema:
+async def auth_test_client(
+        principal: UserSchema | ClientSchema = Security(get_principal, scopes=[
+            PermissionEnum.auth_user_list.value,
+            PermissionEnum.auth_user_read.value,
+            PermissionEnum.auth_user_update.value,
+        ]),
+        #principal2: UserSchema | ClientSchema = Depends(get_principal),
+) -> UserSchema | ClientSchema:
     from loguru import logger
     logger.warning(principal)
     return principal

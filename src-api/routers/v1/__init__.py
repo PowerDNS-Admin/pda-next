@@ -22,14 +22,20 @@ router.include_router(tasks.router)
 async def token(
         session: AsyncSession = Depends(get_db_session),
         client_id: UUID = Depends(authorize_oauth_client),
+        scope: str = Form(None),
 ) -> dict:
     """Handle OAuth token grants."""
     from lib.security import ACCESS_TOKEN_AGE
     from lib.api.oauth import create_access_token
     from models.db.auth import RefreshToken
 
+    jwt_payload = {'sub': str(client_id)}
+
+    if isinstance(scope, str):
+        jwt_payload['scope'] = scope
+
     # Create the JWT access token
-    access_token = create_access_token({'sub': str(client_id)})
+    access_token = create_access_token(jwt_payload)
 
     # Create a refresh token
     refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id)
@@ -52,6 +58,7 @@ async def token_refresh(
         session: AsyncSession = Depends(get_db_session),
 ):
     """Handle OAuth token grants."""
+    from loguru import logger
     from lib.security import ACCESS_TOKEN_AGE, TokenGrantTypeEnum, TokenErrorTypeEnum
     from lib.api.oauth import create_access_token
     from models.db.auth import Client, RefreshToken
@@ -78,10 +85,16 @@ async def token_refresh(
     # Revoke the previous token
     await RefreshToken.revoke_token(session, stored)
 
+    jwt_payload = {'sub': str(stored.user_id) if stored.user_id else client_id}
+
+    if isinstance(scope, str):
+        jwt_payload['scope'] = scope
+
     # TODO: Handle scope changes
+    logger.warning(f'OAuth Refresh Token Requested Scopes: {scope}')
 
     # Create the JWT access token
-    access_token = create_access_token({'sub': str(stored.user_id) if stored.user_id else client_id})
+    access_token = create_access_token(jwt_payload)
 
     # Create a refresh token
     refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id, stored.user_id)

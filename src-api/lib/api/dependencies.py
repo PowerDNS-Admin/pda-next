@@ -1,8 +1,8 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Optional
 from uuid import UUID
 
 from fastapi import Depends, Request, Form, HTTPException, status
-from fastapi.security import HTTPBasicCredentials
+from fastapi.security import HTTPBasicCredentials, SecurityScopes
 from sqlalchemy.orm import Mapped
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,6 +17,7 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def get_principal(
+        scopes: SecurityScopes,
         request: Request,
         session: AsyncSession = Depends(get_db_session),
         bearer_token: str = Depends(oauth2_scheme),
@@ -27,25 +28,36 @@ async def get_principal(
     from lib.security import ALGORITHM, COOKIE_NAME
     from models.db.auth import Session, Client
 
+    required_scopes = set(scopes.scopes)
+
     # Attempt OAuth Bearer Token Authentication
     if bearer_token:
-        invalid_msg = 'Invalid bearer token'
+        invalid_token_msg = 'Invalid bearer token'
+        missing_scopes_msg = 'Client is not granted the required scopes.'
         try:
             payload = jwt.decode(bearer_token, config.app.secret_key, algorithms=[ALGORITHM])
         except JWTError:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
 
         if 'sub' not in payload or 'exp' not in payload:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
 
         client = await Client.get_by_id(session, payload['sub'])
 
         if not client:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
 
         # Verify that token hasn't expired
         if datetime.now(timezone.utc) > datetime.fromtimestamp(payload['exp'], tz=timezone.utc):
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
+
+        if len(required_scopes) and 'scope' not in payload:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, missing_scopes_msg)
+
+        granted_scopes = set(payload['scope'].split(' '))
+
+        if not required_scopes.issubset(granted_scopes):
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, missing_scopes_msg)
 
         return ClientSchema.model_validate(client)
 
@@ -57,6 +69,9 @@ async def get_principal(
         if db_session:
             # Extend the session's expiration timestamp
             await Session.extend_session(session, db_session)
+
+            # TODO: Check if the associated user has the permissions listed in required_scopes
+
             return db_session.user
 
     # If neither works, raise an exception
@@ -69,6 +84,7 @@ async def get_principal(
 async def authorize_oauth_client(
         credentials: HTTPBasicCredentials = Depends(http_basic_scheme),
         grant_type: str = Form(...),
+        scope: str = Form(None),
         session: AsyncSession = Depends(get_db_session),
 ) -> UUID | Mapped[UUID]:
     from lib.security import TokenGrantTypeEnum, TokenErrorTypeEnum
@@ -89,6 +105,17 @@ async def authorize_oauth_client(
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail=TokenErrorTypeEnum.invalid_client.value,
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+
+    # Validate the requested scopes
+    granted_scopes = set(client.scopes if client.scopes else [])
+    required_scopes = set(scope.split(' ') if scope else [])
+
+    if not required_scopes.issubset(granted_scopes):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=TokenErrorTypeEnum.missing_required_scopes.value,
             headers={'WWW-Authenticate': 'Bearer'},
         )
 

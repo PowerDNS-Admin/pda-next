@@ -26,6 +26,7 @@ class TokenErrorTypeEnum(str, Enum):
     invalid_user = 'invalid_user'
     invalid_token = 'invalid_token'
     unsupported_grant_type = 'unsupported_grant_type'
+    missing_required_scopes = 'missing_required_scopes'
 
 
 def verify_hash(plain_value: str, hashed_value: str) -> bool:

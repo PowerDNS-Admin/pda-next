@@ -1,5 +1,5 @@
 from datetime import timedelta, datetime
-from typing import Optional
+from typing import Dict, Optional
 
 from fastapi import Request
 from fastapi.openapi.models import OAuthFlowClientCredentials
@@ -7,6 +7,7 @@ from fastapi.security import OAuth2, HTTPBasic
 from fastapi.security.oauth2 import OAuthFlowsModel
 from jose import jwt
 
+from lib.api import API_SCOPES
 from lib.security import ACCESS_TOKEN_AGE, ALGORITHM
 
 
@@ -16,6 +17,7 @@ class ClientCredentialsBearer(OAuth2):
             self,
             tokenUrl: str,
             refreshUrl: Optional[str] = None,
+            scopes: Dict[str, str] = None,
             scheme_name: Optional[str] = None,
             auto_error: bool = True,
     ):
@@ -23,7 +25,7 @@ class ClientCredentialsBearer(OAuth2):
             clientCredentials=OAuthFlowClientCredentials(
                 tokenUrl=tokenUrl,
                 refreshUrl=refreshUrl,
-                scopes={},
+                scopes=scopes or {},
             ),
         )
         super().__init__(flows=flows, scheme_name=scheme_name, auto_error=auto_error)
@@ -40,7 +42,12 @@ class ClientCredentialsBearer(OAuth2):
         return param
 
 
-oauth2_scheme = ClientCredentialsBearer(tokenUrl='v1/token', refreshUrl='v1/token/refresh', auto_error=False)
+oauth2_scheme = ClientCredentialsBearer(
+    tokenUrl='v1/token',
+    refreshUrl='v1/token/refresh',
+    scopes=API_SCOPES,
+    auto_error=False,
+)
 http_basic_scheme = HTTPBasic()
 
 
