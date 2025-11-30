@@ -22,7 +22,6 @@ async def get_principal(
         bearer_token: str = Depends(oauth2_scheme),
 ) -> UserSchema | ClientSchema:
     from datetime import datetime, timezone
-    from loguru import logger
     from jose import JWTError, jwt
     from app import config
     from lib.security import ALGORITHM, COOKIE_NAME
@@ -33,7 +32,6 @@ async def get_principal(
         invalid_msg = 'Invalid bearer token'
         try:
             payload = jwt.decode(bearer_token, config.app.secret_key, algorithms=[ALGORITHM])
-            logger.warning(payload)
         except JWTError:
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
 

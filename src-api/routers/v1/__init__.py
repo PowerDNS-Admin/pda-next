@@ -1,6 +1,8 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Form, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from uuid import UUID
+
 from lib.api.dependencies import get_db_session, authorize_oauth_client
 from routers.root import router_responses
 from routers.v1 import auth, services, tasks
@@ -22,7 +24,8 @@ async def token(
         client_id: UUID = Depends(authorize_oauth_client),
 ) -> dict:
     """Handle OAuth token grants."""
-    from lib.security import create_access_token, ACCESS_TOKEN_AGE
+    from lib.security import ACCESS_TOKEN_AGE
+    from lib.api.oauth import create_access_token
     from models.db.auth import RefreshToken
 
     # Create the JWT access token
@@ -49,8 +52,11 @@ async def token_refresh(
         session: AsyncSession = Depends(get_db_session),
 ):
     """Handle OAuth token grants."""
-    from lib.security import create_access_token, ACCESS_TOKEN_AGE, TokenGrantTypeEnum, TokenErrorTypeEnum
+    from lib.security import ACCESS_TOKEN_AGE, TokenGrantTypeEnum, TokenErrorTypeEnum
+    from lib.api.oauth import create_access_token
     from models.db.auth import Client, RefreshToken
+
+    # TODO: Finish implementation and testing of OAuth2 refresh token flow
 
     # Retrieve the referenced client
     client = await Client.get_by_id(session, client_id)

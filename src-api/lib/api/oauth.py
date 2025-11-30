@@ -1,9 +1,13 @@
+from datetime import timedelta, datetime
 from typing import Optional
 
 from fastapi import Request
 from fastapi.openapi.models import OAuthFlowClientCredentials
 from fastapi.security import OAuth2, HTTPBasic
 from fastapi.security.oauth2 import OAuthFlowsModel
+from jose import jwt
+
+from lib.security import ACCESS_TOKEN_AGE, ALGORITHM
 
 
 class ClientCredentialsBearer(OAuth2):
@@ -38,3 +42,14 @@ class ClientCredentialsBearer(OAuth2):
 
 oauth2_scheme = ClientCredentialsBearer(tokenUrl='v1/token', refreshUrl='v1/token/refresh', auto_error=False)
 http_basic_scheme = HTTPBasic()
+
+
+def create_access_token(data: dict, expires_delta: timedelta | None = None):
+    from datetime import timezone
+    from app import config
+
+    to_encode = data.copy()
+    expire = datetime.now(tz=timezone.utc) + (expires_delta or timedelta(seconds=ACCESS_TOKEN_AGE))
+    to_encode.update({"exp": int(expire.timestamp())})
+
+    return jwt.encode(to_encode, config.app.secret_key, algorithm=ALGORITHM)
