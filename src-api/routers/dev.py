@@ -11,6 +11,7 @@ from routers.root import router_responses
 
 router = APIRouter(
     prefix='/dev',
+    tags=['dev'],
     responses=router_responses,
 )
 

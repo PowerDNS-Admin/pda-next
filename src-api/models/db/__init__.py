@@ -38,7 +38,7 @@ class JSONType(TypeDecorator):
 from .acl import *
 from .audits import *
 from .auth import *
-from .crypto import *
+from .keys import *
 from .servers import *
 from .system import *
 from .tasks import *

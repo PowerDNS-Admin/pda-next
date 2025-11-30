@@ -7,7 +7,6 @@ from routers.root import router_responses
 
 router = APIRouter(
     prefix='/mail',
-    tags=['services'],
     responses=router_responses,
 )
 

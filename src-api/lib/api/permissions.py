@@ -1,5 +1,5 @@
 from models.api.acl import Permission
-from models.enums import PrincipalTypeEnum, ResourceTypeEnum
+from models.enums import ResourceTypeEnum
 
 
 class classproperty:
@@ -95,3 +95,58 @@ class Permissions:
         ],
     )
     """Provides the ability to change a user's status within context."""
+
+    roles: Permission = Permission(
+        uri="roles",
+        title="All Roles Permissions",
+        description="Includes all roles-related permissions.",
+        resource_types=[
+            ResourceTypeEnum.acl_role,
+            ResourceTypeEnum.acl_acl,
+        ],
+    )
+    """Includes all roles-related permissions."""
+
+    roles_read: Permission = Permission(
+        uri="roles:read",
+        title="Read Roles",
+        description="Provides the ability to read role records within context.",
+        resource_types=[
+            ResourceTypeEnum.acl_role,
+            ResourceTypeEnum.acl_acl,
+        ],
+    )
+    """Provides the ability to read role records within context."""
+
+    roles_create: Permission = Permission(
+        uri="roles:create",
+        title="Create Roles",
+        description="Provides the ability to create role records within context.",
+        resource_types=[
+            ResourceTypeEnum.acl_role,
+            ResourceTypeEnum.acl_acl,
+        ],
+    )
+    """Provides the ability to create role records within context."""
+
+    roles_update: Permission = Permission(
+        uri="roles:update",
+        title="Update Roles",
+        description="Provides the ability to update role records within context.",
+        resource_types=[
+            ResourceTypeEnum.acl_role,
+            ResourceTypeEnum.acl_acl,
+        ],
+    )
+    """Provides the ability to update role records within context."""
+
+    roles_delete: Permission = Permission(
+        uri="roles:delete",
+        title="Delete Roles",
+        description="Provides the ability to delete role records within context.",
+        resource_types=[
+            ResourceTypeEnum.acl_role,
+            ResourceTypeEnum.acl_acl,
+        ],
+    )
+    """Provides the ability to delete role records within context."""

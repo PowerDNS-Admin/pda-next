@@ -27,10 +27,54 @@ class ApiConfig(BaseConfig):
             super().__init__(**kwargs)
             if not self.tags:
                 self.tags = [
-                    self.ApiMetadataTagConfig(name='default',
-                                              description='Provides browser client entrypoint and monitoring functionality.'),
-                    self.ApiMetadataTagConfig(name='tasks',
-                                              description='Provides task execution and monitoring features'),
+                    self.ApiMetadataTagConfig(
+                        name='default',
+                        description='Provides browser client entrypoint and monitoring functionality.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='auth',
+                        description='Provides functionality for managing, monitoring, and authenticating users and OAuth clients.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='acl',
+                        description='Provides functionality for managing permissions for users and OAuth clients.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='settings',
+                        description='Provides functionality for managing system, tenant, user, and OAuth client settings.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='system',
+                        description='Provides functionality for managing system resources.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='tasks',
+                        description='Provides functionality for managing and monitoring task execution.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='tenants',
+                        description='Provides functionality for managing system tenants.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='servers',
+                        description='Provides functionality for managing DNS servers and settings.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='keys',
+                        description='Provides features for managing DNS keys.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='zones',
+                        description='Provides functionality for managing DNS zones and records.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='views',
+                        description='Provides functionality for managing DNS views and related resources.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='dev',
+                        description='Provides development mode resources and tools.',
+                    ),
                 ]
 
     metadata: ApiMetadataConfig

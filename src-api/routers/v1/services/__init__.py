@@ -4,6 +4,7 @@ from routers.v1.services import mail
 
 router = APIRouter(
     prefix='/services',
+    tags=['services'],
     responses=router_responses,
 )
 

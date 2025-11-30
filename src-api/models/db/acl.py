@@ -8,7 +8,7 @@ from datetime import datetime
 from sqlalchemy import DateTime, String, TEXT, Uuid, text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.db import BaseSqlModel
-from models.enums import ResourceTypeEnum, PrincipalTypeEnum, PermissionEnum
+from models.enums import ResourceTypeEnum, PrincipalTypeEnum
 
 
 class Role(BaseSqlModel):
@@ -50,7 +50,7 @@ class RolePermission(BaseSqlModel):
     role_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
     """The unique identifier of the associated role."""
 
-    permission: Mapped[PermissionEnum] = mapped_column(TEXT, nullable=False)
+    permission: Mapped[str] = mapped_column(TEXT, nullable=False)
     """The permission associated with the role."""
 
     created_at: Mapped[datetime] = mapped_column(
@@ -87,7 +87,7 @@ class Acl(BaseSqlModel):
     principal_id: Mapped[str] = mapped_column(Uuid, nullable=False)
     """The unique identifier of the associated principal."""
 
-    permission: Mapped[PermissionEnum] = mapped_column(String(255), nullable=False)
+    permission: Mapped[str] = mapped_column(String(255), nullable=False)
     """The permission associated with the ACL."""
 
     created_by: Mapped[str] = mapped_column(

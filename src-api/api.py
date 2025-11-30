@@ -3,6 +3,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 from prometheus_fastapi_instrumentator import Instrumentator
 from app import initialize, init_loop, init_db_loop
+from lib.config.app import EnvironmentEnum
 from middleware import load_middleware
 from routers import install_routers
 
@@ -37,6 +38,15 @@ app = FastAPI(
     openapi_tags=[t.model_dump() for t in config.api.metadata.tags],
     root_path=config.server.proxy_root,
     servers=[{'url': f'{config.app.environment.urls.api}/api/', 'description': 'PDA Environment API'}],
+    debug=config.app.environment.name in (EnvironmentEnum.local, EnvironmentEnum.dev),
+    swagger_ui_parameters={
+        'docExpansion': 'list',
+        'displayRequestDuration': True,
+        'filter': True,
+        'tryItOutEnabled': True,
+        'requestSnippetsEnabled': True,
+        'persistAuthorization': True,
+    },
 )
 
 # Set up FastAPI middleware

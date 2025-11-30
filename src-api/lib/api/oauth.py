@@ -43,8 +43,8 @@ class ClientCredentialsBearer(OAuth2):
 
 
 oauth2_scheme = ClientCredentialsBearer(
-    tokenUrl='v1/token',
-    refreshUrl='v1/token/refresh',
+    tokenUrl='v1/auth/token',
+    refreshUrl='v1/auth/token/refresh',
     scopes=Permissions.scopes,
     auto_error=False,
 )
