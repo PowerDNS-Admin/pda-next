@@ -7,7 +7,7 @@ from fastapi.security import OAuth2, HTTPBasic
 from fastapi.security.oauth2 import OAuthFlowsModel
 from jose import jwt
 
-from lib.api import API_SCOPES
+from lib.api.permissions import Permissions
 from lib.security import ACCESS_TOKEN_AGE, ALGORITHM
 
 
@@ -45,7 +45,7 @@ class ClientCredentialsBearer(OAuth2):
 oauth2_scheme = ClientCredentialsBearer(
     tokenUrl='v1/token',
     refreshUrl='v1/token/refresh',
-    scopes=API_SCOPES,
+    scopes=Permissions.scopes,
     auto_error=False,
 )
 http_basic_scheme = HTTPBasic()

@@ -34,13 +34,21 @@ class AuthenticatorTypeEnum(str, Enum):
     """A email-based one-time password authenticator type."""
 
 
-class ResourceTypeEnum(Enum):
+class PrincipalTypeEnum(str, Enum):
+    """Defines the principal types of PDA."""
+    client = 'client'
+    group = 'group'
+    user = 'user'
+    role = 'role'
+    tenant = 'tenant'
+
+
+class ResourceTypeEnum(str, Enum):
     """Defines the resource types of PDA."""
     auth_user = 'auth_user'
     auth_user_authenticator = 'auth_user_authenticator'
     auth_session = 'auth_session'
     auth_client = 'auth_client'
-    auth_access_token = 'auth_access_token'
     auth_refresh_token = 'auth_refresh_token'
     acl = 'acl'
     acl_role = 'acl_role'
@@ -62,13 +70,6 @@ class ResourceTypeEnum(Enum):
     zone_azone_metadata = 'zone_azone_metadata'
     zone_rzone = 'zone_rzone'
     zone_rzone_record = 'zone_rzone_record'
-
-
-class PrincipalTypeEnum(Enum):
-    """Defines the principal types of PDA."""
-    user = 'user'
-    role = 'role'
-    tenant = 'tenant'
 
 
 class PermissionEnum(str, Enum):

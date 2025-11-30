@@ -5,8 +5,8 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from lib.api.dependencies import get_db_session, get_principal
+from lib.api.permissions import Permissions as p
 from models.api.auth import UserSchema, ClientSchema
-from models.enums import PermissionEnum
 from routers.root import router_responses
 
 router = APIRouter(
@@ -101,9 +101,7 @@ async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> U
 @router.get('/auth/test/client', response_model=UserSchema | ClientSchema)
 async def auth_test_client(
         principal: UserSchema | ClientSchema = Security(get_principal, scopes=[
-            PermissionEnum.auth_user_list.value,
-            PermissionEnum.auth_user_read.value,
-            PermissionEnum.auth_user_update.value,
+            p.users_read.uri, p.users_update.uri, p.users_change_status.uri,
         ]),
 ) -> UserSchema | ClientSchema:
     from loguru import logger
@@ -119,5 +117,5 @@ async def auth_test_user(principal: UserSchema | ClientSchema = Depends(get_prin
 
 
 @router.get('/acl/test')
-async def acl_test(principal: UserSchema | ClientSchema = Depends(get_principal)) -> JSONResponse:
-    return JSONResponse(principal.model_dump(mode='json'))
+async def acl_test() -> JSONResponse:
+    return JSONResponse(p.scopes)
