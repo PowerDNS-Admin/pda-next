@@ -3,8 +3,12 @@ from enum import Enum
 from jose import jwt
 from passlib.context import CryptContext
 
+from models.db.auth import Session
+
 # TODO: Set the following constants from app settings
-COOKIE_NAME = 'session_id'
+SESSION_AGE = 86400 # 1 day
+SESSION_TOKEN_LENGTH = 128
+COOKIE_NAME = 'session'
 ALGORITHM = "HS256"
 ACCESS_TOKEN_EXPIRE_MINUTES = 60
 

@@ -2,7 +2,7 @@ from fastapi import APIRouter, Request, Depends
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 from lib.api.dependencies import get_db_session, get_principal
-from models.api.auth import UserApi, ClientApi
+from models.api.auth import UserSchema, ClientSchema
 from routers.root import router_responses
 
 router = APIRouter(
@@ -15,6 +15,7 @@ router = APIRouter(
 async def proxy_test(request: Request) -> JSONResponse:
     return JSONResponse({
         'host': request.headers.get('Host'),
+        'client-host': request.client.host,
         'x-real-ip': request.headers.get('X-Real-IP'),
         'x-forwarded-for': request.headers.get('X-Forwarded-For'),
         'x-forwarded-proto': request.headers.get('X-Forwarded-Proto'),
@@ -27,34 +28,9 @@ async def proxy_test(request: Request) -> JSONResponse:
 
 @router.get('/db/schema')
 async def db_schema(drop: bool = False, create:bool = True) -> JSONResponse:
-    import importlib.util, os, sys
     from loguru import logger
-    from app import db_engine, settings
+    from app import db_engine
     from models.db import BaseSqlModel
-
-    models_dir = f'{settings.root_path}/src/models/db'
-
-    if not os.path.isdir(models_dir):
-        logger.warning(f'Models directory does not exist: {models_dir}')
-        return JSONResponse({}, status_code=500)
-
-    sys.path.append(os.path.abspath(os.path.dirname(models_dir)))
-
-    for filename in os.listdir(models_dir):
-        if filename.endswith(".py") and not filename.startswith("__"):
-            # Construct module name without the .py extension
-            module_name = filename[:-3]
-            file_path = os.path.join(models_dir, filename)
-
-            try:
-                # Use importlib to dynamically load the module
-                spec = importlib.util.spec_from_file_location(module_name, file_path)
-                module = importlib.util.module_from_spec(spec)
-                sys.modules[module_name] = module
-                spec.loader.exec_module(module)
-                logger.debug(f'Successfully loaded module: {module_name}')
-            except Exception as e:
-                logger.error(f'Failed to load module ({module_name}): {e}')
 
     tables = BaseSqlModel.metadata.tables.keys()
 
@@ -78,8 +54,8 @@ async def db_test(session: AsyncSession = Depends(get_db_session)) -> JSONRespon
     return JSONResponse({})
 
 
-@router.get('/auth/create-client', response_model=ClientApi)
-async def auth_create_client(session: AsyncSession = Depends(get_db_session)) -> ClientApi:
+@router.get('/auth/create-client', response_model=ClientSchema)
+async def auth_create_client(session: AsyncSession = Depends(get_db_session)) -> ClientSchema:
     """Creates an auth client."""
     import json
     from models.db.auth import Client
@@ -95,13 +71,13 @@ async def auth_create_client(session: AsyncSession = Depends(get_db_session)) ->
     await session.commit()
     await session.refresh(db_client)
 
-    return ClientApi.model_validate(db_client)
+    return ClientSchema.model_validate(db_client)
 
 
-@router.get('/auth/create-user', response_model=UserApi)
-async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> UserApi:
+@router.get('/auth/create-user', response_model=UserSchema)
+async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> UserSchema:
     """Creates an auth user."""
-    from models.api.auth import UserApi
+    from models.api.auth import UserSchema
     from models.db.auth import User
     from models.enums import UserStatusEnum
 
@@ -116,23 +92,23 @@ async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> U
     await session.commit()
     await session.refresh(db_user)
 
-    return UserApi.model_validate(db_user)
+    return UserSchema.model_validate(db_user)
 
 
-@router.get('/auth/test/client')
-async def auth_test_client(principal: UserApi | ClientApi = Depends(get_principal)) -> JSONResponse:
+@router.get('/auth/test/client', response_model=UserSchema | ClientSchema)
+async def auth_test_client(principal: UserSchema | ClientSchema = Depends(get_principal)) -> UserSchema | ClientSchema:
     from loguru import logger
     logger.warning(principal)
-    return JSONResponse(principal.model_dump(mode='json'))
+    return principal
 
 
-@router.get('/auth/test/user')
-async def auth_test_user(principal: UserApi | ClientApi = Depends(get_principal)) -> JSONResponse:
+@router.get('/auth/test/user', response_model=UserSchema | ClientSchema)
+async def auth_test_user(principal: UserSchema | ClientSchema = Depends(get_principal)) -> UserSchema | ClientSchema:
     from loguru import logger
     logger.warning(principal)
-    return JSONResponse(principal.model_dump(mode='json'))
+    return principal
 
 
 @router.get('/acl/test')
-async def acl_test(principal: UserApi | ClientApi = Depends(get_principal)) -> JSONResponse:
+async def acl_test(principal: UserSchema | ClientSchema = Depends(get_principal)) -> JSONResponse:
     return JSONResponse(principal.model_dump(mode='json'))

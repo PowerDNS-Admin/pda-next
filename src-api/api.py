@@ -1,11 +1,9 @@
-import importlib, asyncio
+import asyncio
 from contextlib import asynccontextmanager
 from fastapi import FastAPI
-from loguru import logger
 from prometheus_fastapi_instrumentator import Instrumentator
-
-import models.db
 from app import initialize, init_loop, init_db_loop
+from middleware import load_middleware
 from routers import install_routers
 
 # Initialize the app with logging, environment settings, and file-based configuration
@@ -28,7 +26,7 @@ async def lifespan(app: FastAPI):
         task.cancel()
 
 
-# Instantiate the FastAPI app
+# Set up FastAPI app
 app = FastAPI(
     lifespan=lifespan,
     title=config.app.name.title(),
@@ -41,16 +39,10 @@ app = FastAPI(
     servers=[{'url': f'{config.app.environment.urls.api}/api/', 'description': 'PDA Environment API'}],
 )
 
-# FastAPI Middleware Configuration
-if config.server.middleware:
-    for middleware in config.server.middleware:
-        logger.debug(f'Loading FastAPI middleware: {middleware.name}')
-        mw_parts = middleware.name.split('.')
-        mw_mod = importlib.import_module('.'.join(mw_parts[:-1]))
-        mw = getattr(mw_mod, mw_parts[-1])
-        app.add_middleware(mw, **middleware.config if middleware.config else {})
+# Set up FastAPI middleware
+load_middleware(app, config)
 
-# Set up Prometheus metrics for the app
+# Set up FastAPI Prometheus metrics
 metrics = Instrumentator()
 metrics.instrument(app).expose(app)
 

@@ -6,7 +6,7 @@ from models.api import BaseApiModel
 from models.enums import UserStatusEnum
 
 
-class UserApi(BaseApiModel):
+class UserSchema(BaseApiModel):
     """Represents an authentication user for API interactions."""
 
     id: Optional[uuid.UUID] = Field(
@@ -14,7 +14,6 @@ class UserApi(BaseApiModel):
         title='User ID',
         description='The unique identifier of the user.',
         examples=[uuid.uuid4()],
-        pattern='^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
     )
     """The unique identifier of the user."""
 
@@ -23,7 +22,6 @@ class UserApi(BaseApiModel):
         title='Tenant ID',
         description='The unique identifier of the tenant associated with the user (if any).',
         examples=[uuid.uuid4()],
-        pattern='^[0-9a-f]{8}-[0-9a-f]{4}-4[0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$',
     )
     """The unique identifier of the tenant associated with the user (if any)."""
 
@@ -73,7 +71,7 @@ class UserApi(BaseApiModel):
     """The timestamp representing when the user was last authenticated."""
 
 
-class ClientApi(BaseApiModel):
+class ClientSchema(BaseApiModel):
     """Represents an authentication client for API interactions."""
     id: Optional[uuid.UUID] = None
     tenant_id: Optional[uuid.UUID] = None

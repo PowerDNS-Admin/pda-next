@@ -9,7 +9,7 @@ from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from models.api.auth import UserApi
+from models.api.auth import UserSchema
 from models.db import BaseSqlModel
 from models.enums import UserStatusEnum, AuthenticatorTypeEnum
 
@@ -87,6 +87,19 @@ class User(BaseSqlModel):
         stmt = select(User).where(User.username == username)
         return (await session.execute(stmt)).scalar_one_or_none()
 
+    @staticmethod
+    async def mark_authentication(session: AsyncSession, user: 'User') -> 'User':
+        """Updates the given user's authenticated_at timestamp and returns the user."""
+        from datetime import timezone
+
+        user.authenticated_at = datetime.now(tz=timezone.utc)
+
+        session.add(user)
+        await session.commit()
+        await session.refresh(user)
+
+        return user
+
 
 class UserAuthenticator(BaseSqlModel):
     """Represents a user authenticator."""
@@ -151,7 +164,13 @@ class Session(BaseSqlModel):
     user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
     """The unique identifier of the user associated with the session."""
 
-    data: Mapped[str] = mapped_column(TEXT, nullable=False)
+    remote_ip: Mapped[str] = mapped_column(String(45), nullable=False)
+    """The IPv4 or IPv6 address of the session client."""
+
+    token: Mapped[str] = mapped_column(TEXT, nullable=False)
+    """The opaque identifier token for session persistence on clients."""
+
+    data: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
     """The JSON-encoded data of the session."""
 
     created_at: Mapped[datetime] = mapped_column(
@@ -184,27 +203,53 @@ class Session(BaseSqlModel):
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
-    async def create_session(session: AsyncSession, user: UserApi) -> 'Session':
+    async def get_by_token(session: AsyncSession, token: str, remote_ip: Optional[str] = None) -> 'Session | None':
+        """Retrieves a session object by its token and optionally remote ip."""
+        from sqlalchemy import select
+        from sqlalchemy.orm import selectinload
+        stmt = select(Session).options(selectinload(Session.user)).where(Session.token == token)
+        if isinstance(remote_ip, str):
+            stmt.where(Session.remote_ip == remote_ip)
+        return (await session.execute(stmt)).scalar_one_or_none()
+
+    @staticmethod
+    async def create_session(session: AsyncSession, user: UserSchema, remote_ip: Optional[str] = None) -> 'Session':
         """Creates an auth session and returns it."""
-        import json
+        import secrets
         from datetime import timedelta, timezone
+        from lib.security import SESSION_AGE, SESSION_TOKEN_LENGTH
 
-        # TODO: Set expiration window from app settings
-        expires_at = datetime.now(tz=timezone.utc) + timedelta(minutes=60)
+        expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=SESSION_AGE)
 
-        s = Session(
+        db_session = Session(
             tenant_id=user.tenant_id,
             user_id=user.id,
+            remote_ip=remote_ip,
+            token=secrets.token_hex(SESSION_TOKEN_LENGTH),
             expires_at=expires_at,
-            data=json.dumps({
-                'user_id': user.id.hex,
-            }),
+            data=None,
         )
 
-        session.add(s)
+        session.add(db_session)
         await session.commit()
-        await session.refresh(s)
-        return s
+        await session.refresh(db_session)
+
+        return db_session
+
+    @staticmethod
+    async def extend_session(session: AsyncSession, db_session: 'Session', total_seconds: Optional[int] = None) \
+            -> 'Session':
+        """Extends the expiration of a session."""
+        from datetime import timedelta, timezone
+        from lib.security import SESSION_AGE
+
+        db_session.expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=total_seconds or SESSION_AGE)
+
+        session.add(db_session)
+        await session.commit()
+        await session.refresh(db_session)
+
+        return db_session
 
     @staticmethod
     async def destroy_session(session: AsyncSession, id: str | uuid.UUID) -> bool:
@@ -357,7 +402,7 @@ class RefreshToken(BaseSqlModel):
                            user_id: Optional[str | Uuid] = None) -> 'RefreshToken':
         """Creates a refresh token for the given client and optionally user and returns the object."""
         from datetime import timedelta, timezone
-        
+
         if isinstance(client_id, str):
             client_id = uuid.UUID(client_id)
         if isinstance(user_id, str):
@@ -365,9 +410,9 @@ class RefreshToken(BaseSqlModel):
 
         # TODO: Set expiration window from app settings
         expires_at = datetime.now(tz=timezone.utc) + timedelta(minutes=60)
-        
+
         rt = RefreshToken(client_id=client_id, user_id=user_id, expires_at=expires_at)
-        
+
         session.add(rt)
         await session.commit()
         await session.refresh(rt)

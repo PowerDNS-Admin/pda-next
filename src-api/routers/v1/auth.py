@@ -1,7 +1,9 @@
-from fastapi import APIRouter, Response, Depends, Form, HTTPException, status
+from fastapi import APIRouter, Request, Response, Depends, Form, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
+from starlette.responses import JSONResponse
+
 from lib.api.dependencies import get_db_session
-from models.api.auth import UserApi
+from models.api.auth import UserSchema
 from routers.root import router_responses
 
 router = APIRouter(
@@ -10,14 +12,15 @@ router = APIRouter(
 )
 
 
-@router.post('/login', response_model=UserApi)
+@router.post('/login', response_model=UserSchema)
 async def login(
+        request: Request,
         response: Response,
-        session:AsyncSession = Depends(get_db_session),
+        session: AsyncSession = Depends(get_db_session),
         username: str = Form(...),
         password: str = Form(...),
-) -> UserApi:
-    from lib.security import COOKIE_NAME
+) -> UserSchema:
+    from lib.security import COOKIE_NAME, SESSION_AGE
     from models.db.auth import User, Session
     from models.enums import UserStatusEnum
 
@@ -57,17 +60,19 @@ async def login(
 
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, reason)
 
-    # Create the user schema from the database user
-    user = UserApi.model_validate(db_user)
+    # Update the user's last authentication timestamp
+    await User.mark_authentication(session, db_user)
 
-    # TODO: Create a secure session cookie mechanism
+    # Create the user schema from the database user
+    user = UserSchema.model_validate(db_user)
 
     # Create a new auth session for the user
-    auth_session = await Session.create_session(session, user)
+    auth_session = await Session.create_session(session, user, request.client.host)
 
     response.set_cookie(
         key=COOKIE_NAME,
-        value=auth_session.id.hex,
+        value=auth_session.token,
+        max_age=SESSION_AGE,
         path='/',
         httponly=True,
         samesite='strict',
@@ -75,3 +80,32 @@ async def login(
     )
 
     return user
+
+
+@router.get('/logout')
+async def logout(
+        request: Request,
+        response: Response,
+        session: AsyncSession = Depends(get_db_session),
+) -> JSONResponse:
+    from lib.security import COOKIE_NAME
+    from models.db.auth import Session
+
+    session_token = request.cookies.get(COOKIE_NAME)
+
+    if session_token:
+        db_session = await Session.get_by_token(session, session_token, request.client.host)
+        if db_session:
+            await Session.destroy_session(session, db_session.id)
+
+    # Delete any existing session cookie
+    # FIXME: The following cookie delete isn't functioning
+    response.delete_cookie(
+        key=COOKIE_NAME,
+        path='/',
+        httponly=True,
+        samesite='strict',
+        secure=True,
+    )
+
+    return JSONResponse({'message': 'Successfully logged out.'})
