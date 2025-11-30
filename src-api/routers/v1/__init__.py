@@ -1,6 +1,7 @@
-from fastapi import APIRouter, Form, Depends, HTTPException
+from fastapi import APIRouter, Form, Depends, HTTPException, status
 from sqlalchemy.ext.asyncio import AsyncSession
-from lib.api.dependencies import get_db_session
+from uuid import UUID
+from lib.api.dependencies import get_db_session, authorize_oauth_client
 from routers.root import router_responses
 from routers.v1 import auth, services, tasks
 
@@ -17,67 +18,71 @@ router.include_router(tasks.router)
 
 @router.post('/token')
 async def token(
+        session: AsyncSession = Depends(get_db_session),
+        client_id: UUID = Depends(authorize_oauth_client),
+) -> dict:
+    """Handle OAuth token grants."""
+    from lib.security import create_access_token, ACCESS_TOKEN_AGE
+    from models.db.auth import RefreshToken
+
+    # Create the JWT access token
+    access_token = create_access_token({'sub': str(client_id)})
+
+    # Create a refresh token
+    refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id)
+
+    return {
+        'access_token': access_token,
+        'token_type': 'bearer',
+        'expires_in': ACCESS_TOKEN_AGE,
+        'refresh_token': str(refresh.id),
+    }
+
+
+@router.post('/token/refresh')
+async def token_refresh(
         grant_type: str = Form(...),
         client_id: str = Form(...),
         client_secret: str = Form(...),
-        username: str = Form(None),
-        password: str = Form(None),
-        refresh_token: str = Form(None),
+        refresh_token: str = Form(...),
+        scope: str = Form(None),
         session: AsyncSession = Depends(get_db_session),
 ):
     """Handle OAuth token grants."""
-    from lib.security import create_access_token, ACCESS_TOKEN_EXPIRE_MINUTES, TokenGrantTypeEnum
-    from models.db.auth import Client, RefreshToken, User
+    from lib.security import create_access_token, ACCESS_TOKEN_AGE, TokenGrantTypeEnum, TokenErrorTypeEnum
+    from models.db.auth import Client, RefreshToken
 
-    # Validate Client
+    # Retrieve the referenced client
     client = await Client.get_by_id(session, client_id)
+
+    # Validate the client
     if not client or not client.verify_secret(client_secret):
-        raise HTTPException(400, 'invalid_client')
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, TokenErrorTypeEnum.invalid_client.value)
 
-    # Client Credential Grants
-    if grant_type == TokenGrantTypeEnum.client_credentials.value:
-        access = create_access_token({'sub': f'client:{client_id}'})
-        refresh = await RefreshToken.create_token(session, client_id)
+    if grant_type != TokenGrantTypeEnum.refresh_token.value:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, TokenErrorTypeEnum.unsupported_grant_type)
 
-        return {
-            'access_token': access,
-            'token_type': 'bearer',
-            'expires_in': ACCESS_TOKEN_EXPIRE_MINUTES,
-            'refresh_token': str(refresh.id),
-        }
+    # Retrieve the referenced token
+    stored = await RefreshToken.get_by_id(session, refresh_token)
 
-    # Username Credential Grants
-    if grant_type == TokenGrantTypeEnum.password.value:
-        user = await User.get_by_username(session, username)
-        if not user or not user.verify_password(password):
-            raise HTTPException(400, 'invalid_user')
+    # Validate the token
+    if not stored or not stored.validate(client_id):
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, TokenErrorTypeEnum.invalid_token.value)
 
-        access = create_access_token({'sub': str(user.id)})
-        refresh = await RefreshToken.create_token(session, client_id, str(user.id))
+    # Revoke the previous token
+    await RefreshToken.revoke_token(session, stored)
 
-        return {
-            'access_token': access,
-            'token_type': 'bearer',
-            'expires_in': ACCESS_TOKEN_EXPIRE_MINUTES,
-            'refresh_token': str(refresh.id),
-        }
+    # TODO: Handle scope changes
 
-    # Refresh Token Grants
-    if grant_type == TokenGrantTypeEnum.refresh_token.value:
-        stored = await RefreshToken.get_by_id(session, refresh_token)
-        if not stored or stored.revoked or stored.client_id != client_id:
-            raise HTTPException(400, 'invalid_grant')
+    # Create the JWT access token
+    access_token = create_access_token({'sub': str(stored.user_id) if stored.user_id else client_id})
 
-        await RefreshToken.revoke_token(session, stored)
+    # Create a refresh token
+    refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id, stored.user_id)
 
-        access = create_access_token({'sub': str(stored.user_id) if stored.user_id else f'client:{client_id}'})
-        refresh = await RefreshToken.create_token(session, client_id, str(stored.user_id))
-
-        return {
-            'access_token': access,
-            'token_type': 'bearer',
-            'expires_in': ACCESS_TOKEN_EXPIRE_MINUTES,
-            'refresh_token': str(refresh.id),
-        }
-
-    raise HTTPException(400, 'unsupported_grant_type')
+    return {
+        'access_token': access_token,
+        'token_type': 'bearer',
+        'expires_in': ACCESS_TOKEN_AGE,
+        'refresh_token': str(refresh.id),
+    }

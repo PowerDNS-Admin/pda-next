@@ -26,7 +26,13 @@ async def login(
 
     # Delete any existing session cookie
     # FIXME: The following cookie delete isn't functioning
-    response.delete_cookie(COOKIE_NAME, path='/')
+    response.delete_cookie(
+        key=COOKIE_NAME,
+        path='/',
+        httponly=True,
+        samesite='strict',
+        secure=True,
+    )
 
     if not username or isinstance(username, str) and not len(username.strip()):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'No username provided.')

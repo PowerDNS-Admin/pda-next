@@ -9,8 +9,9 @@ from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
+from uuid import UUID
 from models.api.auth import UserSchema
-from models.db import BaseSqlModel
+from models.db import BaseSqlModel, JSONType
 from models.enums import UserStatusEnum, AuthenticatorTypeEnum
 
 
@@ -20,10 +21,10 @@ class User(BaseSqlModel):
     __tablename__ = 'pda_auth_users'
     """Defines the database table name."""
 
-    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     """The unique identifier of the record."""
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant that owns the record if any."""
 
     username: Mapped[str] = mapped_column(String(100), nullable=False)
@@ -107,13 +108,13 @@ class UserAuthenticator(BaseSqlModel):
     __tablename__ = 'pda_auth_user_authenticators'
     """Defines the database table name."""
 
-    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     """The unique identifier of the record."""
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant that owns the record if any."""
 
-    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
+    user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
     """The unique identifier of the user that owns the record if any."""
 
     type_: Mapped[AuthenticatorTypeEnum] = mapped_column(String(20), nullable=False)
@@ -155,13 +156,13 @@ class Session(BaseSqlModel):
     __tablename__ = 'pda_auth_sessions'
     """Defines the database table name."""
 
-    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     """The unique identifier of the record."""
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant associated with the session if any."""
 
-    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
+    user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
     """The unique identifier of the user associated with the session."""
 
     remote_ip: Mapped[str] = mapped_column(String(45), nullable=False)
@@ -170,7 +171,7 @@ class Session(BaseSqlModel):
     token: Mapped[str] = mapped_column(TEXT, nullable=False)
     """The opaque identifier token for session persistence on clients."""
 
-    data: Mapped[Optional[str]] = mapped_column(TEXT, nullable=True)
+    data: Mapped[Optional[dict]] = mapped_column(JSONType, nullable=True)
     """The JSON-encoded data of the session."""
 
     created_at: Mapped[datetime] = mapped_column(
@@ -194,11 +195,11 @@ class Session(BaseSqlModel):
     """The user associated with the session."""
 
     @staticmethod
-    async def get_by_id(session: AsyncSession, id: str | uuid.UUID) -> 'Session | None':
+    async def get_by_id(session: AsyncSession, id: str | UUID) -> 'Session | None':
         """Retrieves a session object by its id."""
         from sqlalchemy import select
         if isinstance(id, str):
-            id = uuid.UUID(id)
+            id = UUID(id)
         stmt = select(Session).where(Session.id == id)
         return (await session.execute(stmt)).scalar_one_or_none()
 
@@ -252,11 +253,11 @@ class Session(BaseSqlModel):
         return db_session
 
     @staticmethod
-    async def destroy_session(session: AsyncSession, id: str | uuid.UUID) -> bool:
+    async def destroy_session(session: AsyncSession, id: str | UUID) -> bool:
         """Destroys a session by id."""
 
         if isinstance(id, str):
-            id = uuid.UUID(id)
+            id = UUID(id)
 
         auth_session = await Session.get_by_id(session, id)
 
@@ -274,13 +275,13 @@ class Client(BaseSqlModel):
     __tablename__ = 'pda_auth_clients'
     """Defines the database table name."""
 
-    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     """The unique identifier of the record."""
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant that owns the record if any."""
 
-    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
+    user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
     """The unique identifier of the user that owns the record if any."""
 
     hashed_secret: Mapped[str] = mapped_column(TEXT, nullable=False)
@@ -292,7 +293,7 @@ class Client(BaseSqlModel):
     redirect_uri: Mapped[str] = mapped_column(TEXT, nullable=True)
     """The URL to redirect after authorization (if using auth code flow)."""
 
-    scopes: Mapped[str] = mapped_column(TEXT, nullable=True)
+    scopes: Mapped[Optional[list[str]]] = mapped_column(JSONType, nullable=True)
     """A JSON-encoded list of scopes associated with the client."""
 
     created_at: Mapped[datetime] = mapped_column(
@@ -339,7 +340,7 @@ class Client(BaseSqlModel):
         """Retrieves a client object by its id."""
         from sqlalchemy import select
         if isinstance(id, str):
-            id = uuid.UUID(id)
+            id = UUID(id)
         stmt = select(Client).where(Client.id == id)
         return (await session.execute(stmt)).scalar_one_or_none()
 
@@ -350,20 +351,17 @@ class RefreshToken(BaseSqlModel):
     __tablename__ = 'pda_auth_refresh_tokens'
     """Defines the database table name."""
 
-    id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     """The unique identifier of the record."""
 
-    tenant_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant that owns the record if any."""
 
-    user_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
+    user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
     """The unique identifier of the user that owns the record if any."""
 
-    client_id: Mapped[uuid.UUID] = mapped_column(Uuid, ForeignKey('pda_auth_clients.id'), nullable=False)
+    client_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_clients.id'), nullable=False)
     """The unique identifier of the authclient that owns the record."""
-
-    revoked: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
-    """Whether the refresh token has been revoked or not."""
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
@@ -388,28 +386,46 @@ class RefreshToken(BaseSqlModel):
     client = relationship('Client', back_populates='refresh_tokens')
     """The authclient associated with the refresh token."""
 
+    def validate(self, client_id: str | UUID) -> bool:
+        """Validates the refresh token matches the given client id and has not expired."""
+        from datetime import timezone
+
+        if isinstance(client_id, str):
+            client_id = UUID(client_id)
+
+        if client_id != self.client_id:
+            return False
+
+        if self.expires_at < datetime.now(tz=timezone.utc):
+            return False
+
+        return True
+
     @staticmethod
-    async def get_by_id(session: AsyncSession, id: str | Uuid) -> 'RefreshToken | None':
+    async def get_by_id(session: AsyncSession, id: str | UUID) -> 'RefreshToken | None':
         """Retrieves a refresh token object by its id."""
         from sqlalchemy import select
         if isinstance(id, str):
-            id = uuid.UUID(id)
+            id = UUID(id)
         stmt = select(RefreshToken).where(RefreshToken.id == id)
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
-    async def create_token(session: AsyncSession, client_id: str | Uuid,
-                           user_id: Optional[str | Uuid] = None) -> 'RefreshToken':
+    async def create_token(
+            session: AsyncSession,
+            expires_in: int,
+            client_id: str | UUID,
+            user_id: Optional[str | UUID | Mapped[UUID]] = None,
+    ) -> 'RefreshToken':
         """Creates a refresh token for the given client and optionally user and returns the object."""
         from datetime import timedelta, timezone
 
         if isinstance(client_id, str):
-            client_id = uuid.UUID(client_id)
+            client_id = UUID(client_id)
         if isinstance(user_id, str):
-            user_id = uuid.UUID(user_id)
+            user_id = UUID(user_id)
 
-        # TODO: Set expiration window from app settings
-        expires_at = datetime.now(tz=timezone.utc) + timedelta(minutes=60)
+        expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=expires_in)
 
         rt = RefreshToken(client_id=client_id, user_id=user_id, expires_at=expires_at)
 
@@ -419,12 +435,16 @@ class RefreshToken(BaseSqlModel):
         return rt
 
     @staticmethod
-    async def revoke_token(session: AsyncSession, rt: 'RefreshToken | str | Uuid') -> None:
+    async def revoke_token(session: AsyncSession, rt: 'RefreshToken | str | UUID') -> None:
         """Revokes the given refresh token."""
-        if isinstance(rt, str) or isinstance(rt, Uuid):
-            if isinstance(rt, str):
-                rt = uuid.UUID(rt)
+        # Retrieve an ORM instance of the RefreshToken if a record ID was provided instance of an instance
+        if isinstance(rt, str) or isinstance(rt, UUID):
             rt = RefreshToken.get_by_id(session, rt)
-        rt.revoked = True
-        session.add(rt)
+        elif not isinstance(rt, RefreshToken):
+            raise TypeError('Invalid refresh token type')
+
+        if not rt:
+            raise ValueError('Invalid refresh token')
+
+        await session.delete(rt)
         await session.commit()

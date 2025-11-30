@@ -77,8 +77,8 @@ class ClientSchema(BaseApiModel):
     tenant_id: Optional[uuid.UUID] = None
     user_id: Optional[uuid.UUID] = None
     name: str
-    redirect_uri: str
-    scopes: list[str]
+    redirect_uri: Optional[str] = None
+    scopes: Optional[list[str]] = None
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None

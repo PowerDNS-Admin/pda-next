@@ -1,14 +1,13 @@
-from fastapi import Depends, Request, HTTPException, status
-from fastapi.security import OAuth2PasswordBearer
-from sqlalchemy.ext.asyncio import AsyncSession
 from typing import AsyncGenerator
+from uuid import UUID
+
+from fastapi import Depends, Request, Form, HTTPException, status
+from fastapi.security import HTTPBasicCredentials
+from sqlalchemy.orm import Mapped
+from sqlalchemy.ext.asyncio import AsyncSession
+
+from lib.api.oauth import oauth2_scheme, http_basic_scheme
 from models.api.auth import UserSchema, ClientSchema
-
-oauth2_scheme_password = OAuth2PasswordBearer(tokenUrl='v1/token', auto_error=False)
-
-
-async def validate_user_token_placeholder(token: str) -> UserSchema:
-    pass
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -20,28 +19,42 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 async def get_principal(
         request: Request,
         session: AsyncSession = Depends(get_db_session),
-        bearer_token: str = Depends(oauth2_scheme_password),
+        bearer_token: str = Depends(oauth2_scheme),
 ) -> UserSchema | ClientSchema:
+    from datetime import datetime, timezone
     from loguru import logger
     from jose import JWTError, jwt
     from app import config
     from lib.security import ALGORITHM, COOKIE_NAME
-    from models.db.auth import Session
+    from models.db.auth import Session, Client
 
     # Attempt OAuth Bearer Token Authentication
     if bearer_token:
+        invalid_msg = 'Invalid bearer token'
         try:
             payload = jwt.decode(bearer_token, config.app.secret_key, algorithms=[ALGORITHM])
             logger.warning(payload)
         except JWTError:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Invalid bearer token')
-        user = await validate_user_token_placeholder(bearer_token)
-        if user:
-            return user
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+
+        if 'sub' not in payload or 'exp' not in payload:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+
+        client = await Client.get_by_id(session, payload['sub'])
+
+        if not client:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+
+        # Verify that token hasn't expired
+        if datetime.now(timezone.utc) > datetime.fromtimestamp(payload['exp'], tz=timezone.utc):
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_msg)
+
+        return ClientSchema.model_validate(client)
 
     # Attempt Session Token Authentication
     session_token = request.cookies.get(COOKIE_NAME)
     if session_token:
+        # TODO: Implement hijack detection failsafe and terminate session if token matches but remote IP doesn't
         db_session = await Session.get_by_token(session, session_token, request.client.host)
         if db_session:
             # Extend the session's expiration timestamp
@@ -53,3 +66,33 @@ async def get_principal(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Not authenticated'
     )
+
+
+async def authorize_oauth_client(
+        credentials: HTTPBasicCredentials = Depends(http_basic_scheme),
+        grant_type: str = Form(...),
+        session: AsyncSession = Depends(get_db_session),
+) -> UUID | Mapped[UUID]:
+    from lib.security import TokenGrantTypeEnum, TokenErrorTypeEnum
+    from models.db.auth import Client
+
+    # Standard OAuth requires the grant_type field to be present in the body
+    if grant_type != TokenGrantTypeEnum.client_credentials.value:
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail='Invalid grant_type provided. Must be "client_credentials".'
+        )
+
+    # Retrieve the referenced client
+    client = await Client.get_by_id(session, credentials.username)
+
+    # Validate the client
+    if not client or not client.verify_secret(credentials.password):
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail=TokenErrorTypeEnum.invalid_client.value,
+            headers={'WWW-Authenticate': 'Bearer'},
+        )
+
+    # Return the client schema upon successful validation
+    return client.id
