@@ -107,7 +107,7 @@
         "summary": {
           "type": "string",
           "description": "Provides a summary of the application.",
-          "default": "A PowerDNS web interface with advanced management and automation features."
+          "default": "An advanced management and monitoring tool for the PowerDNS software suite."
         },
         "timezone": {
           "type": "string",
@@ -203,7 +203,7 @@
             "description": {
               "type": "string",
               "description": "The description of the app.",
-              "default": "The PDA API provides an interface for task execution and monitoring."
+              "default": "The PDA API provides a backend interface for core functionality and support of the UI."
             }
           }
         }

@@ -34,7 +34,7 @@ class AppConfig(BaseConfig):
 
     name: str = 'pda'
     version: str = '0.1.0'
-    summary: str = 'A PowerDNS web interface with advanced management and automation features.'
+    summary: str = 'An advanced management and monitoring tool for the PowerDNS software suite.'
     timezone: str = 'Etc/UTC'
     timezone_code: str = 'UTC'
     author: AuthorConfig
