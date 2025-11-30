@@ -7,7 +7,7 @@ from fastapi.security import OAuth2, HTTPBasic
 from fastapi.security.oauth2 import OAuthFlowsModel
 from jose import jwt
 
-from lib.api.permissions import Permissions
+from lib.permissions import Permissions
 from lib.security import ACCESS_TOKEN_AGE, ALGORITHM
 
 

@@ -1,11 +1,9 @@
-from typing_extensions import Annotated
-
 from fastapi import APIRouter, Request, Depends, Security
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from lib.api.dependencies import get_db_session, get_principal
-from lib.api.permissions import Permissions as p
+from lib.permissions import Permissions as p
 from models.api.auth import UserSchema, ClientSchema
 from routers.root import router_responses
 
