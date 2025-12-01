@@ -28,6 +28,9 @@ class Setting(BaseSqlModel):
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
     """The unique identifier of the user associated with the setting."""
 
+    uri: Mapped[str] = mapped_column(String(255), nullable=False)
+    """The uri of the setting."""
+
     key: Mapped[str] = mapped_column(String(255), nullable=False)
     """The key of the setting."""
 

@@ -23,6 +23,12 @@ class BaseSetting(BaseApiModel):
     )
     """The description this setting."""
 
+    uri: str = Field(
+        title='Setting URI',
+        description='The URI of this setting.',
+    )
+    """The URI of this setting."""
+
     key: str = Field(
         title='Setting Key',
         description='The key of this setting.',

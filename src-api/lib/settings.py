@@ -4,6 +4,7 @@ from uuid import UUID
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from models.api.settings import Setting, StringSetting, IntSetting, FloatSetting, BoolSetting
+from models.db.settings import Setting as DbSetting
 
 
 class SettingException(Exception):
@@ -50,12 +51,12 @@ class SettingsManager:
     """Provides an interface for managing system settings."""
 
     @staticmethod
-    async def get_by_id(session: AsyncSession, id: str | UUID) -> 'Setting | None':
+    async def get_by_id(session: AsyncSession, id: str | UUID) -> DbSetting | None:
         """Retrieves a setting object by its id."""
         from sqlalchemy import select
         if isinstance(id, str):
             id = UUID(id)
-        stmt = select(Setting).where(Setting.id == id)
+        stmt = select(DbSetting).where(DbSetting.id == id)
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
@@ -65,7 +66,7 @@ class SettingsManager:
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
             include_none: bool = False,
-    ) -> 'Setting | None':
+    ) -> DbSetting | None:
         """Retrieves a setting object by its key and optionally tenant and/or user id."""
         from sqlalchemy import select
 
@@ -74,23 +75,25 @@ class SettingsManager:
         if isinstance(user_id, str):
             user_id = UUID(user_id)
 
-        stmt = select(Setting).where(Setting.key == key.value)
+        stmt = select(DbSetting).where(DbSetting.key == key)
 
         if include_none or isinstance(tenant_id, UUID):
-            stmt = stmt.where(Setting.tenant_id == tenant_id)
+            stmt = stmt.where(DbSetting.tenant_id == tenant_id)
 
         if include_none or isinstance(user_id, UUID):
-            stmt = stmt.where(Setting.user_id == user_id)
+            stmt = stmt.where(DbSetting.user_id == user_id)
 
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
     async def get_many(
             session: AsyncSession,
+            uri: Optional[str] = None,
             key: Optional[str] = None,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
-    ) -> 'list[Setting]':
+            include_none: bool = False,
+    ) -> list[DbSetting]:
         """Retrieves multiple setting objects by based on the given attribute values."""
         from sqlalchemy import select
 
@@ -99,32 +102,43 @@ class SettingsManager:
         if isinstance(user_id, str):
             user_id = UUID(user_id)
 
-        stmt = select(Setting).where(
-            Setting.key == key.value, Setting.tenant_id == tenant_id, Setting.user_id == user_id
-        )
+        stmt = select(DbSetting)
+
+        if include_none or isinstance(uri, str):
+            stmt = stmt.where(DbSetting.uri == uri)
+
+        if include_none or isinstance(key, str):
+            stmt = stmt.where(DbSetting.key == key)
+
+        if include_none or isinstance(tenant_id, str):
+            stmt = stmt.where(DbSetting.tenant_id == tenant_id)
+
+        if include_none or isinstance(user_id, str):
+            stmt = stmt.where(DbSetting.user_id == user_id)
 
         return list((await session.execute(stmt)).scalars().all())
 
     @staticmethod
     async def create_setting(
             session: AsyncSession,
-            key: Optional[str],
+            uri: str,
+            key: str,
             value: Optional[str] = None,
             overridable: Optional[bool] = None,
             readonly: bool = False,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
-    ) -> 'Setting':
+    ) -> DbSetting:
         """
         Creates a single setting based on the given criteria and returns the created setting object.
         """
 
-        setting = await Setting.get_by_criteria(session, key, tenant_id, user_id)
+        setting = await SettingsManager.get_by_criteria(session, key, tenant_id, user_id)
 
         # Validate that there isn't already an existing setting matching the given criteria
         if setting:
             raise SettingExistsException(
-                f'The setting already exists: key: {key.value}, tenant_id: {tenant_id}, user_id: {user_id}',
+                f'The setting already exists: key: {key}, tenant_id: {tenant_id}, user_id: {user_id}',
                 key=key,
                 tenant_id=tenant_id,
                 user_id=user_id,
@@ -132,11 +146,11 @@ class SettingsManager:
 
         # Validate tenant level override capability of setting if applicable
         if user_id and tenant_id:
-            setting = await Setting.get_by_criteria(session, key, tenant_id)
+            setting = await SettingsManager.get_by_criteria(session, key, tenant_id)
             if setting and not setting.overridable:
                 raise SettingExistsException(
                     f'The setting already exists at the tenant level and cannot be overridden: '
-                    + f'key: {key.value}, tenant_id: {tenant_id}, user_id: {user_id}',
+                    + f'key: {key}, tenant_id: {tenant_id}, user_id: {user_id}',
                     key=key,
                     tenant_id=tenant_id,
                     user_id=user_id,
@@ -144,19 +158,21 @@ class SettingsManager:
 
         # Validate system level override capability of setting if applicable
         if user_id or tenant_id:
-            setting = await Setting.get_by_criteria(session, key, include_none=True)
+            setting = await SettingsManager.get_by_criteria(session, key, include_none=True)
             if setting and not setting.overridable:
                 raise SettingExistsException(
                     f'The setting already exists at the system level and cannot be overridden: '
-                    + f'key: {key.value}, tenant_id: {tenant_id}, user_id: {user_id}',
+                    + f'key: {key}, tenant_id: {tenant_id}, user_id: {user_id}',
                     key=key,
                     tenant_id=tenant_id,
                     user_id=user_id,
                 )
 
-        setting = Setting(
+        setting = DbSetting(
             tenant_id=tenant_id,
             user_id=user_id,
+            uri=uri,
+            key=key,
             value=value,
             overridable=overridable,
             readonly=readonly,
@@ -171,24 +187,25 @@ class SettingsManager:
     @staticmethod
     async def update_setting(
             session: AsyncSession,
-            key: Optional[str],
+            key: str,
             value: Optional[str] = None,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
-    ) -> 'Setting':
+    ) -> DbSetting:
         """Updates a single setting based on the given criteria and returns the updated setting object."""
 
-        setting = await Setting.get_by_criteria(session, key, tenant_id, user_id)
+        setting = await SettingsManager.get_by_criteria(session, key, tenant_id, user_id)
 
         if not setting:
             raise SettingExistsException(
-                f'The setting does not exist: key: {key.value}, tenant_id: {tenant_id}, user_id: {user_id}',
+                f'The setting does not exist: key: {key}, tenant_id: {tenant_id}, user_id: {user_id}',
                 key=key,
                 tenant_id=tenant_id,
                 user_id=user_id,
             )
 
         setting.value = value
+
         session.add(setting)
         await session.commit()
         await session.refresh(setting)
@@ -198,17 +215,17 @@ class SettingsManager:
     @staticmethod
     async def delete_setting(
             session: AsyncSession,
-            key: Optional[str],
+            key: str,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
     ) -> None:
         """Deletes a single setting based on the given criteria and returns True if successful, False otherwise."""
 
-        setting = await Setting.get_by_criteria(session, key, tenant_id, user_id, include_none=True)
+        setting = await SettingsManager.get_by_criteria(session, key, tenant_id, user_id, include_none=True)
 
         if not setting:
             raise SettingExistsException(
-                f'The setting does not exist: key: {key.value}, tenant_id: {tenant_id}, user_id: {user_id}',
+                f'The setting does not exist: key: {key}, tenant_id: {tenant_id}, user_id: {user_id}',
                 key=key,
                 tenant_id=tenant_id,
                 user_id=user_id,
@@ -225,7 +242,8 @@ class Settings:
         type='str',
         title='Auth Session Cookie Name',
         description='The name of the session cookie.',
-        key='auth:session:cookie_name',
+        uri='auth:session:cookie_name',
+        key='auth_session_cookie_name',
         value='session',
         overridable=False,
     )
@@ -235,7 +253,8 @@ class Settings:
         type='int',
         title='Idle Auth Session Expiration Age',
         description='The number of seconds a session can be idle before expiring.',
-        key='auth:session:expiration_age',
+        uri='auth:session:expiration_age',
+        key='auth_session_expiration_age',
         value=3600,
         overridable=True,
     )
@@ -245,7 +264,8 @@ class Settings:
         type='int',
         title='Auth Session Maximum Age',
         description='The maximum number of seconds a session can before a forced expiration.',
-        key='auth:session:max_age',
+        uri='auth:session:max_age',
+        key='auth_session_max_age',
         value=14400,
         overridable=True,
     )
