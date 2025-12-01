@@ -29,7 +29,7 @@ class BaseSetting(BaseApiModel):
     )
     """The key of this setting."""
 
-    default_value: Any = Field(
+    value: Any = Field(
         title='Default Setting Value',
         description='The default value of this setting.',
     )
@@ -42,6 +42,13 @@ class BaseSetting(BaseApiModel):
     )
     """Whether the setting can be overridden in lower contexts."""
 
+    readonly: bool = Field(
+        title='Setting Read-Only',
+        description='Whether the setting can be modified in non-system contexts.',
+        default=False,
+    )
+    """Whether the setting can be modified in non-system contexts."""
+
 
 class StringSetting(BaseSetting):
     """Provides an interface for defining a string-type system setting and applying it accordingly."""
@@ -49,7 +56,7 @@ class StringSetting(BaseSetting):
     type: Literal['str']
     """The value type of the setting."""
 
-    default_value: str
+    value: str
     """The default value of this setting."""
 
 
@@ -59,7 +66,7 @@ class IntSetting(BaseSetting):
     type: Literal['int']
     """The value type of the setting."""
 
-    default_value: int
+    value: int
     """The default value of this setting."""
 
 
@@ -69,7 +76,7 @@ class FloatSetting(BaseSetting):
     type: Literal['float']
     """The value type of the setting."""
 
-    default_value: float
+    value: float
     """The default value of this setting."""
 
 
@@ -79,9 +86,11 @@ class BoolSetting(BaseSetting):
     type: Literal['bool']
     """The value type of the setting."""
 
-    default_value: bool
+    value: bool
     """The default value of this setting."""
 
+
+# TODO: Implement a JSON type for automatic conversion
 
 Setting = StringSetting | IntSetting | FloatSetting | BoolSetting
 """Mash all the types together to make a delicious potato. ( ͡ᵔ ͜ʖ ͡ᵔ )"""
