@@ -40,6 +40,7 @@ from .audits import *
 from .auth import *
 from .keys import *
 from .servers import *
+from .settings import *
 from .system import *
 from .tasks import *
 from .tenants import *

@@ -45,6 +45,9 @@ class Tenant(BaseSqlModel):
     stopgap_domain = relationship('StopgapDomain', back_populates='tenants')
     """The stopgap domain associated with the tenant."""
 
+    settings = relationship('Setting', back_populates='tenant')
+    """A list of settings associated with the tenant."""
+
     auth_users = relationship('User', back_populates='tenant')
     """A list of auth users associated with the tenant."""
 

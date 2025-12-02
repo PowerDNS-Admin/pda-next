@@ -41,7 +41,7 @@ class ApiConfig(BaseConfig):
                     ),
                     self.ApiMetadataTagConfig(
                         name='settings',
-                        description='Provides functionality for managing system, tenant, user, and OAuth client settings.',
+                        description='Provides functionality for managing system, tenant, and user level settings.',
                     ),
                     self.ApiMetadataTagConfig(
                         name='system',

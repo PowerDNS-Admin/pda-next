@@ -2,13 +2,8 @@ from enum import Enum
 
 from passlib.context import CryptContext
 
-# TODO: Set the following constants from app settings
-ACCESS_TOKEN_AGE = 3600
-REFRESH_TOKEN_AGE = 1800
-SESSION_AGE = 86400 # 1 day
-SESSION_TOKEN_LENGTH = 128
-COOKIE_NAME = 'session'
 ALGORITHM = 'HS256'
+SESSION_TOKEN_LENGTH = 128
 
 crypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 

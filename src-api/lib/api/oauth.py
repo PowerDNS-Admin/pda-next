@@ -8,7 +8,6 @@ from fastapi.security.oauth2 import OAuthFlowsModel
 from jose import jwt
 
 from lib.permissions import Permissions
-from lib.security import ACCESS_TOKEN_AGE, ALGORITHM
 
 
 class ClientCredentialsBearer(OAuth2):
@@ -51,12 +50,13 @@ oauth2_scheme = ClientCredentialsBearer(
 http_basic_scheme = HTTPBasic()
 
 
-def create_access_token(data: dict, expires_delta: timedelta | None = None):
+def create_access_token(payload: dict, age: int):
     from datetime import timezone
     from app import config
+    from lib.security import ALGORITHM
 
-    to_encode = data.copy()
-    expire = datetime.now(tz=timezone.utc) + (expires_delta or timedelta(seconds=ACCESS_TOKEN_AGE))
-    to_encode.update({"exp": int(expire.timestamp())})
+    to_encode = payload.copy()
+    expire = datetime.now(tz=timezone.utc) + timedelta(seconds=age)
+    to_encode.update({'exp': int(expire.timestamp())})
 
     return jwt.encode(to_encode, config.app.secret_key, algorithm=ALGORITHM)

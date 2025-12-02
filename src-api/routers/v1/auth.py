@@ -22,7 +22,8 @@ async def token(
         scope: str = Form(None),
 ) -> dict:
     """Handle OAuth token grants."""
-    from lib.security import ACCESS_TOKEN_AGE
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
     from lib.api.oauth import create_access_token
     from models.db.auth import RefreshToken
 
@@ -31,16 +32,19 @@ async def token(
     if isinstance(scope, str):
         jwt_payload['scope'] = scope
 
+    access_token_age = (await SettingsManager.get(session=session, key=sd.auth_access_token_age.key)).value
+    refresh_token_age = (await SettingsManager.get(session=session, key=sd.auth_refresh_token_age.key)).value
+
     # Create the JWT access token
-    access_token = create_access_token(jwt_payload)
+    access_token = create_access_token(payload=jwt_payload, age=access_token_age)
 
     # Create a refresh token
-    refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id)
+    refresh = await RefreshToken.create_token(session, refresh_token_age, client_id)
 
     return {
         'access_token': access_token,
         'token_type': 'bearer',
-        'expires_in': ACCESS_TOKEN_AGE,
+        'expires_in': access_token_age,
         'refresh_token': str(refresh.id),
     }
 
@@ -56,7 +60,9 @@ async def token_refresh(
 ):
     """Handle OAuth token grants."""
     from loguru import logger
-    from lib.security import ACCESS_TOKEN_AGE, TokenGrantTypeEnum, TokenErrorTypeEnum
+    from lib.security import TokenGrantTypeEnum, TokenErrorTypeEnum
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
     from lib.api.oauth import create_access_token
     from models.db.auth import Client, RefreshToken
 
@@ -88,16 +94,19 @@ async def token_refresh(
     # TODO: Handle scope changes
     logger.critical('Token refresh endpoint needs permissions finished!')
 
+    access_token_age = (await SettingsManager.get(session=session, key=sd.auth_access_token_age.key)).value
+    refresh_token_age = (await SettingsManager.get(session=session, key=sd.auth_refresh_token_age.key)).value
+
     # Create the JWT access token
-    access_token = create_access_token(jwt_payload)
+    access_token = create_access_token(payload=jwt_payload, age=access_token_age)
 
     # Create a refresh token
-    refresh = await RefreshToken.create_token(session, ACCESS_TOKEN_AGE, client_id, stored.user_id)
+    refresh = await RefreshToken.create_token(session, refresh_token_age, client_id, stored.user_id)
 
     return {
         'access_token': access_token,
         'token_type': 'bearer',
-        'expires_in': ACCESS_TOKEN_AGE,
+        'expires_in': access_token_age,
         'refresh_token': str(refresh.id),
     }
 
@@ -110,14 +119,18 @@ async def login(
         username: str = Form(...),
         password: str = Form(...),
 ) -> UserSchema:
-    from lib.security import COOKIE_NAME, SESSION_AGE
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
     from models.db.auth import User, Session
     from models.enums import UserStatusEnum
+
+    cookie_name = (await SettingsManager.get(session=session, key=sd.auth_session_cookie_name.key)).value
+    cookie_age = (await SettingsManager.get(session=session, key=sd.auth_session_expiration_age.key)).value
 
     # Delete any existing session cookie
     # FIXME: The following cookie delete isn't functioning
     response.delete_cookie(
-        key=COOKIE_NAME,
+        key=cookie_name,
         path='/',
         httponly=True,
         samesite='strict',
@@ -166,9 +179,9 @@ async def login(
     auth_session = await Session.create_session(session, user, request.client.host)
 
     response.set_cookie(
-        key=COOKIE_NAME,
+        key=cookie_name,
         value=auth_session.token,
-        max_age=SESSION_AGE,
+        max_age=cookie_age,
         path='/',
         httponly=True,
         samesite='strict',
@@ -184,10 +197,13 @@ async def logout(
         response: Response,
         session: AsyncSession = Depends(get_db_session),
 ) -> JSONResponse:
-    from lib.security import COOKIE_NAME
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
     from models.db.auth import Session
 
-    session_token = request.cookies.get(COOKIE_NAME)
+    cookie_name = (await SettingsManager.get(session=session, key=sd.auth_session_cookie_name.key)).value
+
+    session_token = request.cookies.get(cookie_name)
 
     if session_token:
         db_session = await Session.get_by_token(session, session_token, request.client.host)
@@ -197,7 +213,7 @@ async def logout(
     # Delete any existing session cookie
     # FIXME: The following cookie delete isn't functioning
     response.delete_cookie(
-        key=COOKIE_NAME,
+        key=cookie_name,
         path='/',
         httponly=True,
         samesite='strict',

@@ -26,7 +26,9 @@ async def get_principal(
     from jose import JWTError, jwt
     from loguru import logger
     from app import config
-    from lib.security import ALGORITHM, COOKIE_NAME
+    from lib.security import ALGORITHM
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
     from models.db.auth import Session, Client
 
     required_scopes = set(scopes.scopes)
@@ -65,8 +67,10 @@ async def get_principal(
 
         return ClientSchema.model_validate(client)
 
+    cookie_name = (await SettingsManager.get(session=session, key=sd.auth_session_cookie_name.key)).value
+
     # Attempt Session Token Authentication
-    session_token = request.cookies.get(COOKIE_NAME)
+    session_token = request.cookies.get(cookie_name)
     if session_token:
         # TODO: Implement hijack detection failsafe and terminate session if token matches but remote IP doesn't
         db_session = await Session.get_by_token(session, session_token, request.client.host)

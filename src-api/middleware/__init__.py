@@ -5,7 +5,6 @@ from lib.config import Config
 def load_middleware(app:FastAPI, config: Config):
     import importlib
     from loguru import logger
-    from lib.security import SESSION_AGE
     from middleware import SessionMiddleware
 
     # Set up session middleware

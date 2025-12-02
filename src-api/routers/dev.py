@@ -52,9 +52,32 @@ async def db_schema(drop: bool = False, create:bool = True) -> JSONResponse:
     return JSONResponse({'result': 'Database Schema Created!'})
 
 
-@router.get('/db/test')
-async def db_test(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
-    return JSONResponse({})
+@router.get(
+    '/settings/create-missing',
+    summary='Load database with missing settings',
+    description="Loads the database with any system settings that don't already exist.",
+)
+async def settings_create_missing(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
+    """Temporary route for testing settings."""
+    from lib.settings import SettingsManager
+
+    total_created = await SettingsManager.create_settings(session)
+
+    return JSONResponse({'total_created': total_created})
+
+
+@router.get(
+    '/settings/default',
+    summary='Reset system-level settings',
+    description="Resets the system-level settings in the database with the defined defaults.",
+)
+async def settings_default(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
+    """Temporary route for testing settings."""
+    from lib.settings import SettingsManager
+
+    total_created = await SettingsManager.default_settings(session)
+
+    return JSONResponse({'total_created': total_created})
 
 
 @router.get('/auth/create-client', response_model=ClientSchema)

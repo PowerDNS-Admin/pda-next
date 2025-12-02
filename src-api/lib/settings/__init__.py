@@ -1,10 +1,10 @@
+from datetime import datetime, date, time
 from typing import Optional
 from uuid import UUID
 
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict, Field, computed_field
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.api.settings import Setting
 from models.db.settings import Setting as DbSetting
 from models.enums import SettingTypeEnum
 
@@ -49,43 +49,198 @@ class SettingMissingException(SettingException):
     """The exception's message."""
 
 
-class Settings(BaseModel):
-    """Defines the available settings of the system."""
+class Setting(BaseModel):
+    """Provides an interface for defining a system setting and applying it accordingly."""
+    model_config = ConfigDict(from_attributes=True)
 
-    auth_session_cookie_name: Setting = Setting(
-        title='Auth Session Cookie Name',
-        description='The name of the session cookie.',
-        key='auth:session:cookie_name',
-        data_type=SettingTypeEnum.str,
-        default_value='session',
-        overridable=False,
-        hidden=True,
+    title: str = Field(
+        title='Setting Title',
+        description='The title of this setting.',
     )
-    """Defines the name of the session cookie."""
+    """The title of this setting."""
 
-    auth_session_expiration_age: Setting = Setting(
-        title='Idle Auth Session Expiration Age',
-        description='The number of seconds a session can be idle before expiring.',
-        key='auth:session:expiration_age',
-        data_type=SettingTypeEnum.int,
-        default_value=3600,
-        overridable=True,
+    description: str = Field(
+        title='Setting Description',
+        description='The description of this setting.',
     )
-    """Defines the number of seconds a session can be idle before expiring."""
+    """The description this setting."""
 
-    auth_session_max_age: Setting = Setting(
-        title='Auth Session Maximum Age',
-        description='The maximum number of seconds a session can before a forced expiration.',
-        key='auth:session:max_age',
-        data_type=SettingTypeEnum.int,
-        default_value=14400,
-        overridable=True,
+    key: str = Field(
+        title='Setting Key',
+        description='The key of this setting.',
     )
-    """Defines the maximum number of seconds a session can live before a forced expiration."""
+    """The key of this setting."""
+
+    data_type: SettingTypeEnum = Field(
+        title='Setting Data Type',
+        description="The data type of this setting's value.",
+    )
+    """The data type of this setting's value."""
+
+    raw_value: Optional[str] = Field(
+        title='Setting Data Raw Value',
+        description="The raw value of this setting.",
+        default=None,
+    )
+    """The raw value of this setting."""
+
+    default_value: str | int | float | bool | datetime | date | time | tuple | list | dict = Field(
+        title='Setting Default Value',
+        description='The default value of this setting.',
+    )
+    """The default value of this setting."""
+
+    overridable: bool = Field(
+        title='Setting Overridable',
+        description='Whether the setting can be overridden in lower contexts.',
+        default=False,
+    )
+    """Whether the setting can be overridden in lower contexts."""
+
+    hidden: bool = Field(
+        title='Setting Hidden',
+        description='Whether the setting is hidden in lower contexts.',
+        default=False,
+    )
+    """Whether the setting is hidden in lower contexts."""
+
+    readonly: bool = Field(
+        title='Setting Read-Only',
+        description='Whether the setting can be modified in non-system contexts.',
+        default=False,
+    )
+    """Whether the setting can be modified in non-system contexts."""
+
+    @computed_field(
+        title='Setting Value',
+        description='The value of the setting.',
+    )
+    @property
+    def value(self) -> str | int | float | bool | datetime | date | time | tuple | list | dict | None:
+        """The value of the setting."""
+        import json
+
+        if self.raw_value is None:
+            return None
+
+        match self.data_type:
+            case SettingTypeEnum.str:
+                return str(self.raw_value)
+            case SettingTypeEnum.int:
+                return int(self.raw_value)
+            case SettingTypeEnum.float:
+                return float(self.raw_value)
+            case SettingTypeEnum.bool:
+                return bool(self.raw_value.lower())
+            case SettingTypeEnum.datetime:
+                return datetime.fromisoformat(self.raw_value)
+            case SettingTypeEnum.date:
+                return date.fromisoformat(self.raw_value)
+            case SettingTypeEnum.time:
+                return time.fromisoformat(self.raw_value)
+            case SettingTypeEnum.tuple:
+                return tuple(json.loads(self.raw_value))
+            case SettingTypeEnum.list:
+                return json.loads(self.raw_value)
+            case SettingTypeEnum.dict:
+                return json.loads(self.raw_value)
+            case _:
+                raise ValueError(f'Unknown setting type: {self.data_type}')
+
+    @value.setter
+    def value(self, value: str | int | float | bool | datetime | date | time | tuple | list | dict | None):
+        """Sets the value of the setting."""
+        import json
+
+        value_type = type(value)
+
+        if value is None:
+            self.raw_value = None
+        elif value_type in (str, int, float):
+            self.raw_value = str(value)
+        elif value_type == bool:
+            self.raw_value = str(value).lower()
+        elif value_type in (tuple, list, dict):
+            self.raw_value = json.dumps(value)
+        elif value_type in (datetime, date, time):
+            self.raw_value = value.isoformat()
+        else:
+            raise ValueError(f'Unknown setting type: {value_type}')
 
 
 class SettingsManager:
     """Provides an interface for managing system settings."""
+
+    @staticmethod
+    async def default_settings(session: AsyncSession) -> int:
+        """
+        Resets database-stored system level settings to the default values from the settings definition and returns
+        the total created.
+        """
+        from loguru import logger
+        from sqlalchemy import delete
+        from lib.settings.definitions import sd
+
+        definitions = list(dict(sd).values())
+
+        stmt = delete(DbSetting).where(DbSetting.tenant_id == None, DbSetting.user_id == None)
+
+        await session.execute(stmt)
+        await session.commit()
+
+        total_created = 0
+
+        for setting in definitions:
+            session.add(DbSetting(
+                key=setting.key,
+                raw_value=setting.default_value,
+                overridable=setting.overridable,
+                hidden=setting.hidden,
+                readonly=setting.readonly,
+            ))
+
+            logger.trace(f'Creating setting: {setting.key}')
+
+            total_created += 1
+
+        await session.commit()
+
+        return total_created
+
+    @staticmethod
+    async def create_settings(session: AsyncSession) -> int:
+        """Creates defined settings that aren't currently in the database and returns the total created."""
+        from loguru import logger
+        from sqlalchemy import select
+        from lib.settings.definitions import sd
+
+        definitions = list(dict(sd).values())
+
+        stmt = select(DbSetting.key).where(DbSetting.tenant_id == None, DbSetting.user_id == None)
+
+        db_keys = set((await session.execute(stmt)).scalars().all())
+
+        total_created = 0
+
+        for setting in definitions:
+            if setting.key in db_keys:
+                continue
+
+            session.add(DbSetting(
+                key=setting.key,
+                raw_value=setting.default_value,
+                overridable=setting.overridable,
+                hidden=setting.hidden,
+                readonly=setting.readonly,
+            ))
+
+            logger.trace(f'Creating setting: {setting.key}')
+
+            total_created += 1
+
+        await session.commit()
+
+        return total_created
 
     @staticmethod
     async def get_by_id(session: AsyncSession, id: str | UUID) -> DbSetting | None:
@@ -97,15 +252,16 @@ class SettingsManager:
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
-    async def get_by_criteria(
+    async def get(
             session: AsyncSession,
             key: str,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
             include_none: bool = False,
-    ) -> DbSetting | None:
+    ) -> Setting | None:
         """Retrieves a setting object by its key and optionally tenant and/or user id."""
         from sqlalchemy import select
+        from lib.settings.definitions import sdk
 
         if isinstance(tenant_id, str):
             tenant_id = UUID(tenant_id)
@@ -120,7 +276,21 @@ class SettingsManager:
         if include_none or isinstance(user_id, UUID):
             stmt = stmt.where(DbSetting.user_id == user_id)
 
-        return (await session.execute(stmt)).scalar_one_or_none()
+        db_setting: DbSetting = (await session.execute(stmt)).scalar_one_or_none()
+
+        if not db_setting:
+            return None
+
+        if db_setting.key not in sdk:
+            return None
+
+        setting = sdk[db_setting.key].model_copy()
+        setting.raw_value = db_setting.raw_value
+        setting.overridable = db_setting.overridable
+        setting.hidden = db_setting.hidden
+        setting.readonly = db_setting.readonly
+
+        return setting
 
     @staticmethod
     async def get_many(

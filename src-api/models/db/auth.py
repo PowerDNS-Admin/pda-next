@@ -65,6 +65,9 @@ class User(BaseSqlModel):
     refresh_tokens = relationship('RefreshToken', back_populates='user')
     """A list of auth refresh tokens associated with the user."""
 
+    settings = relationship('Setting', back_populates='user')
+    """A list of settings associated with the user."""
+
     @property
     def password(self) -> str:
         """Returns the hashed user password."""
@@ -218,9 +221,13 @@ class Session(BaseSqlModel):
         """Creates an auth session and returns it."""
         import secrets
         from datetime import timedelta, timezone
-        from lib.security import SESSION_AGE, SESSION_TOKEN_LENGTH
+        from lib.security import SESSION_TOKEN_LENGTH
+        from lib.settings import SettingsManager
+        from lib.settings.definitions import sd
 
-        expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=SESSION_AGE)
+        session_age = (await SettingsManager.get(session=session, key=sd.auth_session_expiration_age.key)).value
+
+        expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=session_age)
 
         db_session = Session(
             tenant_id=user.tenant_id,
@@ -242,9 +249,21 @@ class Session(BaseSqlModel):
             -> 'Session':
         """Extends the expiration of a session."""
         from datetime import timedelta, timezone
-        from lib.security import SESSION_AGE
+        from lib.settings import SettingsManager
+        from lib.settings.definitions import sd
 
-        db_session.expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=total_seconds or SESSION_AGE)
+        session_max_age = (await SettingsManager.get(session=session, key=sd.auth_session_max_age.key)).value
+        current_age = (datetime.now(tz=timezone.utc) - db_session.created_at).total_seconds()
+
+        # Use the session age setting when no amount given for the session life extension
+        if total_seconds is None:
+            total_seconds = (await SettingsManager.get(session=session, key=sd.auth_session_expiration_age.key)).value
+
+        # Enforce the maximum session age policy
+        if current_age + total_seconds > session_max_age:
+            total_seconds = session_max_age - current_age
+
+        db_session.expires_at = datetime.now(tz=timezone.utc) + timedelta(seconds=total_seconds)
 
         session.add(db_session)
         await session.commit()
