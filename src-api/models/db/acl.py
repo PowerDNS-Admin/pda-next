@@ -18,7 +18,7 @@ class Role(BaseSqlModel):
     """Defines the database table name."""
 
     id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    """The unique identifier of the role."""
 
     slug: Mapped[str] = mapped_column(String(50), nullable=False)
     """The role slug."""
@@ -29,13 +29,13 @@ class Role(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the role was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the role was last updated."""
 
     permissions = relationship('RolePermission', back_populates='role')
     """A list of permissions associated with the role."""
@@ -66,39 +66,45 @@ class RolePermission(BaseSqlModel):
     }
 
 
-class Acl(BaseSqlModel):
-    """Represents an ACL."""
+class Policy(BaseSqlModel):
+    """Represents an ACL policy."""
 
-    __tablename__ = 'pda_acls'
+    __tablename__ = 'pda_acl_policies'
     """Defines the database table name."""
 
     id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    """The unique identifier of the policy."""
 
     resource_type: Mapped[ResourceTypeEnum] = mapped_column(String(20), nullable=False)
-    """The resource type associated with the ACL."""
+    """The resource type associated with the policy."""
 
     resource_id: Mapped[str] = mapped_column(Uuid, nullable=False)
     """The unique identifier of the associated resource."""
 
     principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
-    """The principal type associated with the ACL."""
+    """The principal type associated with the policy."""
 
     principal_id: Mapped[str] = mapped_column(Uuid, nullable=False)
     """The unique identifier of the associated principal."""
 
     permission: Mapped[str] = mapped_column(String(255), nullable=False)
-    """The permission associated with the ACL."""
+    """The permission associated with the policy."""
 
     created_by: Mapped[str] = mapped_column(
         Uuid, ForeignKey('pda_auth_users.id'), nullable=False,
     )
-    """The unique identifier of the user that created the ACL."""
+    """The unique identifier of the user that created the policy."""
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the policy was created."""
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
+        server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
+    )
+    """The timestamp representing when the policy was last updated."""
 
     __table_args__ = (
         UniqueConstraint(
