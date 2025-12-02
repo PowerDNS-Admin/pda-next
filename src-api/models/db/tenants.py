@@ -3,7 +3,7 @@ PDA Tenant Database Models
 
 This file defines the database models associated with tenant functionality.
 """
-import uuid
+from uuid import UUID, uuid4
 from datetime import datetime
 from sqlalchemy import DateTime, String, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -16,8 +16,8 @@ class Tenant(BaseSqlModel):
     __tablename__ = 'pda_tenants'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the tenant."""
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     """The name of the tenant."""
@@ -25,7 +25,7 @@ class Tenant(BaseSqlModel):
     fqdn: Mapped[str] = mapped_column(String(253), nullable=True)
     """The FQDN for the tenant UI."""
 
-    stopgap_domain_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_stopgap_domains.id'), nullable=True)
+    stopgap_domain_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_stopgap_domains.id'), nullable=True)
     """The unique identifier of the associated stopgap domain."""
 
     stopgap_hostname: Mapped[str] = mapped_column(String(253), nullable=True)
@@ -34,13 +34,13 @@ class Tenant(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the tenant was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the tenant was last updated."""
 
     stopgap_domain = relationship('StopgapDomain', back_populates='tenants')
     """The stopgap domain associated with the tenant."""

@@ -40,7 +40,7 @@ app = FastAPI(
     servers=[{'url': f'{config.app.environment.urls.api}/api/', 'description': 'PDA Environment API'}],
     debug=config.app.environment.name in (EnvironmentEnum.local, EnvironmentEnum.dev),
     swagger_ui_parameters={
-        'docExpansion': 'list',
+        'docExpansion': 'none', # list, full, or none
         'displayRequestDuration': True,
         'filter': True,
         'tryItOutEnabled': True,

@@ -3,9 +3,8 @@ App Settings Database Models
 
 This file defines the database models associated with app settings functionality.
 """
-import uuid
 from datetime import datetime
-from uuid import UUID
+from uuid import UUID, uuid4
 
 from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
@@ -19,8 +18,8 @@ class Setting(BaseSqlModel):
     __tablename__ = 'pda_settings'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the setting."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant associated with the setting."""

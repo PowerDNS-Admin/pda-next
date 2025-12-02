@@ -48,10 +48,6 @@ class ApiConfig(BaseConfig):
                         description='Provides functionality for managing system resources.',
                     ),
                     self.ApiMetadataTagConfig(
-                        name='tasks',
-                        description='Provides functionality for managing and monitoring task execution.',
-                    ),
-                    self.ApiMetadataTagConfig(
                         name='tenants',
                         description='Provides functionality for managing system tenants.',
                     ),
@@ -70,6 +66,14 @@ class ApiConfig(BaseConfig):
                     self.ApiMetadataTagConfig(
                         name='views',
                         description='Provides functionality for managing DNS views and related resources.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='tasks',
+                        description='Provides functionality for managing and monitoring task execution.',
+                    ),
+                    self.ApiMetadataTagConfig(
+                        name='services',
+                        description='Provides access to various system service features.',
                     ),
                     self.ApiMetadataTagConfig(
                         name='dev',

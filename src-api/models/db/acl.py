@@ -3,8 +3,8 @@ PDA ACL Database Models
 
 This file defines the database models associated with ACL functionality.
 """
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 from sqlalchemy import DateTime, String, TEXT, Uuid, text, ForeignKey, UniqueConstraint
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.db import BaseSqlModel
@@ -17,7 +17,7 @@ class Role(BaseSqlModel):
     __tablename__ = 'pda_acl_roles'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     """The unique identifier of the role."""
 
     slug: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -42,12 +42,12 @@ class Role(BaseSqlModel):
 
 
 class RolePermission(BaseSqlModel):
-    """Represents an ACL role permission."""
+    """Represents an ACL role permission relationship."""
 
     __tablename__ = 'pda_acl_role_permissions'
     """Defines the database table name."""
 
-    role_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
+    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
     """The unique identifier of the associated role."""
 
     permission: Mapped[str] = mapped_column(TEXT, nullable=False)
@@ -56,7 +56,7 @@ class RolePermission(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the role permission was created."""
 
     role = relationship('Role', back_populates='permissions')
     """The role associated with the permission."""
@@ -72,19 +72,19 @@ class Policy(BaseSqlModel):
     __tablename__ = 'pda_acl_policies'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     """The unique identifier of the policy."""
 
     resource_type: Mapped[ResourceTypeEnum] = mapped_column(String(20), nullable=False)
     """The resource type associated with the policy."""
 
-    resource_id: Mapped[str] = mapped_column(Uuid, nullable=False)
+    resource_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
     """The unique identifier of the associated resource."""
 
     principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
     """The principal type associated with the policy."""
 
-    principal_id: Mapped[str] = mapped_column(Uuid, nullable=False)
+    principal_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
     """The unique identifier of the associated principal."""
 
     permission: Mapped[str] = mapped_column(String(255), nullable=False)

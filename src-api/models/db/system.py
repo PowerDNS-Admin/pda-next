@@ -3,8 +3,8 @@ PDA System Database Models
 
 This file defines the database models associated with core system functionality.
 """
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 from sqlalchemy import DateTime, Integer, String, TEXT, Uuid, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.db import BaseSqlModel
@@ -16,8 +16,8 @@ class StopgapDomain(BaseSqlModel):
     __tablename__ = 'pda_stopgap_domains'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the stopgap domain."""
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)
     """The friendly name of the stopgap domain."""
@@ -31,16 +31,16 @@ class StopgapDomain(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the stopgap domain was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the stopgap domain was last updated."""
 
     tenants = relationship('Tenant', back_populates='stopgap_domain')
-    """A list of tenants associated with the record."""
+    """A list of tenants associated with the stopgap domain."""
 
 
 class RefTimezone(BaseSqlModel):
@@ -50,7 +50,7 @@ class RefTimezone(BaseSqlModel):
     """Defines the database table name."""
 
     id: Mapped[int] = mapped_column(Integer, primary_key=True, autoincrement=True)
-    """The unique identifier of the record."""
+    """The unique identifier of the timezone."""
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, unique=True)
     """The unique IANA name for the timezone."""
@@ -64,10 +64,10 @@ class RefTimezone(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the timezone was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the timezone was last updated."""

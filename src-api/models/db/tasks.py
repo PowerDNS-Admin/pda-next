@@ -3,8 +3,8 @@ PDA Task Database Models
 
 This file defines the database models associated with task functionality.
 """
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 from sqlalchemy import DateTime, DECIMAL, Integer, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
@@ -13,21 +13,21 @@ from models.enums import TaskJobStatusEnum
 
 
 class TaskJob(BaseSqlModel):
-    """Represents a PDA task job."""
+    """Represents a task job."""
 
     __tablename__ = 'pda_task_jobs'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True)
+    """The unique identifier of the task job."""
 
-    root_id: Mapped[str] = mapped_column(Uuid)
+    root_id: Mapped[UUID] = mapped_column(Uuid)
     """The unique identifier of the Celery root task associated with this task."""
 
-    parent_id: Mapped[Optional[str]] = mapped_column(Uuid)
+    parent_id: Mapped[Optional[UUID]] = mapped_column(Uuid)
     """The unique identifier of the Celery parent task associated with this task."""
 
-    task_id: Mapped[Optional[str]] = mapped_column(Uuid)
+    task_id: Mapped[Optional[UUID]] = mapped_column(Uuid)
     """The unique identifier of the Celery task associated with this task."""
 
     name: Mapped[str] = mapped_column(String(255), nullable=False)
@@ -60,13 +60,13 @@ class TaskJob(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the task job was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the task job was last updated."""
 
     started_at: Mapped[Optional[DateTime]] = mapped_column(DateTime)
     """The timestamp representing when the task job was started."""
@@ -79,15 +79,15 @@ class TaskJob(BaseSqlModel):
 
 
 class TaskJobActivity(BaseSqlModel):
-    """Represents a PDA task job activity update."""
+    """Represents a task job activity update."""
 
     __tablename__ = 'pda_task_job_activities'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the activity."""
 
-    task_job_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_task_jobs.id'), nullable=False)
+    task_job_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_task_jobs.id'), nullable=False)
     """The unique identifier of the task job associated with this activity update."""
 
     error: Mapped[Optional[str]] = mapped_column(TEXT)
@@ -99,7 +99,7 @@ class TaskJobActivity(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the activity was created."""
 
     task_job = relationship('TaskJob', back_populates='activities')
     """The task job associated with the activity update."""

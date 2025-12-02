@@ -3,8 +3,8 @@ DNS Server Database Models
 
 This file defines the database models associated with DNS server functionality.
 """
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.db import BaseSqlModel
@@ -17,11 +17,11 @@ class Server(BaseSqlModel):
     __tablename__ = 'pda_servers'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the server."""
 
-    tenant_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=False)
-    """The unique identifier of the tenant that owns the record."""
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the tenant that owns the server if any."""
 
     type_: Mapped[ServerTypeEnum] = mapped_column(String(20), nullable=False)
     """The type of DNS server."""
@@ -44,13 +44,13 @@ class Server(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the server was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the server was last updated."""
 
     tenant = relationship('Tenant', back_populates='servers')
     """The tenant associated with the server."""
@@ -60,19 +60,19 @@ class Server(BaseSqlModel):
 
 
 class ServerAutoPrimary(BaseSqlModel):
-    """Represents an autoprimary registration for a server."""
+    """Represents an auto-primary registration for a server."""
 
     __tablename__ = 'pda_server_auto_primaries'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the auto-primary."""
 
-    tenant_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=False)
-    """The unique identifier of the tenant that owns the record."""
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the tenant that owns the auto-primary if any."""
 
-    server_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_servers.id'), nullable=False)
-    """The unique identifier of the server this record belongs to."""
+    server_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_servers.id'), nullable=False)
+    """The unique identifier of the server this auto-primary belongs to."""
 
     ip: Mapped[str] = mapped_column(String(45), nullable=False)
     """The IP address of the autoprimary server."""
@@ -86,13 +86,13 @@ class ServerAutoPrimary(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the auto-primary was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the auto-primary was last updated."""
 
     tenant = relationship('Tenant', back_populates='auto_primaries')
     """The tenant associated with the auto primary registration."""

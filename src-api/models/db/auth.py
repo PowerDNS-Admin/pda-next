@@ -3,13 +3,12 @@ PDA Authentication Database Models
 
 This file defines the database models associated with authentication functionality.
 """
-import uuid
 from datetime import datetime
 from sqlalchemy import Boolean, DateTime, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from typing import Optional
-from uuid import UUID
+from uuid import UUID, uuid4
 from models.api.auth import UserSchema
 from models.db import BaseSqlModel, JSONType
 from models.enums import UserStatusEnum, AuthenticatorTypeEnum
@@ -21,11 +20,11 @@ class User(BaseSqlModel):
     __tablename__ = 'pda_auth_users'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the user."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
-    """The unique identifier of the tenant that owns the record if any."""
+    """The unique identifier of the tenant that owns the user if any."""
 
     username: Mapped[str] = mapped_column(String(100), nullable=False)
     """The username of the user."""
@@ -39,13 +38,13 @@ class User(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the user was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the user was last updated."""
 
     authenticated_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     """The timestamp representing when the user was last authenticated."""
@@ -111,14 +110,14 @@ class UserAuthenticator(BaseSqlModel):
     __tablename__ = 'pda_auth_user_authenticators'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the authenticator."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
-    """The unique identifier of the tenant that owns the record if any."""
+    """The unique identifier of the tenant that owns the authenticator if any."""
 
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
-    """The unique identifier of the user that owns the record if any."""
+    """The unique identifier of the user that owns the authenticator."""
 
     type_: Mapped[AuthenticatorTypeEnum] = mapped_column(String(20), nullable=False)
     """The type of the authenticator."""
@@ -135,13 +134,13 @@ class UserAuthenticator(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the authenticator was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the authenticator was last updated."""
 
     used_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     """The timestamp representing when the authenticator was last used."""
@@ -159,8 +158,8 @@ class Session(BaseSqlModel):
     __tablename__ = 'pda_auth_sessions'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the session."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
     """The unique identifier of the tenant associated with the session if any."""
@@ -289,19 +288,19 @@ class Session(BaseSqlModel):
 
 
 class Client(BaseSqlModel):
-    """Represents an authclient."""
+    """Represents an OAuth client."""
 
     __tablename__ = 'pda_auth_clients'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the client."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
-    """The unique identifier of the tenant that owns the record if any."""
+    """The unique identifier of the tenant that owns the client if any."""
 
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
-    """The unique identifier of the user that owns the record if any."""
+    """The unique identifier of the user that owns the client if any."""
 
     hashed_secret: Mapped[str] = mapped_column(TEXT, nullable=False)
     """The hashed client secret."""
@@ -318,13 +317,13 @@ class Client(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the client was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the client was last updated."""
 
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=True)
     """The timestamp representing when the client expires if ever."""
@@ -370,28 +369,28 @@ class RefreshToken(BaseSqlModel):
     __tablename__ = 'pda_auth_refresh_tokens'
     """Defines the database table name."""
 
-    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the refresh token."""
 
     tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
-    """The unique identifier of the tenant that owns the record if any."""
+    """The unique identifier of the tenant that owns the refresh token if any."""
 
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=True)
-    """The unique identifier of the user that owns the record if any."""
+    """The unique identifier of the user that owns the refresh token if any."""
 
     client_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_clients.id'), nullable=False)
-    """The unique identifier of the authclient that owns the record."""
+    """The unique identifier of the authclient that owns the refresh token."""
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the refresh token was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the refresh token was last updated."""
 
     expires_at: Mapped[datetime] = mapped_column(DateTime, nullable=False)
     """The timestamp representing when the refresh token expires."""

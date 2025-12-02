@@ -3,8 +3,8 @@ DNS View Database Models
 
 This file defines the database models associated with DNS view functionality.
 """
-import uuid
 from datetime import datetime
+from uuid import UUID, uuid4
 from sqlalchemy import DateTime, String, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 from models.db import BaseSqlModel
@@ -16,11 +16,11 @@ class View(BaseSqlModel):
     __tablename__ = 'pda_views'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the view."""
 
-    tenant_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=False)
-    """The unique identifier of the tenant that owns the record."""
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the tenant that owns the view if any."""
 
     name: Mapped[str] = mapped_column(String(253), nullable=False)
     """The name of the view."""
@@ -28,13 +28,13 @@ class View(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the view was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the view was last updated."""
 
     tenant = relationship('Tenant', back_populates='views')
     """The tenant associated with the view."""
@@ -52,14 +52,14 @@ class ViewZone(BaseSqlModel):
     __tablename__ = 'pda_view_zones'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the view zone."""
 
-    tenant_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=False)
-    """The unique identifier of the tenant that owns the record."""
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the tenant that owns the view zone if any."""
 
-    view_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_views.id'), nullable=False)
-    """The unique identifier of the zone view this record belongs to."""
+    view_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_views.id'), nullable=False)
+    """The unique identifier of the zone view this view zone belongs to."""
 
     fqdn: Mapped[str] = mapped_column(String(253), nullable=False)
     """The FQDN of the zone."""
@@ -67,13 +67,13 @@ class ViewZone(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the view zone was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the view zone was last updated."""
 
     tenant = relationship('Tenant', back_populates='view_zones')
     """The tenant associated with the view zone."""
@@ -88,13 +88,13 @@ class ViewNetwork(BaseSqlModel):
     __tablename__ = 'pda_view_networks'
     """Defines the database table name."""
 
-    id: Mapped[str] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
-    """The unique identifier of the record."""
+    id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
+    """The unique identifier of the network."""
 
-    tenant_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=False)
-    """The unique identifier of the tenant that owns the record."""
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the tenant that owns the network if any."""
 
-    view_id: Mapped[str] = mapped_column(Uuid, ForeignKey('pda_views.id'), nullable=False)
+    view_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_views.id'), nullable=False)
     """The unique identifier of the zone view this network assumes responsibility for."""
 
     network: Mapped[str] = mapped_column(String(45), nullable=False)
@@ -103,13 +103,13 @@ class ViewNetwork(BaseSqlModel):
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was created."""
+    """The timestamp representing when the network was created."""
 
     updated_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
         server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
     )
-    """The timestamp representing when the record was last updated."""
+    """The timestamp representing when the network was last updated."""
 
     tenant = relationship('Tenant', back_populates='view_networks')
     """The tenant associated with the view network."""

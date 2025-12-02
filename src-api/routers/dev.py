@@ -29,7 +29,11 @@ async def proxy_test(request: Request) -> JSONResponse:
     })
 
 
-@router.get('/db/schema')
+@router.get(
+    '/db/schema',
+    summary='Creates Database Schema',
+    description='This provides the ability to drop and/or create missing database schemas.',
+)
 async def db_schema(drop: bool = False, create:bool = True) -> JSONResponse:
     from loguru import logger
     from app import db_engine
@@ -53,6 +57,20 @@ async def db_schema(drop: bool = False, create:bool = True) -> JSONResponse:
 
 
 @router.get(
+    '/settings/default',
+    summary='Reset system-level settings',
+    description="Resets the system-level settings in the database with the defined defaults.",
+)
+async def settings_default(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
+    """Temporary route for testing settings."""
+    from lib.settings import SettingsManager
+
+    total_created = await SettingsManager.default_settings(session)
+
+    return JSONResponse({'total_created': total_created})
+
+
+@router.get(
     '/settings/create-missing',
     summary='Load database with missing settings',
     description="Loads the database with any system settings that don't already exist.",
@@ -67,57 +85,127 @@ async def settings_create_missing(session: AsyncSession = Depends(get_db_session
 
 
 @router.get(
-    '/settings/default',
-    summary='Reset system-level settings',
-    description="Resets the system-level settings in the database with the defined defaults.",
+    '/test/data',
+    summary='Loads the database with test data',
+    description="Loads the database with test data.",
 )
-async def settings_default(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
+async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResponse:
     """Temporary route for testing settings."""
-    from lib.settings import SettingsManager
-
-    total_created = await SettingsManager.default_settings(session)
-
-    return JSONResponse({'total_created': total_created})
-
-
-@router.get('/auth/create-client', response_model=ClientSchema)
-async def auth_create_client(session: AsyncSession = Depends(get_db_session)) -> ClientSchema:
-    """Creates an auth client."""
-    from models.db.auth import Client
-
-    db_client = Client(
-        name='Test Client',
-        scopes=['audit:*', 'zone:*'],
-    )
-
-    db_client.secret = 'testtest'
-
-    session.add(db_client)
-    await session.commit()
-    await session.refresh(db_client)
-
-    return ClientSchema.model_validate(db_client)
-
-
-@router.get('/auth/create-user', response_model=UserSchema)
-async def auth_create_user(session: AsyncSession = Depends(get_db_session)) -> UserSchema:
-    """Creates an auth user."""
-    from models.api.auth import UserSchema
-    from models.db.auth import User
+    from datetime import datetime, timedelta, timezone
+    from uuid import uuid4
+    from lib.permissions import Permissions as p
+    from models.db.auth import User, Client
+    from models.db.tenants import Tenant
     from models.enums import UserStatusEnum
 
-    db_user = User(
+    client_expires = datetime.now(tz=timezone.utc) + timedelta(days=7)
+
+    # Create a system-level client
+    sl_client = Client(
+        id=uuid4(),
+        name='System-Level Test Client',
+        scopes=[
+            p.users.uri,
+            p.roles.uri,
+        ],
+        expires_at=client_expires,
+    )
+    sl_client.secret = 'test'
+
+    session.add(sl_client)
+
+    # Create a system-level user
+    sl_user = User(
+        id=uuid4(),
         username='test',
         status=UserStatusEnum.active,
     )
+    sl_user.password = 'test'
 
-    db_user.password = 'testtest'
+    session.add(sl_user)
 
-    session.add(db_user)
+    # Create a system-level user client
+    sl_user_client = Client(
+        id=uuid4(),
+        user_id=sl_user.id,
+        name='System-Level Test User Client',
+        scopes=[
+            p.users_read.uri,
+            p.users_create.uri,
+            p.roles_read.uri,
+            p.roles_create.uri,
+        ],
+        expires_at=client_expires,
+    )
+    sl_user_client.secret = 'test'
+
+    session.add(sl_user_client)
+
+    # Create a tenant
+    tenant = Tenant(
+        id=uuid4(),
+        name='Test Tenant',
+        fqdn='t1.local.powerdnsadmin.org',
+    )
+
+    session.add(tenant)
+
+    # Create a tenant-level client
+
+    tl_client = Client(
+        id=uuid4(),
+        tenant_id=tenant.id,
+        name='Tenant-Level Test Client',
+        scopes=[
+            p.users.uri,
+            p.roles.uri,
+        ],
+        expires_at=client_expires,
+    )
+    tl_client.secret = 'test'
+
+    session.add(tl_client)
+
+    # Create a tenant-level user
+    tl_user = User(
+        id=uuid4(),
+        tenant_id=tenant.id,
+        username='test',
+        status=UserStatusEnum.active,
+    )
+    tl_user.password = 'test'
+
+    session.add(tl_user)
+
+    # Create a tenant-level user client
+    tl_user_client = Client(
+        id=uuid4(),
+        tenant_id=tenant.id,
+        user_id=tl_user.id,
+        name='Tenant-Level Test User Client',
+        scopes=[
+            p.users_read.uri,
+            p.users_create.uri,
+            p.roles_read.uri,
+            p.roles_create.uri,
+        ],
+        expires_at=client_expires,
+    )
+    tl_user_client.secret = 'test'
+
+    session.add(tl_user_client)
+
     await session.commit()
-    await session.refresh(db_user)
 
-    return UserSchema.model_validate(db_user)
+    return JSONResponse({
+        'system-level-client': sl_client.id.hex,
+        'system-level-user': sl_user.id.hex,
+        'system-level-user-client': sl_user_client.id.hex,
+        'tenant': tenant.id.hex,
+        'tenant-level-client': tl_client.id.hex,
+        'tenant-level-user': tl_user.id.hex,
+        'tenant-level-user-client': tl_user_client.id.hex,
+    })
 
 
 @router.get('/auth/test/client', response_model=UserSchema | ClientSchema)
@@ -126,18 +214,9 @@ async def auth_test_client(
             p.users_read.uri, p.users_update.uri, p.users_change_status.uri,
         ]),
 ) -> UserSchema | ClientSchema:
-    from loguru import logger
-    logger.warning(principal)
     return principal
 
 
 @router.get('/auth/test/user', response_model=UserSchema | ClientSchema)
 async def auth_test_user(principal: UserSchema | ClientSchema = Depends(get_principal)) -> UserSchema | ClientSchema:
-    from loguru import logger
-    logger.warning(principal)
     return principal
-
-
-@router.get('/acl/test')
-async def acl_test() -> JSONResponse:
-    return JSONResponse(p.scopes)
