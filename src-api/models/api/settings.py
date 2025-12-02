@@ -1,15 +1,14 @@
-from typing import Any, Literal
+from datetime import datetime, date, time
+from typing import Optional
 
-from pydantic import Field
+from pydantic import Field, computed_field
 
 from models.api import BaseApiModel
+from models.enums import SettingTypeEnum
 
 
-class BaseSetting(BaseApiModel):
+class Setting(BaseApiModel):
     """Provides an interface for defining a system setting and applying it accordingly."""
-
-    type: Literal['any'] = Any
-    """The value type of the setting."""
 
     title: str = Field(
         title='Setting Title',
@@ -23,11 +22,19 @@ class BaseSetting(BaseApiModel):
     )
     """The description this setting."""
 
-    uri: str = Field(
-        title='Setting URI',
-        description='The URI of this setting.',
+    tenant_id: Optional[str] = Field(
+        title='Tenant ID',
+        description='The tenant ID that this setting is associated with.',
+        default=None,
     )
-    """The URI of this setting."""
+    """The tenant ID that this setting is associated with."""
+
+    user_id: Optional[str] = Field(
+        title='User ID',
+        description='The user ID that this setting is associated with.',
+        default=None,
+    )
+    """The user ID that this setting is associated with."""
 
     key: str = Field(
         title='Setting Key',
@@ -35,8 +42,21 @@ class BaseSetting(BaseApiModel):
     )
     """The key of this setting."""
 
-    value: Any = Field(
-        title='Default Setting Value',
+    data_type: SettingTypeEnum = Field(
+        title='Setting Data Type',
+        description="The data type of this setting's value.",
+    )
+    """The data type of this setting's value."""
+
+    raw_value: Optional[str] = Field(
+        title='Setting Data Raw Value',
+        description="The raw value of this setting.",
+        default=None,
+    )
+    """The raw value of this setting."""
+
+    default_value: str | int | float | bool | datetime | date | time | tuple | list | dict = Field(
+        title='Setting Default Value',
         description='The default value of this setting.',
     )
     """The default value of this setting."""
@@ -48,6 +68,13 @@ class BaseSetting(BaseApiModel):
     )
     """Whether the setting can be overridden in lower contexts."""
 
+    hidden: bool = Field(
+        title='Setting Hidden',
+        description='Whether the setting is hidden in lower contexts.',
+        default=False,
+    )
+    """Whether the setting is hidden in lower contexts."""
+
     readonly: bool = Field(
         title='Setting Read-Only',
         description='Whether the setting can be modified in non-system contexts.',
@@ -55,48 +82,72 @@ class BaseSetting(BaseApiModel):
     )
     """Whether the setting can be modified in non-system contexts."""
 
+    created_at: Optional[datetime] = Field(
+        title='Setting Created Timestamp',
+        description='The date and time the setting was created.',
+        default=None,
+    )
+    """The date and time the setting was created."""
 
-class StringSetting(BaseSetting):
-    """Provides an interface for defining a string-type system setting and applying it accordingly."""
+    updated_at: Optional[datetime] = Field(
+        title='Setting Updated Timestamp',
+        description='The date and time the setting was updated.',
+        default=None,
+    )
+    """The date and time the setting was updated."""
 
-    type: Literal['str']
-    """The value type of the setting."""
+    @computed_field(
+        title='Setting Value',
+        description='The value of the setting.',
+    )
+    @property
+    def value(self) -> str | int | float | bool | datetime | date | time | tuple | list | dict | None:
+        """The value of the setting."""
+        import json
 
-    value: str
-    """The default value of this setting."""
+        if self.raw_value is None:
+            return None
 
+        match self.data_type:
+            case SettingTypeEnum.str:
+                return str(self.raw_value)
+            case SettingTypeEnum.int:
+                return int(self.raw_value)
+            case SettingTypeEnum.float:
+                return float(self.raw_value)
+            case SettingTypeEnum.bool:
+                return bool(self.raw_value.lower())
+            case SettingTypeEnum.datetime:
+                return datetime.fromisoformat(self.raw_value)
+            case SettingTypeEnum.date:
+                return date.fromisoformat(self.raw_value)
+            case SettingTypeEnum.time:
+                return time.fromisoformat(self.raw_value)
+            case SettingTypeEnum.tuple:
+                return tuple(json.loads(self.raw_value))
+            case SettingTypeEnum.list:
+                return json.loads(self.raw_value)
+            case SettingTypeEnum.dict:
+                return json.loads(self.raw_value)
+            case _:
+                raise ValueError(f'Unknown setting type: {self.data_type}')
 
-class IntSetting(BaseSetting):
-    """Provides an interface for defining a int-type system setting and applying it accordingly."""
+    @value.setter
+    def value(self, value: str | int | float | bool | datetime | date | time | tuple | list | dict | None):
+        """Sets the value of the setting."""
+        import json
 
-    type: Literal['int']
-    """The value type of the setting."""
+        value_type = type(value)
 
-    value: int
-    """The default value of this setting."""
-
-
-class FloatSetting(BaseSetting):
-    """Provides an interface for defining a float-type system setting and applying it accordingly."""
-
-    type: Literal['float']
-    """The value type of the setting."""
-
-    value: float
-    """The default value of this setting."""
-
-
-class BoolSetting(BaseSetting):
-    """Provides an interface for defining a bool-type system setting and applying it accordingly."""
-
-    type: Literal['bool']
-    """The value type of the setting."""
-
-    value: bool
-    """The default value of this setting."""
-
-
-# TODO: Implement a JSON type for automatic conversion
-
-Setting = StringSetting | IntSetting | FloatSetting | BoolSetting
-"""Mash all the types together to make a delicious potato. ( ͡ᵔ ͜ʖ ͡ᵔ )"""
+        if value is None:
+            self.raw_value = None
+        elif value_type in (str, int, float):
+            self.raw_value = str(value)
+        elif value_type == bool:
+            self.raw_value = str(value).lower()
+        elif value_type in (tuple, list, dict):
+            self.raw_value = json.dumps(value)
+        elif value_type in (datetime, date, time):
+            self.raw_value = value.isoformat()
+        else:
+            raise ValueError(f'Unknown setting type: {value_type}')

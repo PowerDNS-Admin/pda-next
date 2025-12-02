@@ -1,6 +1,21 @@
 from enum import Enum
 
 
+class SettingTypeEnum(str, Enum):
+    """Defines the supported data types for setting values."""
+    str = 'str'
+    int = 'int'
+    float = 'float'
+    bool = 'bool'
+    datetime = 'datetime'
+    date = 'date'
+    time = 'time'
+    timestamp = 'timestamp'
+    tuple = 'tuple'
+    list = 'list'
+    dict = 'dict'
+
+
 class UserStatusEnum(str, Enum):
     """Defines the different statuses a user can have."""
     pending = 'pending'

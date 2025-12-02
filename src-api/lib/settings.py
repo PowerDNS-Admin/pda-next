@@ -1,10 +1,12 @@
 from typing import Optional
 from uuid import UUID
 
+from pydantic import BaseModel
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from models.api.settings import Setting, StringSetting, IntSetting, FloatSetting, BoolSetting
+from models.api.settings import Setting
 from models.db.settings import Setting as DbSetting
+from models.enums import SettingTypeEnum
 
 
 class SettingException(Exception):
@@ -45,6 +47,41 @@ class SettingMissingException(SettingException):
     """An exception raised when attempting to update a setting that does not exist."""
     message: str = 'Setting does not exist!'
     """The exception's message."""
+
+
+class Settings(BaseModel):
+    """Defines the available settings of the system."""
+
+    auth_session_cookie_name: Setting = Setting(
+        title='Auth Session Cookie Name',
+        description='The name of the session cookie.',
+        key='auth:session:cookie_name',
+        data_type=SettingTypeEnum.str,
+        default_value='session',
+        overridable=False,
+        hidden=True,
+    )
+    """Defines the name of the session cookie."""
+
+    auth_session_expiration_age: Setting = Setting(
+        title='Idle Auth Session Expiration Age',
+        description='The number of seconds a session can be idle before expiring.',
+        key='auth:session:expiration_age',
+        data_type=SettingTypeEnum.int,
+        default_value=3600,
+        overridable=True,
+    )
+    """Defines the number of seconds a session can be idle before expiring."""
+
+    auth_session_max_age: Setting = Setting(
+        title='Auth Session Maximum Age',
+        description='The maximum number of seconds a session can before a forced expiration.',
+        key='auth:session:max_age',
+        data_type=SettingTypeEnum.int,
+        default_value=14400,
+        overridable=True,
+    )
+    """Defines the maximum number of seconds a session can live before a forced expiration."""
 
 
 class SettingsManager:
@@ -88,7 +125,6 @@ class SettingsManager:
     @staticmethod
     async def get_many(
             session: AsyncSession,
-            uri: Optional[str] = None,
             key: Optional[str] = None,
             tenant_id: Optional[str | UUID] = None,
             user_id: Optional[str | UUID] = None,
@@ -104,8 +140,8 @@ class SettingsManager:
 
         stmt = select(DbSetting)
 
-        if include_none or isinstance(uri, str):
-            stmt = stmt.where(DbSetting.uri == uri)
+        if include_none or isinstance(key, str):
+            stmt = stmt.where(DbSetting.key == key)
 
         if include_none or isinstance(key, str):
             stmt = stmt.where(DbSetting.key == key)
@@ -121,7 +157,6 @@ class SettingsManager:
     @staticmethod
     async def create_setting(
             session: AsyncSession,
-            uri: str,
             key: str,
             value: Optional[str] = None,
             overridable: Optional[bool] = None,
@@ -171,9 +206,8 @@ class SettingsManager:
         setting = DbSetting(
             tenant_id=tenant_id,
             user_id=user_id,
-            uri=uri,
             key=key,
-            value=value,
+            raw_value=value,
             overridable=overridable,
             readonly=readonly,
         )
@@ -233,40 +267,3 @@ class SettingsManager:
 
         await session.delete(setting)
         await session.commit()
-
-
-class Settings:
-    """Defines the available settings of the system."""
-
-    auth_session_cookie_name: StringSetting = Setting(
-        type='str',
-        title='Auth Session Cookie Name',
-        description='The name of the session cookie.',
-        uri='auth:session:cookie_name',
-        key='auth_session_cookie_name',
-        value='session',
-        overridable=False,
-    )
-    """Defines the name of the session cookie."""
-
-    auth_session_expiration_age: IntSetting = Setting(
-        type='int',
-        title='Idle Auth Session Expiration Age',
-        description='The number of seconds a session can be idle before expiring.',
-        uri='auth:session:expiration_age',
-        key='auth_session_expiration_age',
-        value=3600,
-        overridable=True,
-    )
-    """Defines the number of seconds a session can be idle before expiring."""
-
-    auth_session_max_age: IntSetting = Setting(
-        type='int',
-        title='Auth Session Maximum Age',
-        description='The maximum number of seconds a session can before a forced expiration.',
-        uri='auth:session:max_age',
-        key='auth_session_max_age',
-        value=14400,
-        overridable=True,
-    )
-    """Defines the maximum number of seconds a session can live before a forced expiration."""
