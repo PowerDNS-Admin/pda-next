@@ -279,16 +279,12 @@ class SignalHandler:
 
     def worker_process_init_handler(self, **kwargs):
         """Initialize global dependencies for each Celery worker process."""
-        from loguru import logger
         from app import app_startup
-        logger.warning(f'Celery worker starting...')
         app_startup(use_sync=True)
 
     def worker_process_shutdown_handler(self, **kwargs):
         """Clean up global dependencies for each Celery worker process."""
-        from loguru import logger
         from app import app_shutdown
-        logger.warning(f'Celery worker stopping...')
         app_shutdown(use_sync=True)
 
     def task_received_handler(self, request: Request, **kwargs):
