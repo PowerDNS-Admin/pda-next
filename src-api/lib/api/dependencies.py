@@ -13,6 +13,9 @@ from models.api.auth import Principal
 from models.enums import ResourceTypeEnum
 
 
+INVALID_ACCESS_CONFIG_MSG = 'Wrong access configuration'
+
+
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
     from app import AsyncSessionLocal
     async with AsyncSessionLocal() as session:
@@ -27,7 +30,6 @@ async def get_principal(
     from datetime import datetime, timezone
     from typing import Optional
     from jose import JWTError, jwt
-    from loguru import logger
     from app import config
     from lib.security import ALGORITHM, TENANT_HEADER_NAME
     from lib.settings import SettingsManager
@@ -73,7 +75,7 @@ async def get_principal(
         if isinstance(client.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
                 or not isinstance(client.tenant_id, UUID) and isinstance(tenant_id, UUID) \
                 or client.tenant_id != tenant_id:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Wrong access configuration')
+            raise HTTPException(status.HTTP_400_BAD_REQUEST, INVALID_ACCESS_CONFIG_MSG)
 
         principal = Principal(id=client.id, tenant_id=tenant_id, type=PrincipalTypeEnum.client)
 
@@ -94,7 +96,7 @@ async def get_principal(
             if isinstance(db_session.user.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
                     or not isinstance(db_session.user.tenant_id, UUID) and isinstance(tenant_id, UUID) \
                     or db_session.user.tenant_id != tenant_id:
-                raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Wrong access configuration')
+                raise HTTPException(status.HTTP_400_BAD_REQUEST, INVALID_ACCESS_CONFIG_MSG)
 
             # Extend the session's expiration timestamp
             await Session.extend_session(session, db_session)
@@ -133,12 +135,15 @@ def require_permission(
 
 
 async def authorize_oauth_client(
+        request: Request,
         credentials: HTTPBasicCredentials = Depends(http_basic_scheme),
         grant_type: str = Form(...),
         scope: str = Form(None),
         session: AsyncSession = Depends(get_db_session),
 ) -> UUID | Mapped[UUID]:
-    from lib.security import TokenGrantTypeEnum, TokenErrorTypeEnum
+    from typing import Optional
+    from lib.security import TokenGrantTypeEnum, TokenErrorTypeEnum, TENANT_HEADER_NAME
+    from lib.tenants import TenantManager
     from models.db.auth import Client
 
     # Standard OAuth requires the grant_type field to be present in the body
@@ -169,6 +174,25 @@ async def authorize_oauth_client(
             detail=TokenErrorTypeEnum.missing_required_scopes.value,
             headers={'WWW-Authenticate': 'Bearer'},
         )
+
+    tenant_id: Optional[UUID] = None
+
+    # Attempt to identity the tenant by header
+    if TENANT_HEADER_NAME in request.headers:
+        try:
+            tenant_id = UUID(request.headers[TENANT_HEADER_NAME])
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid Tenant ID')
+
+    # Attempt to identify the tenant by hostname if not provided by request header
+    if not isinstance(tenant_id, UUID):
+        tenant_id = await TenantManager.get_tenant_id_by_fqdn(session, request.headers.get('host'))
+
+    # Verify that the client matches the associated tenant of the request if any
+    if isinstance(client.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
+            or not isinstance(client.tenant_id, UUID) and isinstance(tenant_id, UUID) \
+            or client.tenant_id != tenant_id:
+        raise HTTPException(status.HTTP_400_BAD_REQUEST, INVALID_ACCESS_CONFIG_MSG)
 
     # Return the client schema upon successful validation
     return client.id
