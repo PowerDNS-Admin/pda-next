@@ -1,25 +1,29 @@
 import os
-from loguru import logger
+
 from celery import Celery
-from app import initialize
+from loguru import logger
+
+from lib import load_config, init_logging
 from lib.celery import SignalHandler
 
-# Initialize the app with logging, environment settings, and file-based configuration
-config = initialize()
-
-# Initialize the Celery signal handler
-signal_handler = SignalHandler()
+# Load app configuration and initialize logging
+config = load_config()
+init_logging(config)
 
 # Instantiate the Celery application
-app = signal_handler.app = Celery(
+app = Celery(
     config.app.name,
     broker=config.celery.broker.url,
     backend=config.celery.backend.url,
 )
 
+# Instantiate a Celery signal handler
+SignalHandler(app=app)
+
 # Set this app instance to be the default for all threads
 app.set_default()
 
+# Configure Celery
 app.conf.beat_scheduler = 'src.lib.celery.DynamicScheduler'
 app.conf.timezone = 'UTC'
 app.conf.event_serializer = 'pickle'

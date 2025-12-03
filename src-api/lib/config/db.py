@@ -24,4 +24,5 @@ class DbConfig(BaseConfig):
     """A model that represents a configuration hierarchy for database connection settings."""
     mysql: MySQLDatabaseConnection
     redis: RedisDatabaseConnection
-    sql_url: Optional[str] = 'sqlite+aiosqlite:///./pda.db'
+    sql_async_url: Optional[str] = 'sqlite+aiosqlite:///./pda.db'
+    sql_sync_url: Optional[str] = 'sqlite:///./pda.db'

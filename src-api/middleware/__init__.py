@@ -1,4 +1,5 @@
 from fastapi import FastAPI
+from prometheus_fastapi_instrumentator import Instrumentator
 from lib.config import Config
 
 
@@ -6,6 +7,10 @@ def load_middleware(app:FastAPI, config: Config):
     import importlib
     from loguru import logger
     from middleware import SessionMiddleware
+
+    # Set up FastAPI Prometheus metrics
+    metrics = Instrumentator()
+    metrics.instrument(app).expose(app, endpoint='/api/metrics')
 
     # Set up session middleware
     # app.add_middleware(

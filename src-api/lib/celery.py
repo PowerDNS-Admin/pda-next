@@ -7,7 +7,6 @@ from celery.worker.request import Request
 from collections import namedtuple
 from kombu.transport.virtual.base import Message
 from typing import Any, Optional, Union
-from lib.mysql import MysqlClient, MysqlDbConfig
 from models.db.tasks import TaskJob
 
 event_t = namedtuple('event_t', ('time', 'priority', 'entry'))
@@ -35,15 +34,12 @@ class DynamicScheduler(Scheduler):
              heappush=heapq.heappush):
         import time
         from loguru import logger
-        from app import initialize
 
         now = time.time()
 
         diff = abs(now - self._last_sync)
 
         stale = diff > self.sync_every or 'entries' not in self._store
-
-        initialize()
 
         if stale:
             logger.trace('Schedule data stale, reloading...')
@@ -124,9 +120,6 @@ class SignalHandler:
     app: Optional[Celery]
     """The Celery app instance reference."""
 
-    mysql_client: Optional[MysqlClient]
-    """The MySQL client instance reference."""
-
     _stdout = None
 
     _stderr = None
@@ -156,18 +149,19 @@ class SignalHandler:
     def __init__(self, app: Optional[Celery] = None):
         from celery.signals import (
             task_received, task_revoked, task_rejected, task_prerun, task_postrun, task_retry, task_internal_error,
-            task_success, task_failure, task_unknown
+            task_success, task_failure, task_unknown, worker_process_init, worker_process_shutdown
         )
 
         self.app = app
-        self.mysql_client = None
         self._stdout = None
         self._stderr = None
         self._stdout_original = None
         self._stderr_original = None
 
         # Connect Celery Signals
-        task_received.connect(self.task_received_handler, weak=False)
+        worker_process_init.connect(self.worker_process_init_handler, weak=False)
+        worker_process_shutdown.connect(self.worker_process_shutdown_handler, weak=False)
+        #task_received.connect(self.task_received_handler, weak=False)
         task_revoked.connect(self.task_revoked_handler, weak=False)
         task_rejected.connect(self.task_rejected_handler, weak=False)
         task_prerun.connect(self.task_pre_run_handler, weak=False)
@@ -190,62 +184,51 @@ class SignalHandler:
         sys.stderr = self._stderr_original
         return self._stderr
 
-    def setup_mysql(self):
-        from app import initialize
-        config = initialize()
-        self.mysql_client = MysqlClient(MysqlDbConfig(**config.db.mysql.model_dump()))
-
-    def destroy_mysql(self):
-        from app import initialize
-        initialize()
-        if self.mysql_client:
-            self.mysql_client.disconnect()
-        self.mysql_client = None
-
     def get_task_job(self, task_id: str, request: Union[Request, Context] = None) -> TaskJob:
         import json
+        from uuid import UUID
         from sqlalchemy import select
         from sqlalchemy.exc import InvalidRequestError
-        from sqlalchemy.orm import Session
         from sqlalchemy.orm.exc import UnmappedInstanceError
-        from uuid import UUID
+        from app import SessionLocal
         from models.enums import TaskJobStatusEnum
 
         stmt = select(TaskJob).where(TaskJob.id == UUID(task_id))
-        session = Session(self.mysql_client.engine)
-        result = session.execute(stmt).fetchall()
 
-        if result:
-            tj = result[0][0]
-        else:
-            tj = TaskJob()
+        with SessionLocal() as session:
+            result = session.execute(stmt).fetchall()
 
-            if request.id:
-                tj.id = UUID(request.id)
+            if result:
+                tj = result[0][0]
+            else:
+                tj = TaskJob()
 
-            if request.root_id:
-                tj.root_id = UUID(request.root_id)
+                if hasattr(request, 'id') and request.id:
+                    tj.id = UUID(request.id)
 
-            if request.parent_id:
-                tj.parent_id = UUID(request.parent_id)
+                if request.root_id:
+                    tj.root_id = UUID(request.root_id)
 
-            if hasattr(request, 'name') and request.name:
-                tj.name = request.name
+                if request.parent_id:
+                    tj.parent_id = UUID(request.parent_id)
 
-            if hasattr(request, 'args') and isinstance(request.kwargs, list) and request.args:
-                tj.args = json.dumps(request.args)
+                if hasattr(request, 'name') and request.name:
+                    tj.name = request.name
+                elif hasattr(request, 'task') and request.task:
+                    tj.name = request.task
 
-            if hasattr(request, 'kwargs') and isinstance(request.kwargs, dict) and request.kwargs:
-                tj.kwargs = json.dumps(request.kwargs)
+                if hasattr(request, 'args') and isinstance(request.kwargs, list) and request.args:
+                    tj.args = json.dumps(request.args)
 
-            tj.status = TaskJobStatusEnum.received
+                if hasattr(request, 'kwargs') and isinstance(request.kwargs, dict) and request.kwargs:
+                    tj.kwargs = json.dumps(request.kwargs)
 
-        try:
-            session.expunge(tj)
-        except (InvalidRequestError, UnmappedInstanceError):
-            pass
+                tj.status = TaskJobStatusEnum.received
 
-        session.close()
+            try:
+                session.expunge(tj)
+            except (InvalidRequestError, UnmappedInstanceError):
+                pass
 
         return tj
 
@@ -253,67 +236,73 @@ class SignalHandler:
         import json
         from datetime import datetime
         from sqlalchemy.exc import InvalidRequestError
-        from sqlalchemy.orm import Session
         from sqlalchemy.orm.exc import UnmappedInstanceError
+        from app import SessionLocal
         from models.db.tasks import TaskJobActivity
         from models.enums import TaskJobStatusEnum
 
-        session = Session(self.mysql_client.engine)
-        session.add(task_job)
+        with SessionLocal() as session:
+            session.add(task_job)
 
-        if task_job.status == TaskJobStatusEnum.running and task_job.started_at is None:
-            task_job.started_at = datetime.now()
+            if task_job.status == TaskJobStatusEnum.running and task_job.started_at is None:
+                task_job.started_at = datetime.now()
 
-        elif (task_job.status in [TaskJobStatusEnum.success, TaskJobStatusEnum.failed, TaskJobStatusEnum.internal_error]
-              and task_job.started_at is not None):
-            task_job.ended_at = datetime.now()
-            task_job.runtime = abs((task_job.ended_at - task_job.started_at).total_seconds())
+            elif (task_job.status in [TaskJobStatusEnum.success, TaskJobStatusEnum.failed, TaskJobStatusEnum.internal_error]
+                  and task_job.started_at is not None):
+                task_job.ended_at = datetime.now()
+                task_job.runtime = abs((task_job.ended_at - task_job.started_at).total_seconds())
 
-        elif task_job.status == TaskJobStatusEnum.revoked and task_job.started_at is not None:
-            task_job.ended_at = datetime.now()
-            task_job.runtime = abs((task_job.ended_at - task_job.started_at).total_seconds())
+            elif task_job.status == TaskJobStatusEnum.revoked and task_job.started_at is not None:
+                task_job.ended_at = datetime.now()
+                task_job.runtime = abs((task_job.ended_at - task_job.started_at).total_seconds())
 
-        if create_activity:
-            tja = TaskJobActivity()
-            tja.task_id = task_job.id
-            tja.status = task_job.status
+            if create_activity:
+                tja = TaskJobActivity()
+                tja.task_job_id = task_job.id
+                tja.status = task_job.status
+
+                try:
+                    if task_job.status in [TaskJobStatusEnum.retry, TaskJobStatusEnum.failed]:
+                        tja.error = json.loads(task_job.errors)[-1]
+                except Exception:
+                    pass
+
+                session.add(tja)
+
+            session.commit()
+            session.refresh(task_job)
 
             try:
-                if task_job.status in [TaskJobStatusEnum.retry, TaskJobStatusEnum.failed]:
-                    tja.error = json.loads(task_job.errors)[-1]
-            except Exception:
+                session.expunge(task_job)
+            except (InvalidRequestError, UnmappedInstanceError):
                 pass
 
-            session.add(tja)
+    def worker_process_init_handler(self, **kwargs):
+        """Initialize global dependencies for each Celery worker process."""
+        from loguru import logger
+        from app import app_startup
+        logger.warning(f'Celery worker starting...')
+        app_startup(use_sync=True)
 
-        session.commit()
-        session.refresh(task_job)
-
-        try:
-            session.expunge(task_job)
-        except (InvalidRequestError, UnmappedInstanceError):
-            pass
-
-        session.close()
+    def worker_process_shutdown_handler(self, **kwargs):
+        """Clean up global dependencies for each Celery worker process."""
+        from loguru import logger
+        from app import app_shutdown
+        logger.warning(f'Celery worker stopping...')
+        app_shutdown(use_sync=True)
 
     def task_received_handler(self, request: Request, **kwargs):
         from loguru import logger
-        from app import initialize, notifications
+        from app import notifications
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskReceivedEvent
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(f'Task Received: Request: {request}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(request.id, request):
             tj.status = TaskJobStatusEnum.received
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         event = TaskReceivedEvent(
             request=request,
@@ -324,24 +313,18 @@ class SignalHandler:
 
     def task_revoked_handler(self, request: Context, terminated: bool, signum: int, expired: bool, **kwargs):
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskRevokedEvent
         from lib.services.zabbix import ZabbixMetric
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(
             f'Task Revoked: Request: {request}; Terminated: {terminated}; SigNum: {signum}; Expired: {expired}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(request.id, request):
             tj.status = TaskJobStatusEnum.revoked
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', -2)])
 
@@ -357,11 +340,9 @@ class SignalHandler:
 
     def task_rejected_handler(self, message: str, exc: Exception, **kwargs):
         from loguru import logger
-        from app import initialize, notifications
+        from app import notifications
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskRejectedEvent
-
-        initialize()
 
         logger.debug(f'Task Rejected: {message}; Exception: {exc}')
 
@@ -375,7 +356,7 @@ class SignalHandler:
 
     def task_pre_run_handler(self, task_id: str, task: Task, **kwargs):
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskPreRunEvent
         from lib.services.zabbix import ZabbixMetric
@@ -383,17 +364,11 @@ class SignalHandler:
 
         self.start_capture()
 
-        initialize()
-
         logger.debug(f'Task Pre-Run: Task ID: {task_id}; Task Name: {task.name}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(task_id, task.request):
             tj.status = TaskJobStatusEnum.running
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', 2)])
 
@@ -407,17 +382,13 @@ class SignalHandler:
     def task_post_run_handler(self, task_id: str, task: Task, **kwargs):
         import json
         from loguru import logger
-        from app import initialize, notifications
+        from app import notifications
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskPostRunEvent
-
-        initialize()
 
         logger.debug(f'Task Post-Run: Task ID: {task_id}; Task Name: {task.name}')
 
         stderr = self.stop_capture()
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(task_id, task.request):
 
@@ -437,8 +408,6 @@ class SignalHandler:
 
             self.save_task_job(tj, False)
 
-        self.destroy_mysql()
-
         event = TaskPostRunEvent(
             task=task,
         )
@@ -449,17 +418,13 @@ class SignalHandler:
     def task_retry_handler(self, request: Context, reason: str, einfo: ExceptionInfo, **kwargs):
         import json
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskRetryEvent
         from lib.services.zabbix import ZabbixMetric
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(f'Task Retry: Context: {request}; Reason: {reason};\n\nTraceback:\n\n{einfo.traceback}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(request.id, request):
             tj.status = TaskJobStatusEnum.retry
@@ -479,8 +444,6 @@ class SignalHandler:
 
             self.save_task_job(tj)
 
-        self.destroy_mysql()
-
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', 3)])
 
         event = TaskRetryEvent(
@@ -494,23 +457,17 @@ class SignalHandler:
 
     def task_internal_error_handler(self, task_id: str, args, kwargs, request: Request, exception, traceback, einfo: ExceptionInfo, **kw):
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskInternalErrorEvent
         from lib.services.zabbix import ZabbixMetric
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(f'Task Internal Error: Task ID: {task_id}; Request: {request};\n\nTraceback:\n\n{einfo.traceback}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(task_id, request):
             tj.status = TaskJobStatusEnum.internal_error
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', -1)])
 
@@ -526,24 +483,18 @@ class SignalHandler:
 
     def task_success_handler(self, sender, result: Any, **kwargs):
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskSuccessEvent
         from lib.services.zabbix import ZabbixMetric
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(f'Task Success: {sender.name}; Result: {result}')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(sender.request.id, sender.request):
             tj.status = TaskJobStatusEnum.success
             tj.retries = sender.request.retries
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', 4)])
 
@@ -558,17 +509,13 @@ class SignalHandler:
     def task_failure_handler(self, sender, task_id: str, exception: Exception, args, kwargs, traceback, einfo: ExceptionInfo, **kw):
         import json
         from loguru import logger
-        from app import initialize, notifications, zabbix
+        from app import notifications, zabbix
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskFailedEvent
         from lib.services.zabbix import ZabbixMetric
         from models.enums import TaskJobStatusEnum
 
-        initialize()
-
         logger.debug(f'Task Failure: {sender.name}; Task ID: {task_id};\n\nTraceback:\n\n{einfo.traceback};')
-
-        self.setup_mysql()
 
         if tj := self.get_task_job(task_id, sender.request):
             tj.status = TaskJobStatusEnum.failed
@@ -587,8 +534,6 @@ class SignalHandler:
                 tj.errors = json.dumps(errors)
 
             self.save_task_job(tj)
-
-        self.destroy_mysql()
 
         zabbix.report([ZabbixMetric(f'task.{tj.name}.status', -1)])
 
@@ -609,12 +554,10 @@ class SignalHandler:
 
     def task_unknown_handler(self, name: str, id: str, message: Message, exc: Exception, **kw):
         from loguru import logger
-        from app import initialize, notifications
+        from app import notifications
         from lib.enums import TaskEnum
         from lib.notifications import NotificationManager
         from lib.notifications.events import TaskUnknownEvent
-
-        initialize()
 
         logger.debug(f'Task Unknown: Task Name: {name}; Task ID: {id}; Message: {message}; Exception: {exc}')
 

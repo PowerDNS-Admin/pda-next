@@ -1,5 +1,6 @@
 from uuid import UUID
 
+from redis.asyncio.client import Redis
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from lib.permissions.definitions import Permission
@@ -13,6 +14,7 @@ class PermissionsManager:
     @staticmethod
     async def has_permission(
             db: AsyncSession,
+            redis: Redis,
             principal: Principal,
             resource_type: ResourceTypeEnum,
             resource_id: str | UUID,
@@ -32,6 +34,25 @@ class PermissionsManager:
         logger.warning(f'Validating permissions: principal: {principal.type.value}({principal.id}), '
                        + f'resource: {resource_type.value}({resource_id}), permissions: {permission_strings}')
 
+        valid = True
+
+        for uri in permission_strings:
+            cache_key = f'permission:{principal.type.value}:{principal.id}:{resource_type.value}:{resource_id}:{uri}'
+
+            logger.warning(f'Checking Permission Cache: {cache_key}')
+
+            # Check if permission is cached already
+            cached = await redis.get(cache_key)
+
+            if cached is not None and not bool(int(cached)):
+                valid = False
+                break
+
+            # Check principal roles
+
+            # Check principal policies
+
+
         # TODO
 
-        return False
+        return valid

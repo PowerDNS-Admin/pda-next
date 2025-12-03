@@ -4,7 +4,7 @@ import sys
 from loguru import logger
 from pathlib import Path
 from pydantic_settings import BaseSettings
-from redis import Redis
+from redis.asyncio.client import Redis
 from typing import Union
 from lib.config import Config
 from lib.config.app import AppConfig
@@ -22,6 +22,9 @@ DEFAULT_ENV_NAME: str = AppConfig.EnvironmentConfig.model_fields['name'].default
 
 class AppSettings(BaseSettings):
     """ The application settings class that loads setting values from the application environment. """
+
+    _config: Config = None
+    """The cached configuration data loaded from YAML."""
 
     config_path: Union[str, Path] = 'config/config.yml'
     """ The path to the YAML file containing additional configuration settings. """
@@ -59,6 +62,9 @@ class AppSettings(BaseSettings):
     @property
     def config(self) -> Config:
         """ Returns a configuration data provided by the YAML file given in the config_path setting (if any). """
+        if isinstance(self._config, Config):
+            return self._config
+
         default_config = Config(**{})
 
         if not self.config_path:
@@ -74,7 +80,9 @@ class AppSettings(BaseSettings):
         if loaded_config is None:
             return default_config
 
-        return Config(**loaded_config)
+        self._config = Config(**loaded_config)
+
+        return self._config
 
     @property
     def notifications(self) -> Union[list[NotificationConfig], None]:
@@ -272,8 +280,11 @@ def init_mysql(config: Config) -> MysqlClient:
 
 def init_redis(config: Config) -> Redis:
     """ Initialize a Redis connection instance. """
-    conf = config.db.redis
-    return Redis(host=conf.host, port=conf.port, db=conf.database)
+    return Redis.from_url(
+        url=f'redis://{config.db.redis.host}:{config.db.redis.port}/{config.db.redis.database}',
+        decode_responses=True,
+        pool_timeout=5,
+    )
 
 
 def init_db_schema(config: Config):

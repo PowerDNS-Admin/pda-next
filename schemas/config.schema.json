@@ -307,10 +307,15 @@
             }
           }
         },
-        "sql_url": {
+        "sql_async_url": {
           "type": "string",
           "description": "The connection URI for a supported asynchronous SQL storage driver.",
           "default": "sqlite+aiosqlite:///./pda.db"
+        },
+        "sql_sync_url": {
+          "type": "string",
+          "description": "The connection URI for a supported synchronous SQL storage driver.",
+          "default": "sqlite:///./pda.db"
         }
       }
     },

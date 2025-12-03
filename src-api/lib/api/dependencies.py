@@ -2,7 +2,8 @@ from typing import AsyncGenerator, Callable
 from uuid import UUID
 
 from fastapi import Depends, Request, Form, HTTPException, status
-from fastapi.security import HTTPBasicCredentials, SecurityScopes
+from fastapi.security import HTTPBasicCredentials
+from redis.asyncio.client import Redis
 from sqlalchemy.orm import Mapped
 from sqlalchemy.ext.asyncio import AsyncSession
 
@@ -17,9 +18,18 @@ INVALID_ACCESS_CONFIG_MSG = 'Wrong access configuration'
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
+    """Dependency to inject the SQL session maker into routes/services."""
     from app import AsyncSessionLocal
     async with AsyncSessionLocal() as session:
         yield session
+
+
+async def get_redis_client() -> Redis:
+    """Dependency to inject the Redis client into routes/services."""
+    from app import redis
+    if redis is None:
+        raise HTTPException(status_code=status.HTTP_500_INTERNAL_SERVER_ERROR, detail='Redis is not connected')
+    return redis
 
 
 async def get_principal(
@@ -123,11 +133,12 @@ def require_permission(
             request: Request,
             principal: Principal = Depends(get_principal),
             db: AsyncSession = Depends(get_db_session),
+            redis: Redis = Depends(get_redis_client),
     ):
         resource_id = request.path_params.get(resource_id_param_name)
         if resource_id is None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Missing {resource_id_param_name}')
-        if await PermissionsManager.has_permission(db, principal, resource_type, resource_id, permissions):
+        if await PermissionsManager.has_permission(db, redis, principal, resource_type, resource_id, permissions):
             return True
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Missing permissions')
 
