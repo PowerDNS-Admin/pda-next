@@ -1,10 +1,13 @@
+from uuid import UUID
+
 from fastapi import APIRouter, Request, Depends, Security
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from lib.api.dependencies import get_db_session, get_principal
-from lib.permissions import Permissions as p
-from models.api.auth import UserSchema, ClientSchema
+from lib.api.dependencies import get_db_session, get_principal, require_permission
+from lib.permissions.definitions import Permissions as p
+from models.api.auth import Principal
+from models.enums import ResourceTypeEnum
 from routers.root import router_responses
 
 router = APIRouter(
@@ -93,7 +96,7 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     """Temporary route for testing settings."""
     from datetime import datetime, timedelta, timezone
     from uuid import uuid4
-    from lib.permissions import Permissions as p
+    from lib.permissions.definitions import Permissions as p
     from models.db.auth import User, Client
     from models.db.tenants import Tenant
     from models.enums import UserStatusEnum
@@ -105,8 +108,8 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         id=uuid4(),
         name='System-Level Test Client',
         scopes=[
-            p.users.uri,
-            p.roles.uri,
+            p.auth_users.uri,
+            p.acl_roles.uri,
         ],
         expires_at=client_expires,
     )
@@ -130,10 +133,10 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         user_id=sl_user.id,
         name='System-Level Test User Client',
         scopes=[
-            p.users_read.uri,
-            p.users_create.uri,
-            p.roles_read.uri,
-            p.roles_create.uri,
+            p.auth_users_read.uri,
+            p.auth_users_create.uri,
+            p.acl_roles_read.uri,
+            p.acl_roles_create.uri,
         ],
         expires_at=client_expires,
     )
@@ -157,8 +160,8 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         tenant_id=tenant.id,
         name='Tenant-Level Test Client',
         scopes=[
-            p.users.uri,
-            p.roles.uri,
+            p.auth_users.uri,
+            p.acl_roles.uri,
         ],
         expires_at=client_expires,
     )
@@ -184,10 +187,10 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         user_id=tl_user.id,
         name='Tenant-Level Test User Client',
         scopes=[
-            p.users_read.uri,
-            p.users_create.uri,
-            p.roles_read.uri,
-            p.roles_create.uri,
+            p.auth_users_read.uri,
+            p.auth_users_create.uri,
+            p.acl_roles_read.uri,
+            p.acl_roles_create.uri,
         ],
         expires_at=client_expires,
     )
@@ -208,15 +211,24 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     })
 
 
-@router.get('/auth/test/client', response_model=UserSchema | ClientSchema)
-async def auth_test_client(
-        principal: UserSchema | ClientSchema = Security(get_principal, scopes=[
-            p.users_read.uri, p.users_update.uri, p.users_change_status.uri,
-        ]),
-) -> UserSchema | ClientSchema:
+@router.get('/auth/principal', response_model=Principal)
+async def auth_principal(principal: Principal = Depends(get_principal)) -> Principal:
     return principal
 
 
-@router.get('/auth/test/user', response_model=UserSchema | ClientSchema)
-async def auth_test_user(principal: UserSchema | ClientSchema = Depends(get_principal)) -> UserSchema | ClientSchema:
+@router.get(
+    '/acl/test/zones/{zone_id}',
+    response_model=Principal,
+    summary='Tests permission system.',
+    description='This provides a testing circuit for the permissions system.',
+)
+async def acl_test(
+        zone_id: UUID,
+        principal: Principal = Depends(get_principal),
+        _=Depends(require_permission(
+            ResourceTypeEnum.zones_azone,
+            'zone_id',
+            p.zones_azone_read,
+        )),
+) -> Principal:
     return principal

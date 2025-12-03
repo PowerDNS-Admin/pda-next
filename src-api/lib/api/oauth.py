@@ -7,7 +7,7 @@ from fastapi.security import OAuth2, HTTPBasic
 from fastapi.security.oauth2 import OAuthFlowsModel
 from jose import jwt
 
-from lib.permissions import Permissions
+from lib.permissions.definitions import Permissions
 
 
 class ClientCredentialsBearer(OAuth2):

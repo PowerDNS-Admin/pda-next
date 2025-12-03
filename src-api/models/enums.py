@@ -66,11 +66,11 @@ class ResourceTypeEnum(str, Enum):
     auth_client = 'auth:client'
     auth_refresh_token = 'auth:refresh_token'
     acl_role = 'acl:role'
-    acl_acl = 'acl:acl'
-    system_ref_timezone = 'system:ref_timezone'
+    acl_role_permission = 'acl:role_permission'
+    acl_policy = 'acl:policy'
+    settings_setting = 'settings:setting'
     system_stopgap_domain = 'system:stopgap_domain'
-    tasks_job = 'tasks:job'
-    tasks_job_activity = 'tasks:job_activity'
+    system_timezone = 'system:timezone'
     tenants_tenant = 'tenants:tenant'
     servers_server = 'servers:server'
     servers_auto_primary = 'servers:auto_primary'
@@ -84,6 +84,8 @@ class ResourceTypeEnum(str, Enum):
     views_view = 'views:view'
     views_zone = 'views:zone'
     views_network = 'views:network'
+    tasks_job = 'tasks:job'
+    tasks_job_activity = 'tasks:job_activity'
 
 
 class CryptoKeyTypeEnum(str, Enum):

@@ -1,4 +1,4 @@
-from typing import AsyncGenerator
+from typing import AsyncGenerator, Callable
 from uuid import UUID
 
 from fastapi import Depends, Request, Form, HTTPException, status
@@ -7,7 +7,10 @@ from sqlalchemy.orm import Mapped
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from lib.api.oauth import oauth2_scheme, http_basic_scheme
-from models.api.auth import UserSchema, ClientSchema
+from lib.permissions.manager import PermissionsManager
+from lib.permissions.definitions import Permission
+from models.api.auth import Principal
+from models.enums import ResourceTypeEnum
 
 
 async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
@@ -17,29 +20,22 @@ async def get_db_session() -> AsyncGenerator[AsyncSession, None]:
 
 
 async def get_principal(
-        scopes: SecurityScopes,
         request: Request,
         session: AsyncSession = Depends(get_db_session),
         bearer_token: str = Depends(oauth2_scheme),
-) -> UserSchema | ClientSchema:
+) -> Principal:
     from datetime import datetime, timezone
     from jose import JWTError, jwt
-    from loguru import logger
     from app import config
     from lib.security import ALGORITHM
     from lib.settings import SettingsManager
     from lib.settings.definitions import sd
     from models.db.auth import Session, Client
-
-    required_scopes = set(scopes.scopes)
-
-    # TODO: Implement support for granular resource level permissions
-    logger.critical('Route principal helper needs permissions finished!')
+    from models.enums import PrincipalTypeEnum
 
     # Attempt OAuth Bearer Token Authentication
     if bearer_token:
         invalid_token_msg = 'Invalid bearer token'
-        missing_scopes_msg = 'Client is not granted the required scopes.'
         try:
             payload = jwt.decode(bearer_token, config.app.secret_key, algorithms=[ALGORITHM])
         except JWTError:
@@ -57,15 +53,12 @@ async def get_principal(
         if datetime.now(timezone.utc) > datetime.fromtimestamp(payload['exp'], tz=timezone.utc):
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
 
-        if len(required_scopes) and 'scope' not in payload:
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, missing_scopes_msg)
+        principal = Principal(id=client.id, type=PrincipalTypeEnum.client)
 
-        granted_scopes = set(payload['scope'].split(' '))
+        if 'scope' in payload:
+            principal.permissions = set(payload['scope'].split(' '))
 
-        if not required_scopes.issubset(granted_scopes):
-            raise HTTPException(status.HTTP_401_UNAUTHORIZED, missing_scopes_msg)
-
-        return ClientSchema.model_validate(client)
+        return principal
 
     cookie_name = (await SettingsManager.get(session=session, key=sd.auth_session_cookie_name.key)).value
 
@@ -78,15 +71,40 @@ async def get_principal(
             # Extend the session's expiration timestamp
             await Session.extend_session(session, db_session)
 
-            # TODO: Check if the associated user has the permissions listed in required_scopes
+            # TODO: Load the user's permissions into the principal
 
-            return db_session.user
+            return Principal(
+                id=db_session.user.id,
+                type=PrincipalTypeEnum.user,
+            )
 
     # If neither works, raise an exception
     raise HTTPException(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Not authenticated'
     )
+
+
+def require_permission(
+        resource_type: ResourceTypeEnum,
+        resource_id_param_name: str,
+        permissions: Permission | list[Permission],
+) -> Callable:
+    """Enforces the given permissions against the current principal's permissions for the given resource."""
+
+    async def dep(
+            request: Request,
+            principal: Principal = Depends(get_principal),
+            db: AsyncSession = Depends(get_db_session),
+    ):
+        resource_id = request.path_params.get(resource_id_param_name)
+        if resource_id is None:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Missing {resource_id_param_name}')
+        if await PermissionsManager.has_permission(db, principal, resource_type, resource_id, permissions):
+            return True
+        raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Missing permissions')
+
+    return dep
 
 
 async def authorize_oauth_client(

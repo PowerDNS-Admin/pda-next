@@ -1,9 +1,46 @@
 import uuid
+from typing import Optional
+
 from datetime import datetime
 from pydantic import Field
-from typing import Optional
+
+from lib.permissions.definitions import Permissions
 from models.api import BaseApiModel
-from models.enums import UserStatusEnum
+from models.enums import PrincipalTypeEnum, UserStatusEnum
+
+
+class Principal(BaseApiModel):
+    """Represents an authentication principal."""
+
+    id: Optional[uuid.UUID] = Field(
+        title='User ID',
+        description='The unique identifier of the principal.',
+        default=None,
+        examples=[uuid.uuid4()],
+    )
+    """The unique identifier of the principal."""
+
+    type: PrincipalTypeEnum = Field(
+        title='Type',
+        description='The type of the principal.',
+        examples=[
+            PrincipalTypeEnum.client,
+            PrincipalTypeEnum.user,
+        ],
+    )
+    """The type of the principal."""
+
+    permissions: Optional[set[str]] = Field(
+        title='Principal Permissions',
+        description='A list of permissions that the principal has.',
+        default=None,
+        examples=[
+            Permissions.tenants_read,
+            Permissions.zones_azone,
+            Permissions.zones_rzone_read,
+        ],
+    )
+    """The permissions that the principal has."""
 
 
 class UserSchema(BaseApiModel):
