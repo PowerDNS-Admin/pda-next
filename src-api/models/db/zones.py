@@ -7,7 +7,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from sqlalchemy import Boolean, DateTime, Integer, String, TEXT, Uuid, text, ForeignKey
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.db import BaseSqlModel
+from models.db import BaseSqlModel, JSONType
 from models.enums import AZoneKindEnum, RZoneKindEnum, ZoneRecordTypeEnum
 
 
@@ -38,7 +38,7 @@ class AZone(BaseSqlModel):
     edited_serial: Mapped[int] = mapped_column(Integer, nullable=False)
     """The SOA serial as seen in query responses."""
 
-    masters: Mapped[list[str]] = mapped_column(TEXT, nullable=True)
+    masters: Mapped[list[str]] = mapped_column(JSONType, nullable=True)
     """List of IP addresses configured as a master for this zone (“Slave” type zones only)."""
 
     dnssec: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -71,10 +71,10 @@ class AZone(BaseSqlModel):
     account: Mapped[str] = mapped_column(String(255), nullable=True)
     """MAY be set. Its value is defined by local policy."""
 
-    master_tsig_key_ids: Mapped[list[str]] = mapped_column(TEXT, nullable=True)
+    master_tsig_key_ids: Mapped[list[str]] = mapped_column(JSONType, nullable=True)
     """The id of the TSIG keys used for master operation in this zone."""
 
-    slave_tsig_key_ids: Mapped[list[str]] = mapped_column(TEXT, nullable=True)
+    slave_tsig_key_ids: Mapped[list[str]] = mapped_column(JSONType, nullable=True)
     """The id of the TSIG keys used for slave operation in this zone."""
 
     shared: Mapped[bool] = mapped_column(Boolean, nullable=False, default=False)
@@ -116,7 +116,7 @@ class AZoneRecord(BaseSqlModel):
     zone_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_azones.id'), nullable=False)
     """The unique identifier of the zone this record belongs to."""
 
-    name: Mapped[str] = mapped_column(String(255), nullable=False)
+    name: Mapped[str] = mapped_column(String(255), nullable=True)
     """The name of the record."""
 
     type_: Mapped[ZoneRecordTypeEnum] = mapped_column(String(20), nullable=False)

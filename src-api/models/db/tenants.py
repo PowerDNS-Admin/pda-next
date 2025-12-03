@@ -66,6 +66,9 @@ class Tenant(BaseSqlModel):
     acl_roles = relationship('Role', back_populates='tenant')
     """A list of ACL roles associated with the tenant."""
 
+    acl_role_principals = relationship('RolePrincipal', back_populates='tenant')
+    """A list of ACL role principals associated with the tenant."""
+
     servers = relationship('Server', back_populates='tenant')
     """A list of servers associated with the tenant."""
 

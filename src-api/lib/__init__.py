@@ -283,7 +283,6 @@ def init_redis(config: Config) -> Redis:
     return Redis.from_url(
         url=f'redis://{config.db.redis.host}:{config.db.redis.port}/{config.db.redis.database}',
         decode_responses=True,
-        pool_timeout=5,
     )
 
 

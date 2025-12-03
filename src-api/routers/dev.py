@@ -5,7 +5,7 @@ from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
 from lib.api.dependencies import get_db_session, get_principal, require_permission
-from lib.permissions.definitions import Permissions as p
+from lib.permissions.definitions import Permissions as p, Permission
 from models.api.auth import Principal
 from models.enums import ResourceTypeEnum
 from routers.root import router_responses
@@ -97,10 +97,12 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     from datetime import datetime, timedelta, timezone
     from uuid import uuid4
     from lib.permissions.definitions import Permissions as p
+    from models.db.acl import Role, RolePrincipal, RolePermission
     from models.db.auth import User, Client
     from models.db.system import StopgapDomain
     from models.db.tenants import Tenant
-    from models.enums import UserStatusEnum
+    from models.db.zones import AZone, AZoneRecord
+    from models.enums import PrincipalTypeEnum, UserStatusEnum, AZoneKindEnum, ZoneRecordTypeEnum
 
     client_expires = datetime.now(tz=timezone.utc) + timedelta(days=7)
 
@@ -155,6 +157,36 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
 
     session.add(sl_user_client)
 
+    sl_role = Role(
+        id=uuid4(),
+        slug='system-admin',
+        description='A role for system administrators with full access.',
+    )
+
+    session.add(sl_role)
+
+    sl_role_permission = RolePermission(
+        role_id=sl_role.id,
+        permission=p.auth_users.uri,
+    )
+
+    session.add(sl_role_permission)
+
+    sl_role_permission = RolePermission(
+        role_id=sl_role.id,
+        permission=p.tenants_read.uri,
+    )
+
+    session.add(sl_role_permission)
+
+    sl_role_principal = RolePrincipal(
+        role_id=sl_role.id,
+        principal_type=PrincipalTypeEnum.client,
+        principal_id=sl_client.id,
+    )
+
+    session.add(sl_role_principal)
+
     # Create tenants
     tenant1 = Tenant(
         id=uuid4(),
@@ -182,6 +214,10 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         scopes=[
             p.auth_users.uri,
             p.acl_roles.uri,
+            p.zones_azone.uri,
+            p.zones_azone_read.uri,
+            p.zones_rzone.uri,
+            p.zones_rzone_read.uri,
         ],
         expires_at=client_expires,
     )
@@ -232,16 +268,139 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
 
     session.add(tl_user_client)
 
+    tl_role1 = Role(
+        id=uuid4(),
+        tenant_id=tenant1.id,
+        slug='tenant-admin',
+        description='A role for tenant system administrators with full access.',
+    )
+
+    session.add(tl_role1)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role1.id,
+        permission=p.auth_users.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role1.id,
+        permission=p.tenants.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_principal = RolePrincipal(
+        role_id=tl_role1.id,
+        tenant_id=tenant1.id,
+        principal_type=PrincipalTypeEnum.client,
+        principal_id=tl_client1.id,
+    )
+
+    session.add(tl_role_principal)
+
+    tl_role1 = Role(
+        id=uuid4(),
+        tenant_id=tenant1.id,
+        slug='zone-admin',
+        description='A role for tenant zone administrators with full access.',
+    )
+
+    session.add(tl_role1)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role1.id,
+        permission=p.zones_azone_read.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role1.id,
+        permission=p.zones_rzone_read.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_principal = RolePrincipal(
+        role_id=tl_role1.id,
+        tenant_id=tenant1.id,
+        principal_type=PrincipalTypeEnum.client,
+        principal_id=tl_client1.id,
+    )
+
+    session.add(tl_role_principal)
+
+    tl_role2 = Role(
+        id=uuid4(),
+        tenant_id=tenant2.id,
+        slug='tenant-admin',
+        description='A role for tenant system administrators with full access.',
+    )
+
+    session.add(tl_role2)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role2.id,
+        permission=p.auth_users.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_permission = RolePermission(
+        role_id=tl_role2.id,
+        permission=p.tenants_read.uri,
+    )
+
+    session.add(tl_role_permission)
+
+    tl_role_principal = RolePrincipal(
+        role_id=tl_role2.id,
+        principal_type=PrincipalTypeEnum.client,
+        principal_id=tl_client2.id,
+    )
+
+    session.add(tl_role_principal)
+
+    tl_t1_zone1 = AZone(
+        id=uuid4(),
+        tenant_id=tenant1.id,
+        fqdn='azorian.solutions',
+        kind=AZoneKindEnum.MASTER,
+        serial=123456789,
+        notified_serial=123456789,
+        edited_serial=123456789,
+    )
+
+    session.add(tl_t1_zone1)
+
+    tl_t1_zone1_r1 = AZoneRecord(
+        id=uuid4(),
+        tenant_id=tenant1.id,
+        zone_id=tl_t1_zone1.id,
+        name='',
+        type_=ZoneRecordTypeEnum.A,
+        ttl=3600,
+        content='1.1.1.1',
+    )
+
+    session.add(tl_t1_zone1_r1)
+    
     await session.commit()
 
     return JSONResponse({
+        'system-level-role': sl_role.id.hex,
         'system-level-client': sl_client.id.hex,
         'system-level-user': sl_user.id.hex,
         'system-level-user-client': sl_user_client.id.hex,
         'tenant': tenant1.id.hex,
-        'tenant-level-client': tl_client1.id.hex,
+        'tenant-level-role1': tl_role1.id.hex,
+        'tenant-level-client1': tl_client1.id.hex,
         'tenant-level-user': tl_user.id.hex,
         'tenant-level-user-client': tl_user_client.id.hex,
+        'tenant-level-role2': tl_role2.id.hex,
+        'tenant-level-client2': tl_client2.id.hex,
     })
 
 

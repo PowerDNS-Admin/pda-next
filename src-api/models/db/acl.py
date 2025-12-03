@@ -84,6 +84,9 @@ class RolePrincipal(BaseSqlModel):
     role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
     """The unique identifier of the associated role."""
 
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the associated tenant if any."""
+
     principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
     """The principal type associated with the principal relationship."""
 
@@ -103,6 +106,9 @@ class RolePrincipal(BaseSqlModel):
 
     role = relationship('Role', back_populates='principals')
     """The role associated with the principal relationship."""
+
+    tenant = relationship('Tenant', back_populates='acl_role_principals')
+    """The tenant associated with the principal relationship."""
 
     __mapper_args__ = {
         'primary_key': [role_id, principal_id],
