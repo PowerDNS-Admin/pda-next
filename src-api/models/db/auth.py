@@ -84,10 +84,15 @@ class User(BaseSqlModel):
         return verify_hash(password, self.hashed_password)
 
     @staticmethod
-    async def get_by_username(session: AsyncSession, username: str) -> 'User | None':
+    async def get_by_username(session: AsyncSession, username: str, tenant_id: Optional[str | UUID]) -> 'User | None':
         """Retrieves a user object by its username."""
         from sqlalchemy import select
-        stmt = select(User).where(User.username == username)
+
+        if isinstance(tenant_id, str):
+            tenant_id = UUID(tenant_id)
+
+        stmt = select(User).where(User.username == username, User.tenant_id == tenant_id)
+
         return (await session.execute(stmt)).scalar_one_or_none()
 
     @staticmethod
@@ -252,7 +257,8 @@ class Session(BaseSqlModel):
         from lib.settings.definitions import sd
 
         session_max_age = (await SettingsManager.get(session=session, key=sd.auth_session_max_age.key)).value
-        current_age = (datetime.now(tz=timezone.utc) - db_session.created_at).total_seconds()
+        current_age = ((datetime.now(tz=timezone.utc) - db_session.created_at.replace(tzinfo=timezone.utc))
+                       .total_seconds())
 
         # Use the session age setting when no amount given for the session life extension
         if total_seconds is None:

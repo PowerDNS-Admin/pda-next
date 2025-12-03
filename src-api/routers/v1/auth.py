@@ -119,6 +119,7 @@ async def login(
         username: str = Form(...),
         password: str = Form(...),
 ) -> UserSchema:
+    from lib.tenants import TenantManager
     from lib.settings import SettingsManager
     from lib.settings.definitions import sd
     from models.db.auth import User, Session
@@ -143,10 +144,11 @@ async def login(
     if not password or isinstance(password, str) and not len(password.strip()):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'No password provided.')
 
-    # TODO: Implement tenant segregation
+    # Identify the tenant ID (if any) based on request host
+    tenant_id = await TenantManager.get_tenant_id_by_fqdn(session, request.headers.get('host'))
 
     # Attempt to retrieve a user from the database based on the given username
-    db_user = await User.get_by_username(session, username)
+    db_user = await User.get_by_username(session, username, tenant_id)
 
     if not db_user or not db_user.verify_password(password):
         raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Invalid credentials provided.')
