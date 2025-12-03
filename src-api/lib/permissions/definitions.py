@@ -771,7 +771,105 @@ class Permissions:
     )
     """Provides the ability to delete authoritative zone records within context."""
 
-    # TODO: Authoritative Zone Records, Metadata
+    zones_azone_record: Permission = Permission(
+        uri="zones:azone:record",
+        title="All Authoritative Zone Records Permissions",
+        description="Includes all authoritative zone records-related permissions.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_record,
+        ],
+    )
+    """Includes all authoritative zone records-related permissions."""
+
+    zones_azone_record_read: Permission = Permission(
+        uri="zones:azone:record:read",
+        title="Read Authoritative Zone Records",
+        description="Provides the ability to read authoritative zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_record,
+        ],
+    )
+    """Provides the ability to read authoritative zone records within context."""
+
+    zones_azone_record_create: Permission = Permission(
+        uri="zones:azone:record:create",
+        title="Create Authoritative Zone Records",
+        description="Provides the ability to create authoritative zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_record,
+        ],
+    )
+    """Provides the ability to create authoritative zone records within context."""
+
+    zones_azone_record_update: Permission = Permission(
+        uri="zones:azone:record:update",
+        title="Update Authoritative Zone Records",
+        description="Provides the ability to update authoritative zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_record,
+        ],
+    )
+    """Provides the ability to update authoritative zone records within context."""
+
+    zones_azone_record_delete: Permission = Permission(
+        uri="zones:azone:record:delete",
+        title="Delete Authoritative Zone Records",
+        description="Provides the ability to delete authoritative zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_record,
+        ],
+    )
+    """Provides the ability to delete authoritative zone records within context."""
+
+    zones_azone_metadata: Permission = Permission(
+        uri="zones:azone:metadata",
+        title="All Authoritative Zone Metadata Permissions",
+        description="Includes all authoritative zone metadata-related permissions.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_metadata,
+        ],
+    )
+    """Includes all authoritative zone metadata-related permissions."""
+
+    zones_azone_metadata_read: Permission = Permission(
+        uri="zones:azone:metadata:read",
+        title="Read Authoritative Zone Metadata",
+        description="Provides the ability to read authoritative zone metadata within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_metadata,
+        ],
+    )
+    """Provides the ability to read authoritative zone metadata within context."""
+
+    zones_azone_metadata_create: Permission = Permission(
+        uri="zones:azone:metadata:create",
+        title="Create Authoritative Zone Metadata",
+        description="Provides the ability to create authoritative zone metadata within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_metadata,
+        ],
+    )
+    """Provides the ability to create authoritative zone metadata within context."""
+
+    zones_azone_metadata_update: Permission = Permission(
+        uri="zones:azone:metadata:update",
+        title="Update Authoritative Zone Metadata",
+        description="Provides the ability to update authoritative zone metadata within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_metadata,
+        ],
+    )
+    """Provides the ability to update authoritative zone metadata within context."""
+
+    zones_azone_metadata_delete: Permission = Permission(
+        uri="zones:azone:metadata:delete",
+        title="Delete Authoritative Zone Metadata",
+        description="Provides the ability to delete authoritative zone metadata within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_azone_metadata,
+        ],
+    )
+    """Provides the ability to delete authoritative zone metadata within context."""
 
     zones_rzone: Permission = Permission(
         uri="zones:rzone",
@@ -823,4 +921,52 @@ class Permissions:
     )
     """Provides the ability to delete recursive zone records within context."""
 
-    # TODO: Recursive Zone Records
+    zones_rzone_record: Permission = Permission(
+        uri="zones:rzone:record",
+        title="All Recursive Zone Records Permissions",
+        description="Includes all recursive zone records-related permissions.",
+        resource_types=[
+            ResourceTypeEnum.zones_rzone_record,
+        ],
+    )
+    """Includes all recursive zone records-related permissions."""
+
+    zones_rzone_record_read: Permission = Permission(
+        uri="zones:rzone:record:read",
+        title="Read Recursive Zone Records",
+        description="Provides the ability to read recursive zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_rzone_record,
+        ],
+    )
+    """Provides the ability to read recursive zone records within context."""
+
+    zones_rzone_record_create: Permission = Permission(
+        uri="zones:rzone:record:create",
+        title="Create Recursive Zone Records",
+        description="Provides the ability to create recursive zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_rzone_record,
+        ],
+    )
+    """Provides the ability to create recursive zone records within context."""
+
+    zones_rzone_record_update: Permission = Permission(
+        uri="zones:rzone:record:update",
+        title="Update Recursive Zone Records",
+        description="Provides the ability to update recursive zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_rzone_record,
+        ],
+    )
+    """Provides the ability to update recursive zone records within context."""
+
+    zones_rzone_record_delete: Permission = Permission(
+        uri="zones:rzone:record:delete",
+        title="Delete Recursive Zone Records",
+        description="Provides the ability to delete recursive zone records within context.",
+        resource_types=[
+            ResourceTypeEnum.zones_rzone_record,
+        ],
+    )
+    """Provides the ability to delete recursive zone records within context."""

@@ -416,7 +416,7 @@ async def auth_principal(principal: Principal = Depends(get_principal)) -> Princ
     description='This provides a testing circuit for the permissions system.',
 )
 async def acl_test(
-        zone_id: UUID,
+        zone_id: str,
         principal: Principal = Depends(get_principal),
         _=Depends(require_permission(
             ResourceTypeEnum.zones_azone,
