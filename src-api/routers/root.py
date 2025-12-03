@@ -8,14 +8,19 @@ router_responses: dict = {
 }
 
 router = APIRouter(
-    prefix='',
+    prefix='/api',
     responses=router_responses,
 )
 
 
+@router.get('', response_class=RedirectResponse)
+async def root() -> RedirectResponse:
+    return RedirectResponse(url='/api/docs')
+
+
 @router.get('/', response_class=RedirectResponse)
 async def root() -> RedirectResponse:
-    return RedirectResponse(url='/docs')
+    return RedirectResponse(url='/api/docs')
 
 
 @router.get('/status', response_model=StatusResponse)

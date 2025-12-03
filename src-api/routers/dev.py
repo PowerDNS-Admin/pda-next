@@ -98,10 +98,21 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     from uuid import uuid4
     from lib.permissions.definitions import Permissions as p
     from models.db.auth import User, Client
+    from models.db.system import StopgapDomain
     from models.db.tenants import Tenant
     from models.enums import UserStatusEnum
 
     client_expires = datetime.now(tz=timezone.utc) + timedelta(days=7)
+
+    # Create Stopgap Domain
+    sg_domain = StopgapDomain(
+        id=uuid4(),
+        name='SG Test Domain 1',
+        fqdn='local.powerdnsadmin.org',
+        restricted_hosts=['admin', 'owner', 'root'],
+    )
+
+    session.add(sg_domain)
 
     # Create a system-level client
     sl_client = Client(
@@ -144,35 +155,58 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
 
     session.add(sl_user_client)
 
-    # Create a tenant
-    tenant = Tenant(
+    # Create tenants
+    tenant1 = Tenant(
         id=uuid4(),
-        name='Test Tenant',
-        fqdn='t1.local.powerdnsadmin.org',
+        name='Test Tenant 1',
+        stopgap_domain_id=sg_domain.id,
+        stopgap_hostname='t1',
     )
 
-    session.add(tenant)
+    session.add(tenant1)
+
+    tenant2 = Tenant(
+        id=uuid4(),
+        name='Test Tenant 2',
+        fqdn='local.dnsmin.org',
+    )
+
+    session.add(tenant2)
 
     # Create a tenant-level client
 
-    tl_client = Client(
+    tl_client1 = Client(
         id=uuid4(),
-        tenant_id=tenant.id,
-        name='Tenant-Level Test Client',
+        tenant_id=tenant1.id,
+        name='Tenant-Level Test Client 1',
         scopes=[
             p.auth_users.uri,
             p.acl_roles.uri,
         ],
         expires_at=client_expires,
     )
-    tl_client.secret = 'test'
+    tl_client1.secret = 'test'
 
-    session.add(tl_client)
+    session.add(tl_client1)
+
+    tl_client2 = Client(
+        id=uuid4(),
+        tenant_id=tenant2.id,
+        name='Tenant-Level Test Client 2',
+        scopes=[
+            p.auth_users.uri,
+            p.acl_roles.uri,
+        ],
+        expires_at=client_expires,
+    )
+    tl_client2.secret = 'test'
+
+    session.add(tl_client2)
 
     # Create a tenant-level user
     tl_user = User(
         id=uuid4(),
-        tenant_id=tenant.id,
+        tenant_id=tenant1.id,
         username='test',
         status=UserStatusEnum.active,
     )
@@ -183,7 +217,7 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     # Create a tenant-level user client
     tl_user_client = Client(
         id=uuid4(),
-        tenant_id=tenant.id,
+        tenant_id=tenant1.id,
         user_id=tl_user.id,
         name='Tenant-Level Test User Client',
         scopes=[
@@ -204,8 +238,8 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         'system-level-client': sl_client.id.hex,
         'system-level-user': sl_user.id.hex,
         'system-level-user-client': sl_user_client.id.hex,
-        'tenant': tenant.id.hex,
-        'tenant-level-client': tl_client.id.hex,
+        'tenant': tenant1.id.hex,
+        'tenant-level-client': tl_client1.id.hex,
         'tenant-level-user': tl_user.id.hex,
         'tenant-level-user-client': tl_user_client.id.hex,
     })

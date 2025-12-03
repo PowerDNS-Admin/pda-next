@@ -63,6 +63,9 @@ class Tenant(BaseSqlModel):
     auth_refresh_tokens = relationship('RefreshToken', back_populates='tenant')
     """A list of auth refresh tokens associated with the tenant."""
 
+    acl_roles = relationship('Role', back_populates='tenant')
+    """A list of ACL roles associated with the tenant."""
+
     servers = relationship('Server', back_populates='tenant')
     """A list of servers associated with the tenant."""
 

@@ -67,6 +67,7 @@ class ResourceTypeEnum(str, Enum):
     auth_refresh_token = 'auth:refresh_token'
     acl_role = 'acl:role'
     acl_role_permission = 'acl:role_permission'
+    acl_role_principal = 'acl:role_principal'
     acl_policy = 'acl:policy'
     settings_setting = 'settings:setting'
     system_stopgap_domain = 'system:stopgap_domain'

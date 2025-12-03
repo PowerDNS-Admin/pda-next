@@ -37,7 +37,7 @@ app = FastAPI(
     contact=config.app.author.model_dump(),
     openapi_tags=[t.model_dump() for t in config.api.metadata.tags],
     root_path=config.server.proxy_root,
-    servers=[{'url': f'{config.app.environment.urls.api}/api/', 'description': 'PDA Environment API'}],
+    docs_url='/api/docs',
     debug=config.app.environment.name in (EnvironmentEnum.local, EnvironmentEnum.dev),
     swagger_ui_parameters={
         'docExpansion': 'none', # list, full, or none
@@ -54,7 +54,7 @@ load_middleware(app, config)
 
 # Set up FastAPI Prometheus metrics
 metrics = Instrumentator()
-metrics.instrument(app).expose(app)
+metrics.instrument(app).expose(app, endpoint='/api/metrics')
 
 # Set up FastAPI routers
 install_routers(app)

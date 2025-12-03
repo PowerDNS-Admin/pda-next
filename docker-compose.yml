@@ -73,7 +73,7 @@ services:
     networks:
       - pda
     healthcheck:
-      test: [ 'CMD', 'curl', '-f', 'http://pda_api:8000/status' ]
+      test: [ 'CMD', 'curl', '-f', 'http://pda_api:8000/api/status' ]
       interval: 30s
       timeout: 10s
       retries: 3

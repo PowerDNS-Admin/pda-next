@@ -7,7 +7,7 @@ from datetime import datetime
 from uuid import UUID, uuid4
 from sqlalchemy import DateTime, Integer, String, TEXT, Uuid, text
 from sqlalchemy.orm import Mapped, mapped_column, relationship
-from models.db import BaseSqlModel
+from models.db import BaseSqlModel, JSONType
 
 
 class StopgapDomain(BaseSqlModel):
@@ -25,7 +25,7 @@ class StopgapDomain(BaseSqlModel):
     fqdn: Mapped[str] = mapped_column(String(253), nullable=False)
     """The FQDN for the base stopgap domain."""
 
-    restricted_hosts: Mapped[list[str]] = mapped_column(TEXT, nullable=True)
+    restricted_hosts: Mapped[list[str]] = mapped_column(JSONType, nullable=True)
     """The list of hostnames that are restricted from use by tenants."""
 
     created_at: Mapped[datetime] = mapped_column(

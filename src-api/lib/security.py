@@ -4,6 +4,7 @@ from passlib.context import CryptContext
 
 ALGORITHM = 'HS256'
 SESSION_TOKEN_LENGTH = 128
+TENANT_HEADER_NAME = 'X-Tenant-Id'
 
 crypt_context = CryptContext(schemes=['bcrypt'], deprecated='auto')
 

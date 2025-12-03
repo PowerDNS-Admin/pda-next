@@ -20,6 +20,9 @@ class Role(BaseSqlModel):
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     """The unique identifier of the role."""
 
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    """The unique identifier of the associated tenant if any."""
+
     slug: Mapped[str] = mapped_column(String(50), nullable=False)
     """The role slug."""
 
@@ -37,8 +40,14 @@ class Role(BaseSqlModel):
     )
     """The timestamp representing when the role was last updated."""
 
+    tenant = relationship('Tenant', back_populates='acl_roles')
+    """The tenant associated with the role."""
+
     permissions = relationship('RolePermission', back_populates='role')
     """A list of permissions associated with the role."""
+
+    principals = relationship('RolePrincipal', back_populates='role')
+    """A list of principals associated with the role."""
 
 
 class RolePermission(BaseSqlModel):
@@ -66,6 +75,40 @@ class RolePermission(BaseSqlModel):
     }
 
 
+class RolePrincipal(BaseSqlModel):
+    """Represents an ACL role principal relationship."""
+
+    __tablename__ = 'pda_acl_role_principals'
+    """Defines the database table name."""
+
+    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
+    """The unique identifier of the associated role."""
+
+    principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
+    """The principal type associated with the principal relationship."""
+
+    principal_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
+    """The unique identifier of the associated principal."""
+
+    created_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
+    )
+    """The timestamp representing when the principal relationship was created."""
+
+    updated_at: Mapped[datetime] = mapped_column(
+        DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
+        server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
+    )
+    """The timestamp representing when the principal relationship was last updated."""
+
+    role = relationship('Role', back_populates='principals')
+    """The role associated with the principal relationship."""
+
+    __mapper_args__ = {
+        'primary_key': [role_id, principal_id],
+    }
+
+
 class Policy(BaseSqlModel):
     """Represents an ACL policy."""
 
@@ -89,11 +132,6 @@ class Policy(BaseSqlModel):
 
     permission: Mapped[str] = mapped_column(String(255), nullable=False)
     """The permission associated with the policy."""
-
-    created_by: Mapped[str] = mapped_column(
-        Uuid, ForeignKey('pda_auth_users.id'), nullable=False,
-    )
-    """The unique identifier of the user that created the policy."""
 
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')

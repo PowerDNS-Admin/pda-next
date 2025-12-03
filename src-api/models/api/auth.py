@@ -1,5 +1,5 @@
-import uuid
 from typing import Optional
+from uuid import UUID, uuid4
 
 from datetime import datetime
 from pydantic import Field
@@ -12,14 +12,21 @@ from models.enums import PrincipalTypeEnum, UserStatusEnum
 class Principal(BaseApiModel):
     """Represents an authentication principal."""
 
-    id: Optional[uuid.UUID] = Field(
-        title='User ID',
+    id: UUID = Field(
+        title='Principal ID',
         description='The unique identifier of the principal.',
-        default=None,
-        examples=[uuid.uuid4()],
+        examples=[uuid4()],
     )
     """The unique identifier of the principal."""
 
+    tenant_id: Optional[UUID] = Field(
+        title='Tenant ID',
+        description='The unique identifier of the tenant associated with the principal.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the tenant associated with the principal."""
+    
     type: PrincipalTypeEnum = Field(
         title='Type',
         description='The type of the principal.',
@@ -35,6 +42,7 @@ class Principal(BaseApiModel):
         description='A list of permissions that the principal has.',
         default=None,
         examples=[
+            Permissions.auth_users,
             Permissions.tenants_read,
             Permissions.zones_azone,
             Permissions.zones_rzone_read,
@@ -46,19 +54,19 @@ class Principal(BaseApiModel):
 class UserSchema(BaseApiModel):
     """Represents an authentication user for API interactions."""
 
-    id: Optional[uuid.UUID] = Field(
+    id: Optional[UUID] = Field(
         default=None,
         title='User ID',
         description='The unique identifier of the user.',
-        examples=[uuid.uuid4()],
+        examples=[uuid4()],
     )
     """The unique identifier of the user."""
 
-    tenant_id: Optional[uuid.UUID] = Field(
+    tenant_id: Optional[UUID] = Field(
         default=None,
         title='Tenant ID',
         description='The unique identifier of the tenant associated with the user (if any).',
-        examples=[uuid.uuid4()],
+        examples=[uuid4()],
     )
     """The unique identifier of the tenant associated with the user (if any)."""
 
@@ -110,9 +118,9 @@ class UserSchema(BaseApiModel):
 
 class ClientSchema(BaseApiModel):
     """Represents an authentication client for API interactions."""
-    id: Optional[uuid.UUID] = None
-    tenant_id: Optional[uuid.UUID] = None
-    user_id: Optional[uuid.UUID] = None
+    id: Optional[UUID] = None
+    tenant_id: Optional[UUID] = None
+    user_id: Optional[UUID] = None
     name: str
     redirect_uri: Optional[str] = None
     scopes: Optional[list[str]] = None

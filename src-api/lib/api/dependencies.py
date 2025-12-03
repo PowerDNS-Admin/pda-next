@@ -25,13 +25,29 @@ async def get_principal(
         bearer_token: str = Depends(oauth2_scheme),
 ) -> Principal:
     from datetime import datetime, timezone
+    from typing import Optional
     from jose import JWTError, jwt
+    from loguru import logger
     from app import config
-    from lib.security import ALGORITHM
+    from lib.security import ALGORITHM, TENANT_HEADER_NAME
     from lib.settings import SettingsManager
     from lib.settings.definitions import sd
+    from lib.tenants import TenantManager
     from models.db.auth import Session, Client
     from models.enums import PrincipalTypeEnum
+
+    tenant_id: Optional[UUID] = None
+
+    # Attempt to identity the tenant by header
+    if TENANT_HEADER_NAME in request.headers:
+        try:
+            tenant_id = UUID(request.headers[TENANT_HEADER_NAME])
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid Tenant ID')
+
+    # Attempt to identify the tenant by hostname if not provided by request header
+    if not isinstance(tenant_id, UUID):
+        tenant_id = await TenantManager.get_tenant_id_by_fqdn(session, request.headers.get('host'))
 
     # Attempt OAuth Bearer Token Authentication
     if bearer_token:
@@ -53,7 +69,13 @@ async def get_principal(
         if datetime.now(timezone.utc) > datetime.fromtimestamp(payload['exp'], tz=timezone.utc):
             raise HTTPException(status.HTTP_401_UNAUTHORIZED, invalid_token_msg)
 
-        principal = Principal(id=client.id, type=PrincipalTypeEnum.client)
+        # Verify that the client matches the associated tenant of the request if any
+        if isinstance(client.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
+                or not isinstance(client.tenant_id, UUID) and isinstance(tenant_id, UUID) \
+                or client.tenant_id != tenant_id:
+            raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Wrong access configuration')
+
+        principal = Principal(id=client.id, tenant_id=tenant_id, type=PrincipalTypeEnum.client)
 
         if 'scope' in payload:
             principal.permissions = set(payload['scope'].split(' '))
@@ -68,15 +90,18 @@ async def get_principal(
         # TODO: Implement hijack detection failsafe and terminate session if token matches but remote IP doesn't
         db_session = await Session.get_by_token(session, session_token, request.client.host)
         if db_session:
+            # Verify that the associated user matches the tenant associated with the request if any
+            if isinstance(db_session.user.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
+                    or not isinstance(db_session.user.tenant_id, UUID) and isinstance(tenant_id, UUID) \
+                    or db_session.user.tenant_id != tenant_id:
+                raise HTTPException(status.HTTP_401_UNAUTHORIZED, 'Wrong access configuration')
+
             # Extend the session's expiration timestamp
             await Session.extend_session(session, db_session)
 
             # TODO: Load the user's permissions into the principal
 
-            return Principal(
-                id=db_session.user.id,
-                type=PrincipalTypeEnum.user,
-            )
+            return Principal(id=db_session.user.id, tenant_id=tenant_id, type=PrincipalTypeEnum.user)
 
     # If neither works, raise an exception
     raise HTTPException(
