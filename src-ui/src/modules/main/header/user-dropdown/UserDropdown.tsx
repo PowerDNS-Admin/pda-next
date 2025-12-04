@@ -1,9 +1,8 @@
 import {useState} from 'react';
-import {useNavigate, Link} from 'react-router-dom';
+import {useNavigate} from 'react-router-dom';
 import {useTranslation} from 'react-i18next';
 import {StyledBigUserImage, StyledSmallUserImage} from '@app/styles/common';
 import {
-    UserBody,
     UserFooter,
     UserHeader,
     UserMenuDropdown,
@@ -59,25 +58,12 @@ const UserDropdown = () => {
                                 <span>
                   {DateTime.fromRFC2822(
                       currentUser?.createdAt
-                  ).toFormat('dd LLL yyyy')}
+                  ).toFormat('yyyy LLL dd')}
                 </span>
                             )}
                         </small>
                     </p>
                 </UserHeader>
-                <UserBody>
-                    <div className="row">
-                        <div className="col-4 text-center">
-                            <Link to="/">{t('header.user.followers')}</Link>
-                        </div>
-                        <div className="col-4 text-center">
-                            <Link to="/">{t('header.user.sales')}</Link>
-                        </div>
-                        <div className="col-4 text-center">
-                            <Link to="/">{t('header.user.friends')}</Link>
-                        </div>
-                    </div>
-                </UserBody>
                 <UserFooter>
                     <button
                         type="button"

@@ -5,8 +5,9 @@ from fastapi import APIRouter, Request, Response, Depends, Form, HTTPException, 
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from lib.api.dependencies import get_db_session, get_session_user, authorize_oauth_client
-from models.api.auth import UserSchema
+from lib.api.dependencies import get_db_session, get_session_user, get_principal, authorize_oauth_client
+from models.api import ListParamsModel
+from models.api.auth import Principal, UserSchema, UsersSchema
 from routers.root import router_responses
 
 router = APIRouter(
@@ -229,3 +230,36 @@ async def logout(
     )
 
     return JSONResponse({'message': 'Successfully logged out.'})
+
+
+@router.post(
+    '/users',
+    response_model=UsersSchema,
+    summary='Get Users',
+    description='Get all users in the current context.',
+)
+async def list_users(
+        params: ListParamsModel,
+        session: AsyncSession = Depends(get_db_session),
+        principal: Principal = Depends(get_principal),
+) -> UsersSchema:
+    """Gets all users in the current context."""
+    from sqlalchemy import select
+    from lib.sql import SqlQueryBuilder
+    from models.db.auth import User
+
+    stmt = select(User)
+
+    if principal.tenant_id:
+        stmt = stmt.where(User.tenant_id == principal.tenant_id)
+
+    stmt = SqlQueryBuilder.apply_params(params, stmt, User)
+
+    db_users = (await session.execute(stmt)).scalars().all()
+
+    users = UsersSchema(
+        records=[UserSchema.model_validate(r) for r in db_users],
+        total=len(db_users),
+    )
+
+    return users

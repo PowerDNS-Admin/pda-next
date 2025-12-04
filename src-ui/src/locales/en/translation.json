@@ -77,9 +77,27 @@
     "label": {
       "dashboard": "Dashboard",
       "profile": "Profile",
-      "blank": "Blank",
-      "mainMenu": "Main Menu",
-      "subMenu": "Sub Menu"
+      "subMenu": "Sub Menu",
+      "settings": "System Settings",
+      "settingsStopgapDomains": "Stopgap Domains",
+      "settingsAuth": "Authentication",
+      "settingsTenants": "Tenants",
+      "permissions": "Permissions",
+      "permissionsRoles": "Roles",
+      "permissionsPolicies": "Policies",
+      "authentication": "Authentication",
+      "authenticationUsers": "Users",
+      "authenticationClients": "OAuth Clients",
+      "tenants": "Tenants",
+      "servers": "Servers",
+      "serversAuthoritative": "Authoritative Servers",
+      "serversRecursive": "Recursive Servers",
+      "keys": "Keys",
+      "keysCrypto": "Crypto Keys",
+      "keysTsig": "TSIG Keys",
+      "zones": "Zone Management",
+      "zonesAuthoritative": "Authoritative Zones",
+      "zonesRecursive": "Recursive Zones"
     }
   },
   "footer": {

@@ -55,17 +55,17 @@ class UserSchema(BaseApiModel):
     """Represents an authentication user for API interactions."""
 
     id: Optional[UUID] = Field(
-        default=None,
         title='User ID',
         description='The unique identifier of the user.',
+        default=None,
         examples=[uuid4()],
     )
     """The unique identifier of the user."""
 
     tenant_id: Optional[UUID] = Field(
-        default=None,
         title='Tenant ID',
         description='The unique identifier of the tenant associated with the user (if any).',
+        default=None,
         examples=[uuid4()],
     )
     """The unique identifier of the tenant associated with the user (if any)."""
@@ -78,9 +78,9 @@ class UserSchema(BaseApiModel):
     """The username of the user."""
 
     status: UserStatusEnum = Field(
-        default=UserStatusEnum.pending,
         title='Status',
         description='The status of the user.',
+        default=UserStatusEnum.pending,
         examples=[
             UserStatusEnum.pending.value,
             UserStatusEnum.invited.value,
@@ -92,25 +92,25 @@ class UserSchema(BaseApiModel):
     """The status of the user."""
 
     created_at: Optional[datetime] = Field(
-        default=datetime.now,
         title='Created At',
         description='The timestamp representing when the user was created.',
+        default=datetime.now,
         examples=[datetime.now()],
     )
     """The timestamp representing when the user was created."""
 
     updated_at: Optional[datetime] = Field(
-        default=datetime.now,
         title='Updated At',
         description='The timestamp representing when the user was last updated.',
+        default=datetime.now,
         examples=[datetime.now()],
     )
     """The timestamp representing when the user was last updated."""
 
     authenticated_at: Optional[datetime] = Field(
-        default=None,
         title='Authenticated At',
         description='The timestamp representing when the user was last authenticated.',
+        default=None,
         examples=[datetime.now()],
     )
     """The timestamp representing when the user was last authenticated."""
@@ -127,3 +127,27 @@ class ClientSchema(BaseApiModel):
     created_at: Optional[datetime] = None
     updated_at: Optional[datetime] = None
     expires_at: Optional[datetime] = None
+
+
+class UsersSchema(BaseApiModel):
+    """Represents a list of authentication users for API interactions."""
+
+    records: list[UserSchema] = Field(
+        title='Users',
+        description='A list of users found based on the current request criteria.',
+        default_factory=list,
+        # examples=[
+        #     UserSchema(id=uuid4(), username='user1', status=UserStatusEnum.active),
+        #     UserSchema(id=uuid4(), tenant_id=uuid4(), username='t1-user', status=UserStatusEnum.invited),
+        #     UserSchema(id=uuid4(), tenant_id=uuid4(), username='t2-user', status=UserStatusEnum.disabled),
+        # ],
+    )
+    """A list of users found based on the current request criteria."""
+
+    total: int = Field(
+        title='Total Users Found',
+        description='The total number of users found based on the current request criteria.',
+        default=0,
+        examples=[1234],
+    )
+    """The total number of users found based on the current request criteria."""

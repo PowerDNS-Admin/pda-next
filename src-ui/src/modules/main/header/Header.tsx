@@ -1,12 +1,10 @@
-import { ReactNode, useCallback } from 'react';
+import { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 import { useTranslation } from 'react-i18next';
 import {
   toggleControlSidebar,
   toggleSidebarMenu,
 } from '@app/store/reducers/ui';
-import MessagesDropdown from '@app/modules/main/header/messages-dropdown/MessagesDropdown';
-import NotificationsDropdown from '@app/modules/main/header/notifications-dropdown/NotificationsDropdown';
 import LanguagesDropdown from '@app/modules/main/header/languages-dropdown/LanguagesDropdown';
 import UserDropdown from '@app/modules/main/header/user-dropdown/UserDropdown';
 import { styled } from 'styled-components';
@@ -60,7 +58,7 @@ const Header = ({ containered, ...rest }: { containered?: boolean } & any) => {
             <Link to="/" className="brand-link" style={{ display: 'contents' }}>
               <StyledBrandImage
                 src="/img/logo.png"
-                alt="AdminLTE Logo"
+                alt="PowerDNS Admin Logo"
                 width={33}
                 height={33}
                 rounded
@@ -69,7 +67,7 @@ const Header = ({ containered, ...rest }: { containered?: boolean } & any) => {
                 className="brand-text font-weight-light"
                 style={{ color: 'rgba(0, 0, 0, 0.9)' }}
               >
-                AdminLTE 3
+                PowerDNS Admin
               </span>
             </Link>
 
@@ -104,14 +102,12 @@ const Header = ({ containered, ...rest }: { containered?: boolean } & any) => {
             </Link>
           </li>
           <li className="nav-item d-none d-sm-inline-block">
-            <Link to="/profile" className="nav-link">
+            <Link to="/user/profile" className="nav-link">
               Profile
             </Link>
           </li>
         </ul>
         <ul className="navbar-nav ml-auto">
-          <MessagesDropdown />
-          <NotificationsDropdown />
           <LanguagesDropdown />
           <UserDropdown />
           <li className="nav-item">

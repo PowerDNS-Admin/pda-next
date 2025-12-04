@@ -1,6 +1,41 @@
 from enum import Enum
 
 
+class SortDirectionEnum(str, Enum):
+    """Defines the supported sort directions."""
+    ASC = 'asc'
+    DESC = 'desc'
+
+
+class QueryLogicOperatorEnum(str, Enum):
+    """Defines the supported query logic operators for filtering."""
+    EQUALS = 'equals'
+    NOT_EQUALS = 'doesNotEqual'
+    LT = '<'
+    LTE = '<='
+    GT = '>'
+    GTE = '>='
+    IS = 'is'
+    IS_NOT = 'not'
+    CONTAINS = 'contains'
+    NOT_CONTAINS = 'doesNotContain'
+    STARTS_WITH = 'startsWith'
+    ENDS_WITH = 'endsWith'
+    BEFORE = 'before'
+    AFTER = 'after'
+    ON_OR_BEFORE = 'onOrBefore'
+    ON_OR_AFTER = 'onOrAfter'
+    IS_EMPTY = 'isEmpty'
+    IS_NOT_EMPTY = 'isNotEmpty'
+    IS_ANY_OF = 'isAnyOf'
+
+
+class FilterLogicOperatorEnum(str, Enum):
+    """Defines the supported logic operators for filtering."""
+    AND = 'and'
+    OR = 'or'
+
+
 class SettingTypeEnum(str, Enum):
     """Defines the supported data types for setting values."""
     str = 'str'

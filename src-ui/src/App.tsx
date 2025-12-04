@@ -15,6 +15,7 @@ import Dashboard from '@pages/Dashboard';
 import Blank from '@pages/Blank';
 import SubMenu from '@pages/SubMenu';
 import Profile from '@pages/profile/Profile';
+import AuthUsersView from '@pages/auth/Users';
 
 import PublicRoute from './routes/PublicRoute';
 import PrivateRoute from './routes/PrivateRoute';
@@ -85,6 +86,7 @@ const App = () => {
                 </Route>
                 <Route path="/" element={<PrivateRoute/>}>
                     <Route path="/" element={<Main/>}>
+                        <Route path="/auth/users" element={<AuthUsersView/>}/>
                         <Route path="/sub-menu-2" element={<Blank/>}/>
                         <Route path="/sub-menu-1" element={<SubMenu/>}/>
                         <Route path="/blank" element={<Blank/>}/>
