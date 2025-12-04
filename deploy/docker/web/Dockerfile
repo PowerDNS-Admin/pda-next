@@ -11,11 +11,11 @@ RUN apt update \
     && rm -f /etc/nginx/sites-enabled/default
 
 # Install NodeJS
-RUN curl -fsSL https://deb.nodesource.com/setup_21.x | bash - \
+RUN curl -fsSL https://deb.nodesource.com/setup_25.x | bash - \
     && apt install -y nodejs
 
 # Install NPM dependencies
-RUN npm -g install create-react-app@5.0.1 vite@5.4.14
+RUN npm -g install vite@7.1.11
 
 # Copy entrypoint script into image
 COPY ./deploy/docker/scripts/entrypoint-web.sh /srv/scripts/entrypoint.sh
