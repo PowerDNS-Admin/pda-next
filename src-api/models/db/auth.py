@@ -320,6 +320,9 @@ class Client(BaseSqlModel):
     scopes: Mapped[Optional[list[str]]] = mapped_column(JSONType, nullable=True)
     """A JSON-encoded list of scopes associated with the client."""
 
+    enabled: Mapped[bool] = mapped_column(Boolean, nullable=False, default=True)
+    """Whether the client is enabled."""
+
     created_at: Mapped[datetime] = mapped_column(
         DateTime, nullable=False, default=datetime.now, server_default=text('CURRENT_TIMESTAMP')
     )
