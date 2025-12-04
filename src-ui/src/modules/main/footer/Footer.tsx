@@ -25,11 +25,11 @@ const Footer = ({
         <strong>
           <span>Copyright © {DateTime.now().toFormat('y')} </span>
           <a
-            href="https://powerdnsadmin.com"
+            href="https://powerdnsadmin.org"
             target="_blank"
             rel="noopener noreferrer"
           >
-            powerdnsadmin.com
+            powerdnsadmin.org
           </a>
           <span>.</span>
         </strong>
