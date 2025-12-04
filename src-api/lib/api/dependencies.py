@@ -1,4 +1,4 @@
-from typing import AsyncGenerator, Callable
+from typing import AsyncGenerator, Callable, Optional
 from uuid import UUID
 
 from fastapi import Depends, Request, Form, HTTPException, status
@@ -10,7 +10,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from lib.api.oauth import oauth2_scheme, http_basic_scheme
 from lib.permissions.manager import PermissionsManager
 from lib.permissions.definitions import Permission
-from models.api.auth import Principal
+from models.api.auth import Principal, UserSchema
 from models.enums import ResourceTypeEnum
 
 
@@ -120,6 +120,53 @@ async def get_principal(
         status_code=status.HTTP_401_UNAUTHORIZED,
         detail='Not authenticated'
     )
+
+
+async def get_session_user(
+        request: Request,
+        session: AsyncSession = Depends(get_db_session),
+) -> Optional[UserSchema]:
+    from typing import Optional
+    from lib.security import TENANT_HEADER_NAME
+    from lib.settings import SettingsManager
+    from lib.settings.definitions import sd
+    from lib.tenants import TenantManager
+    from models.db.auth import Session
+
+    tenant_id: Optional[UUID] = None
+
+    # Attempt to identity the tenant by header
+    if TENANT_HEADER_NAME in request.headers:
+        try:
+            tenant_id = UUID(request.headers[TENANT_HEADER_NAME])
+        except ValueError:
+            raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail='Invalid Tenant ID')
+
+    # Attempt to identify the tenant by hostname if not provided by request header
+    if not isinstance(tenant_id, UUID):
+        tenant_id = await TenantManager.get_tenant_id_by_fqdn(session, request.headers.get('host'))
+
+    cookie_name = (await SettingsManager.get(session=session, key=sd.auth_session_cookie_name.key)).value
+
+    # Check for session token
+    session_token = request.cookies.get(cookie_name)
+
+    if not session_token:
+        return None
+
+    # TODO: Implement hijack detection failsafe and terminate session if token matches but remote IP doesn't
+    db_session = await Session.get_by_token(session, session_token, request.client.host)
+
+    if not db_session:
+        return None
+
+    # Verify that the associated user matches the tenant associated with the request if any
+    if isinstance(db_session.user.tenant_id, UUID) and not isinstance(tenant_id, UUID) \
+            or not isinstance(db_session.user.tenant_id, UUID) and isinstance(tenant_id, UUID) \
+            or db_session.user.tenant_id != tenant_id:
+        return None
+
+    return UserSchema.model_validate(db_session.user)
 
 
 def require_permission(

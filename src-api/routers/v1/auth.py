@@ -1,10 +1,11 @@
+from typing import Optional
 from uuid import UUID
 
 from fastapi import APIRouter, Request, Response, Depends, Form, HTTPException, status
 from fastapi.responses import JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from lib.api.dependencies import get_db_session, authorize_oauth_client
+from lib.api.dependencies import get_db_session, get_session_user, authorize_oauth_client
 from models.api.auth import UserSchema
 from routers.root import router_responses
 
@@ -111,6 +112,13 @@ async def token_refresh(
     }
 
 
+@router.get('/session', response_model=Optional[UserSchema])
+async def session(
+        user: UserSchema = Depends(get_session_user),
+) -> Optional[UserSchema]:
+    return user
+
+
 @router.post('/login', response_model=UserSchema)
 async def login(
         request: Request,
@@ -129,7 +137,6 @@ async def login(
     cookie_age = (await SettingsManager.get(session=session, key=sd.auth_session_expiration_age.key)).value
 
     # Delete any existing session cookie
-    # FIXME: The following cookie delete isn't functioning
     response.delete_cookie(
         key=cookie_name,
         path='/',
@@ -213,7 +220,6 @@ async def logout(
             await Session.destroy_session(session, db_session.id)
 
     # Delete any existing session cookie
-    # FIXME: The following cookie delete isn't functioning
     response.delete_cookie(
         key=cookie_name,
         path='/',
