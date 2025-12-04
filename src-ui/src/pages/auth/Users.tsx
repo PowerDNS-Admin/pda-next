@@ -3,7 +3,10 @@ import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import {GridDataSource, GridGetRowsParams, GridGetRowsResponse} from "@mui/x-data-grid";
 import {DataGridPro, GridColDef, GridActionsCellItem} from '@mui/x-data-grid-pro';
+import i18n from '@app/utils/i18n';
 import {ContentHeader} from '@components';
+import UserFormDialog from "@app/components/auth/UserFormDialog";
+
 
 const Dashboard = () => {
 
@@ -71,7 +74,10 @@ const Dashboard = () => {
     return (
         <Grid container>
             <Grid size={12}>
-                <ContentHeader title="Users Administration"/>
+                <ContentHeader title={i18n.t('pageTitles.auth.users')}/>
+            </Grid>
+            <Grid size={12} marginY={2}>
+                <UserFormDialog/>
             </Grid>
             <Grid size={12}>
                 <DataGridPro

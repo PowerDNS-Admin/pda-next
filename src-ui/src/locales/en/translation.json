@@ -110,6 +110,28 @@
       "following": "Following"
     }
   },
+  "pageTitles": {
+    "auth": {
+      "users": "Users Administration"
+    }
+  },
+  "dialogs": {
+    "auth": {
+      "userDialog": {
+        "createButton": "Create User",
+        "titleCreate": "Create New User",
+        "titleUpdate": "Update User",
+        "create": {
+          "title": "Create New User",
+          "headerText": "Please provide the following details to create a new user and then click Save once finished."
+        },
+        "update": {
+          "title": "Update User",
+          "headerText": "Please make the desired changes and click Save once finished."
+        }
+      }
+    }
+  },
   "measurement": {
     "quantityUnit": "{{quantity}} {{unit}}"
   }
