@@ -124,7 +124,7 @@ class UserAuthenticator(BaseSqlModel):
     user_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_auth_users.id'), nullable=False)
     """The unique identifier of the user that owns the authenticator."""
 
-    type_: Mapped[AuthenticatorTypeEnum] = mapped_column(String(20), nullable=False)
+    type: Mapped[AuthenticatorTypeEnum] = mapped_column(String(20), nullable=False)
     """The type of the authenticator."""
 
     name: Mapped[str] = mapped_column(String(100), nullable=False)

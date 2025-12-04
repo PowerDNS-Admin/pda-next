@@ -6,7 +6,7 @@ from pydantic import Field
 
 from lib.permissions.definitions import Permissions
 from models.api import BaseApiModel
-from models.enums import PrincipalTypeEnum, UserStatusEnum
+from models.enums import PrincipalTypeEnum, UserStatusEnum, AuthenticatorTypeEnum
 
 
 class Principal(BaseApiModel):
@@ -116,8 +116,169 @@ class UserSchema(BaseApiModel):
     """The timestamp representing when the user was last authenticated."""
 
 
+class UserAuthenticatorSchema(BaseApiModel):
+    """Represents an authentication user authenticator for API interactions."""
+
+    id: Optional[UUID] = Field(
+        title='Session ID',
+        description='The unique identifier of the authenticator.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the session."""
+
+    tenant_id: Optional[UUID] = Field(
+        title='Tenant ID',
+        description='The unique identifier of the tenant associated with the authenticator (if any).',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the tenant associated with the authenticator (if any)."""
+
+    user_id: UUID = Field(
+        title='User ID',
+        description='The unique identifier of the user associated with the authenticator.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the user associated with the authenticator."""
+
+    type: AuthenticatorTypeEnum = Field(
+        title='Authenticator Type',
+        description='The type of the authenticator.',
+        examples=[
+            AuthenticatorTypeEnum.WEBAUTHN,
+            AuthenticatorTypeEnum.TOTP,
+            AuthenticatorTypeEnum.SMS,
+            AuthenticatorTypeEnum.EMAIL,
+        ],
+    )
+    """The type of the authenticator."""
+
+    name: str = Field(
+        title='Authenticator Name',
+        description='The name of the authenticator.',
+        examples=[
+            AuthenticatorTypeEnum.WEBAUTHN,
+            AuthenticatorTypeEnum.TOTP,
+            AuthenticatorTypeEnum.SMS,
+            AuthenticatorTypeEnum.EMAIL,
+        ],
+    )
+    """The name of the authenticator."""
+
+    data: str = Field(
+        title='Secret Data',
+        description='The secret data of the authenticator.',
+    )
+    """The secret data of the authenticator."""
+
+    enabled: bool = Field(
+        title='Authenticator Enabled',
+        description='Whether the authenticator is enabled.',
+        default=True,
+    )
+    """Whether the authenticator is enabled."""
+
+    created_at: Optional[datetime] = Field(
+        title='Created At',
+        description='The timestamp representing when the authenticator was created.',
+        default=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the authenticator was created."""
+
+    updated_at: Optional[datetime] = Field(
+        title='Updated At',
+        description='The timestamp representing when the authenticator was last updated.',
+        default=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the authenticator was last updated."""
+
+    used_at: Optional[datetime] = Field(
+        title='Last Used At',
+        description='The timestamp representing when the authenticator was last used.',
+        default=None,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the authenticator was last used."""
+
+
+class SessionSchema(BaseApiModel):
+    """Represents an authentication session for API interactions."""
+
+    id: Optional[UUID] = Field(
+        title='Session ID',
+        description='The unique identifier of the session.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the session."""
+
+    tenant_id: Optional[UUID] = Field(
+        title='Tenant ID',
+        description='The unique identifier of the tenant associated with the user (if any).',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the tenant associated with the user (if any)."""
+
+    user_id: UUID = Field(
+        title='User ID',
+        description='The unique identifier of the user associated with the session.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the user associated with the session."""
+
+    remote_ip: str = Field(
+        title='Client IP',
+        description='The IPv4 or IPv6 address of the session client.',
+        examples=['1.1.1.1', '2001:0db8:85a3:0000:0000:8a2e:0370:7334'],
+    )
+    """The IPv4 or IPv6 address of the session client."""
+
+    token: str = Field(
+        title='Session Token',
+        description='The opaque identifier token for session persistence on clients.',
+    )
+    """The opaque identifier token for session persistence on clients."""
+
+    data: Optional[dict] = Field(
+        title='Session Data',
+        description='The JSON-encoded data of the session.',
+    )
+    """The JSON-encoded data of the session."""
+
+    created_at: Optional[datetime] = Field(
+        title='Created At',
+        description='The timestamp representing when the session was created.',
+        default=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the session was created."""
+
+    updated_at: Optional[datetime] = Field(
+        title='Updated At',
+        description='The timestamp representing when the session was last updated.',
+        default=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the session was last updated."""
+
+    expires_at: Optional[datetime] = Field(
+        title='Expires At',
+        description='The timestamp representing when the session expires.',
+        default=None,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the session expires."""
+
+
 class ClientSchema(BaseApiModel):
     """Represents an authentication client for API interactions."""
+
     id: Optional[UUID] = None
     tenant_id: Optional[UUID] = None
     user_id: Optional[UUID] = None
@@ -136,11 +297,6 @@ class UsersSchema(BaseApiModel):
         title='Users',
         description='A list of users found based on the current request criteria.',
         default_factory=list,
-        # examples=[
-        #     UserSchema(id=uuid4(), username='user1', status=UserStatusEnum.active),
-        #     UserSchema(id=uuid4(), tenant_id=uuid4(), username='t1-user', status=UserStatusEnum.invited),
-        #     UserSchema(id=uuid4(), tenant_id=uuid4(), username='t2-user', status=UserStatusEnum.disabled),
-        # ],
     )
     """A list of users found based on the current request criteria."""
 
@@ -151,3 +307,41 @@ class UsersSchema(BaseApiModel):
         examples=[1234],
     )
     """The total number of users found based on the current request criteria."""
+
+
+class UserAuthenticatorsSchema(BaseApiModel):
+    """Represents a list of authentication user authenticators for API interactions."""
+
+    records: list[UserAuthenticatorSchema] = Field(
+        title='Authenticators',
+        description='A list of user authenticators found based on the current request criteria.',
+        default_factory=list,
+    )
+    """A list of user authenticators found based on the current request criteria."""
+
+    total: int = Field(
+        title='Total User Authenticators Found',
+        description='The total number of user authenticators found based on the current request criteria.',
+        default=0,
+        examples=[1234],
+    )
+    """The total number of user authenticators found based on the current request criteria."""
+
+
+class SessionsSchema(BaseApiModel):
+    """Represents a list of authentication sessions for API interactions."""
+
+    records: list[SessionSchema] = Field(
+        title='Sessions',
+        description='A list of sessions found based on the current request criteria.',
+        default_factory=list,
+    )
+    """A list of sessions found based on the current request criteria."""
+
+    total: int = Field(
+        title='Total Sessions Found',
+        description='The total number of sessions found based on the current request criteria.',
+        default=0,
+        examples=[1234],
+    )
+    """The total number of sessions found based on the current request criteria."""
