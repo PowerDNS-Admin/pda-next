@@ -6,7 +6,37 @@ from pydantic import Field, field_validator
 
 from lib.permissions.definitions import Permissions
 from models.api import BaseApiModel
+from models.enums import PrincipalTypeEnum
 
+
+class RolePrincipalInSchema(BaseApiModel):
+    """Provides an API input model for creating ACL role principals."""
+
+    tenant_id: Optional[UUID] = Field(
+        title='Tenant ID',
+        description='The unique identifier of the tenant associated with the principal if any.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the tenant associated with the principal if any."""
+
+    principal_type: PrincipalTypeEnum = Field(
+        title='Principal Type',
+        description='The type of the associated principal.',
+        examples=[
+            PrincipalTypeEnum.user,
+            PrincipalTypeEnum.client,
+        ],
+    )
+    """The type of the associated principal."""
+
+    principal_id: UUID = Field(
+        title='Principal ID',
+        description='The unique identifier of the principal associated with the role.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the principal associated with the role."""
 
 
 class RoleInSchema(BaseApiModel):
@@ -51,6 +81,20 @@ class RoleInSchema(BaseApiModel):
     )
     """The permissions associated with the role."""
 
+    principals: Optional[list[RolePrincipalInSchema]] = Field(
+        title='Role Principals',
+        description='The principals associated with the role.',
+        default=None,
+        examples=[[
+            RolePrincipalInSchema(principal_type=PrincipalTypeEnum.user, principal_id=uuid4()),
+            RolePrincipalInSchema(principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+            RolePrincipalInSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+            RolePrincipalInSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.user, principal_id=uuid4()),
+            RolePrincipalInSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+        ]],
+    )
+    """The principals associated with the role."""
+
     @field_validator('permissions')
     @classmethod
     def permissions_validator(cls, v: list[str]) -> list[str]:
@@ -88,6 +132,52 @@ class RolePermissionOutSchema(BaseApiModel):
         examples=[datetime.now()],
     )
     """The timestamp representing when the association was created."""
+
+
+class RolePrincipalOutSchema(BaseApiModel):
+    """Provides an API response model for representing ACL role principals."""
+
+    tenant_id: Optional[UUID] = Field(
+        title='Tenant ID',
+        description='The unique identifier of the tenant associated with the principal if any.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the tenant associated with the principal if any."""
+
+    principal_type: PrincipalTypeEnum = Field(
+        title='Principal Type',
+        description='The type of the associated principal.',
+        examples=[
+            PrincipalTypeEnum.user,
+            PrincipalTypeEnum.client,
+        ],
+    )
+    """The type of the associated principal."""
+
+    principal_id: UUID = Field(
+        title='Principal ID',
+        description='The unique identifier of the principal associated with the role.',
+        default=None,
+        examples=[uuid4()],
+    )
+    """The unique identifier of the principal associated with the role."""
+
+    created_at: datetime = Field(
+        title='Created At',
+        description='The timestamp representing when the association was created.',
+        default_factory=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the association was created."""
+
+    updated_at: datetime = Field(
+        title='Updated At',
+        description='The timestamp representing when the association was last updated.',
+        default_factory=datetime.now,
+        examples=[datetime.now()],
+    )
+    """The timestamp representing when the association was last updated."""
 
 
 class RoleOutSchema(BaseApiModel):
@@ -148,13 +238,27 @@ class RoleOutSchema(BaseApiModel):
         title='Role Permissions',
         description='The permissions associated with the role.',
         default_factory=list[RolePermissionOutSchema],
-        examples=[
+        examples=[[
             RolePermissionOutSchema(permission=Permissions.auth_users.uri),
             RolePermissionOutSchema(permission=Permissions.auth_clients_read.uri),
             RolePermissionOutSchema(permission=Permissions.zones_azone_update.uri),
-        ],
+        ]],
     )
     """The permissions associated with the role."""
+
+    principals: Optional[list[RolePrincipalOutSchema]] = Field(
+        title='Role Principals',
+        description='The principals associated with the role.',
+        default_factory=list[RolePrincipalOutSchema],
+        examples=[[
+            RolePrincipalOutSchema(principal_type=PrincipalTypeEnum.user, principal_id=uuid4()),
+            RolePrincipalOutSchema(principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+            RolePrincipalOutSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+            RolePrincipalOutSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.user, principal_id=uuid4()),
+            RolePrincipalOutSchema(tenant_id=uuid4(), principal_type=PrincipalTypeEnum.client, principal_id=uuid4()),
+        ]],
+    )
+    """The principals associated with the role."""
 
 
 class RolesSchema(BaseApiModel):

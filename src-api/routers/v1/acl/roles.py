@@ -7,6 +7,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from lib.api.dependencies import get_db_session, get_principal
 from models.api import Principal, ListParamsModel
 from models.api.acl.roles import RolesSchema, RoleOutSchema, RoleInSchema
+from models.db import RolePrincipal
 from routers.v1.acl import router
 
 
@@ -29,7 +30,7 @@ async def record_list(
     from models.db.acl import Role
 
     # Build a statement to retrieve the relevant records
-    stmt = select(Role).options(selectinload(Role.permissions))
+    stmt = select(Role).options(selectinload(Role.permissions), selectinload(Role.principals))
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -64,7 +65,7 @@ async def record_create(
         principal: Principal = Depends(get_principal),
 ):
     """Create ACL role"""
-    from models.db.acl import Role, RolePermission
+    from models.db.acl import Role, RolePermission, RolePrincipal
 
     # Create the record
     record = Role(
@@ -77,6 +78,16 @@ async def record_create(
         record.permissions.append(RolePermission(
             permission=permission,
         ))
+
+    # Add the given principals to the role if any
+    if role.principals:
+        for principal in role.principals:
+            # XXX: Consider validating the principal type / id combination to ensure valid data
+            record.principals.append(RolePrincipal(
+                tenant_id=principal.tenant_id if principal.tenant_id else role.tenant_id,
+                principal_type=principal.principal_type,
+                principal_id=principal.principal_id,
+            ))
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -112,7 +123,9 @@ async def record_read(
     from models.db.acl import Role
 
     # Build a statement to retrieve the record
-    stmt = select(Role).options(selectinload(Role.permissions)).where(Role.id == role_id)
+    stmt = (select(Role)
+            .options(selectinload(Role.permissions), selectinload(Role.principals))
+            .where(Role.id == role_id))
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -149,7 +162,9 @@ async def record_update(
     from models.db.acl import Role, RolePermission
 
     # Build a statement to retrieve the record
-    stmt = select(Role).options(selectinload(Role.permissions)).where(Role.id == role_id)
+    stmt = (select(Role)
+            .options(selectinload(Role.permissions), selectinload(Role.principals))
+            .where(Role.id == role_id))
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -173,13 +188,34 @@ async def record_update(
         if permission.permission not in role.permissions:
             record.permissions.remove(permission)
 
-    # Add new permissions that don't exist already
+    # Add new permissions that don't already exist
     for permission in role.permissions:
         if permission in existing_permissions:
             continue
         record.permissions.append(RolePermission(
             permission=permission,
         ))
+
+    # Update associated principals if defined
+    if isinstance(role.principals, list):
+        existing_principals = set([r.principal_id for r in record.principals])
+        updated_principals = set([r.principal_id for r in role.principals])
+
+        # Remove existing principals that weren't retained
+        for principal in list(record.principals):
+            if principal.principal_id not in updated_principals:
+                record.principals.remove(principal)
+
+        # Add new principals that don't already exist
+        for principal in role.principals:
+            if principal.principal_id in existing_principals:
+                continue
+            # XXX: Consider validating the principal type / id combination to ensure valid data
+            record.principals.append(RolePrincipal(
+                tenant_id=principal.tenant_id if principal.tenant_id else role.tenant_id,
+                principal_type=principal.principal_type,
+                principal_id=principal.principal_id,
+            ))
 
     # Commit the changes to the database
     session.add(record)
