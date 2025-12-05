@@ -5,7 +5,7 @@ from models.api import BaseApiModel
 
 
 class PermissionsMetadataSchema(BaseApiModel):
-    """Provides a response model for API requests for ACL permissions metadata."""
+    """Provides an API response model for retrieving ACL permissions metadata."""
 
     permissions: list[Permission] = Field(
         title='Permissions',

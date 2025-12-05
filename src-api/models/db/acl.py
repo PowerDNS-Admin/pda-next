@@ -20,7 +20,9 @@ class Role(BaseSqlModel):
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     """The unique identifier of the role."""
 
-    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(
+        'pda_tenants.id', onupdate='CASCADE', ondelete='CASCADE'
+    ), nullable=True)
     """The unique identifier of the associated tenant if any."""
 
     slug: Mapped[str] = mapped_column(String(50), nullable=False)
@@ -40,13 +42,13 @@ class Role(BaseSqlModel):
     )
     """The timestamp representing when the role was last updated."""
 
-    tenant = relationship('Tenant', back_populates='acl_roles')
+    tenant = relationship('Tenant', back_populates='acl_roles', cascade='expunge, delete')
     """The tenant associated with the role."""
 
-    permissions = relationship('RolePermission', back_populates='role')
+    permissions = relationship('RolePermission', back_populates='role', cascade='all, delete, delete-orphan')
     """A list of permissions associated with the role."""
 
-    principals = relationship('RolePrincipal', back_populates='role')
+    principals = relationship('RolePrincipal', back_populates='role', cascade='all, delete, delete-orphan')
     """A list of principals associated with the role."""
 
 
@@ -56,7 +58,9 @@ class RolePermission(BaseSqlModel):
     __tablename__ = 'pda_acl_role_permissions'
     """Defines the database table name."""
 
-    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
+    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(
+        'pda_acl_roles.id', onupdate='CASCADE', ondelete='CASCADE'
+    ), nullable=False)
     """The unique identifier of the associated role."""
 
     permission: Mapped[str] = mapped_column(TEXT, nullable=False)
@@ -67,7 +71,7 @@ class RolePermission(BaseSqlModel):
     )
     """The timestamp representing when the role permission was created."""
 
-    role = relationship('Role', back_populates='permissions')
+    role = relationship('Role', back_populates='permissions', cascade='expunge, delete')
     """The role associated with the permission."""
 
     __mapper_args__ = {
@@ -81,10 +85,14 @@ class RolePrincipal(BaseSqlModel):
     __tablename__ = 'pda_acl_role_principals'
     """Defines the database table name."""
 
-    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_acl_roles.id'), nullable=False)
+    role_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(
+        'pda_acl_roles.id', onupdate='CASCADE', ondelete='CASCADE'
+    ), nullable=False)
     """The unique identifier of the associated role."""
 
-    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey('pda_tenants.id'), nullable=True)
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(
+        'pda_tenants.id', onupdate='CASCADE', ondelete='CASCADE'
+    ), nullable=True)
     """The unique identifier of the associated tenant if any."""
 
     principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
@@ -104,10 +112,10 @@ class RolePrincipal(BaseSqlModel):
     )
     """The timestamp representing when the principal relationship was last updated."""
 
-    role = relationship('Role', back_populates='principals')
+    role = relationship('Role', back_populates='principals', cascade='expunge, delete')
     """The role associated with the principal relationship."""
 
-    tenant = relationship('Tenant', back_populates='acl_role_principals')
+    tenant = relationship('Tenant', back_populates='acl_role_principals', cascade='expunge, delete')
     """The tenant associated with the principal relationship."""
 
     __mapper_args__ = {

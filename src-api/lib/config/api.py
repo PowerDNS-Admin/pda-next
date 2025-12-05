@@ -37,7 +37,7 @@ class ApiConfig(BaseConfig):
                     ),
                     self.ApiMetadataTagConfig(
                         name='acl',
-                        description='Provides functionality for managing permissions for users and OAuth clients.',
+                        description='Provides functionality for managing ACL roles and policies.',
                     ),
                     self.ApiMetadataTagConfig(
                         name='settings',

@@ -42,56 +42,57 @@ class Tenant(BaseSqlModel):
     )
     """The timestamp representing when the tenant was last updated."""
 
-    stopgap_domain = relationship('StopgapDomain', back_populates='tenants')
+    stopgap_domain = relationship('StopgapDomain', back_populates='tenants', cascade='expunge, delete')
     """The stopgap domain associated with the tenant."""
 
-    settings = relationship('Setting', back_populates='tenant')
+    settings = relationship('Setting', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of settings associated with the tenant."""
 
-    auth_users = relationship('User', back_populates='tenant')
+    auth_users = relationship('User', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of auth users associated with the tenant."""
 
-    auth_user_authenticators = relationship('UserAuthenticator', back_populates='tenant')
+    auth_user_authenticators = relationship('UserAuthenticator', back_populates='tenant',
+                                            cascade='all, delete, delete-orphan')
     """A list of auth user authenticators associated with the tenant."""
 
-    auth_sessions = relationship('Session', back_populates='tenant')
+    auth_sessions = relationship('Session', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of auth sessions associated with the tenant."""
 
-    auth_clients = relationship('Client', back_populates='tenant')
+    auth_clients = relationship('Client', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of auth clients associated with the tenant."""
 
-    auth_refresh_tokens = relationship('RefreshToken', back_populates='tenant')
+    auth_refresh_tokens = relationship('RefreshToken', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of auth refresh tokens associated with the tenant."""
 
-    acl_roles = relationship('Role', back_populates='tenant')
+    acl_roles = relationship('Role', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of ACL roles associated with the tenant."""
 
-    acl_role_principals = relationship('RolePrincipal', back_populates='tenant')
+    acl_role_principals = relationship('RolePrincipal', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of ACL role principals associated with the tenant."""
 
-    servers = relationship('Server', back_populates='tenant')
+    servers = relationship('Server', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of servers associated with the tenant."""
 
-    auto_primaries = relationship('ServerAutoPrimary', back_populates='tenant')
+    auto_primaries = relationship('ServerAutoPrimary', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of server auto primary registrations associated with the tenant."""
 
-    views = relationship('View', back_populates='tenant')
+    views = relationship('View', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of views associated with the tenant."""
 
-    view_zones = relationship('ViewZone', back_populates='tenant')
+    view_zones = relationship('ViewZone', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of view zones associated with the tenant."""
 
-    view_networks = relationship('ViewNetwork', back_populates='tenant')
+    view_networks = relationship('ViewNetwork', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of view networks associated with the tenant."""
 
-    crypto_keys = relationship('CryptoKey', back_populates='tenant')
+    crypto_keys = relationship('CryptoKey', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of cryptographic keys associated with the tenant."""
 
-    tsig_keys = relationship('TsigKey', back_populates='tenant')
+    tsig_keys = relationship('TsigKey', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of TSIG keys associated with the tenant."""
 
-    azones = relationship('AZone', back_populates='tenant')
+    azones = relationship('AZone', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of authoritative zones associated with the tenant."""
 
-    rzones = relationship('RZone', back_populates='tenant')
+    rzones = relationship('RZone', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of recursive zones associated with the tenant."""
