@@ -20,25 +20,30 @@ export const MENU: IMenuItem[] = [
         path: '/',
     },
     {
-        name: i18n.t('menusidebar.label.settings'),
+        name: i18n.t('menusidebar.system.label'),
         icon: 'far fa-caret-square-down nav-icon',
         children: [
             {
-                name: i18n.t('menusidebar.label.settingsStopgapDomains'),
+                name: i18n.t('menusidebar.system.stopgapDomains'),
                 icon: 'fas fa-arrow-right nav-icon',
-                path: '/settings/stopgap-domains',
+                path: '/system/stopgap-domains',
             },
             {
-                name: i18n.t('menusidebar.label.settingsAuth'),
+                name: i18n.t('menusidebar.system.timezones'),
                 icon: 'fas fa-arrow-right nav-icon',
-                path: '/settings/auth',
+                path: '/system/timezones',
             },
             {
                 name: i18n.t('menusidebar.label.settingsTenants'),
                 icon: 'fas fa-arrow-right nav-icon',
-                path: '/settings/tenants',
+                path: '/system/tenants',
             },
         ],
+    },
+    {
+        name: i18n.t('menusidebar.settings.label'),
+        icon: 'fas fa-arrow-right nav-icon',
+        path: '/settings',
     },
     {
         name: i18n.t('menusidebar.label.authentication'),
@@ -49,7 +54,11 @@ export const MENU: IMenuItem[] = [
                 icon: 'fas fa-arrow-right nav-icon',
                 path: '/auth/users',
             },
-
+            {
+                name: i18n.t('menusidebar.label.authenticationSessions'),
+                icon: 'fas fa-arrow-right nav-icon',
+                path: '/auth/sessions',
+            },
             {
                 name: i18n.t('menusidebar.label.authenticationClients'),
                 icon: 'fas fa-arrow-right nav-icon',
@@ -73,11 +82,6 @@ export const MENU: IMenuItem[] = [
                 path: '/permissions/policies',
             },
         ],
-    },
-    {
-        name: i18n.t('menusidebar.label.tenants'),
-        icon: 'fas fa-arrow-right nav-icon',
-        path: '/tenants',
     },
     {
         name: i18n.t('menusidebar.label.servers'),

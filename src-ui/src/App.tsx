@@ -12,8 +12,6 @@ import {setWindowSize} from '@app/store/reducers/ui';
 import ReactGA from 'react-ga4';
 
 import Dashboard from '@pages/Dashboard';
-import Blank from '@pages/Blank';
-import SubMenu from '@pages/SubMenu';
 import Profile from '@pages/profile/Profile';
 import AuthUsersView from '@pages/auth/Users';
 
@@ -87,9 +85,6 @@ const App = () => {
                 <Route path="/" element={<PrivateRoute/>}>
                     <Route path="/" element={<Main/>}>
                         <Route path="/auth/users" element={<AuthUsersView/>}/>
-                        <Route path="/sub-menu-2" element={<Blank/>}/>
-                        <Route path="/sub-menu-1" element={<SubMenu/>}/>
-                        <Route path="/blank" element={<Blank/>}/>
                         <Route path="/user/profile" element={<Profile/>}/>
                         <Route path="/" element={<Dashboard/>}/>
                     </Route>

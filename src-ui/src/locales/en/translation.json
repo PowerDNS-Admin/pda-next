@@ -46,7 +46,9 @@
   "header": {
     "label": {
       "home": "Home",
-      "contact": "Contact"
+      "contact": "Contact",
+      "userProfile": "User Profile",
+      "tenantProfile": "Tenant Profile"
     },
     "language": {
       "turkish": "Turkish",
@@ -74,6 +76,14 @@
     }
   },
   "menusidebar": {
+    "system": {
+      "label": "System Admin",
+      "stopgapDomains": "Stopgap Domains",
+      "timezones": "Timezones"
+    },
+    "settings": {
+      "label": "Settings"
+    },
     "label": {
       "dashboard": "Dashboard",
       "profile": "Profile",
@@ -87,6 +97,7 @@
       "permissionsPolicies": "Policies",
       "authentication": "Authentication",
       "authenticationUsers": "Users",
+      "authenticationSessions": "Sessions",
       "authenticationClients": "OAuth Clients",
       "tenants": "Tenants",
       "servers": "Servers",
@@ -112,15 +123,15 @@
   },
   "pageTitles": {
     "auth": {
-      "users": "Users Administration"
+      "users": "Users",
+      "sessions": "User Sessions",
+      "clients": "OAuth Clients"
     }
   },
   "dialogs": {
     "auth": {
       "userDialog": {
         "createButton": "Create User",
-        "titleCreate": "Create New User",
-        "titleUpdate": "Update User",
         "create": {
           "title": "Create New User",
           "headerText": "Please provide the following details to create a new user and then click Save once finished."

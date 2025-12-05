@@ -7,8 +7,11 @@ import i18n from '@app/utils/i18n';
 import {ContentHeader} from '@components';
 import UserFormDialog from "@app/components/auth/UserFormDialog";
 
+interface ViewProps {
+    multiTenant?: boolean;
+}
 
-const Dashboard = () => {
+const View = ({multiTenant = true}: ViewProps) => {
 
     const handleEdit = (id: string) => {
         console.log('Edit row with id:', id);
@@ -24,7 +27,7 @@ const Dashboard = () => {
 
     const columns: readonly GridColDef<any>[] = [
         {field: 'id', headerName: 'User ID', width: 300},
-        {field: 'tenant_id', headerName: 'Tenant ID', width: 300},
+        ...(multiTenant ? [{field: 'tenant_id', headerName: 'Tenant ID', width: 300}] : []),
         {field: 'username', headerName: 'Username', width: 300},
         {field: 'status', headerName: 'Status', width: 100},
         {field: 'created_at', headerName: 'Created', width: 175},
@@ -101,4 +104,4 @@ const Dashboard = () => {
     );
 };
 
-export default Dashboard;
+export default View;
