@@ -2,7 +2,7 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import Field
+from pydantic import Field, field_validator
 
 from lib.permissions.definitions import Permissions
 from models.api import BaseApiModel
@@ -71,6 +71,17 @@ class PolicyInSchema(BaseApiModel):
         ],
     )
     """The permission associated with the policy."""
+
+    @field_validator('permission')
+    @classmethod
+    def permission_validator(cls, v: str) -> str:
+        """Validates that the given permission exists."""
+        permissions = Permissions.scopes
+
+        if v not in permissions:
+            raise ValueError(f'Invalid permission "{v}"')
+
+        return v
 
 
 class PolicyOutSchema(BaseApiModel):

@@ -97,7 +97,7 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     from datetime import datetime, timedelta, timezone
     from uuid import uuid4
     from lib.permissions.definitions import Permissions as p
-    from models.db.acl import Role, RolePrincipal, RolePermission
+    from models.db.acl import Role, RolePrincipal
     from models.db.auth import User, Client
     from models.db.system import StopgapDomain
     from models.db.tenants import Tenant
@@ -160,24 +160,11 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
     sl_role = Role(
         id=uuid4(),
         slug='system-admin',
+        name='System Admin',
         description='A role for system administrators with full access.',
     )
 
     session.add(sl_role)
-
-    sl_role_permission = RolePermission(
-        role_id=sl_role.id,
-        permission=p.auth_users.uri,
-    )
-
-    session.add(sl_role_permission)
-
-    sl_role_permission = RolePermission(
-        role_id=sl_role.id,
-        permission=p.tenants_read.uri,
-    )
-
-    session.add(sl_role_permission)
 
     sl_role_principal = RolePrincipal(
         role_id=sl_role.id,
@@ -272,24 +259,11 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         id=uuid4(),
         tenant_id=tenant1.id,
         slug='tenant-admin',
+        name='Tenant Admin',
         description='A role for tenant system administrators with full access.',
     )
 
     session.add(tl_role1)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role1.id,
-        permission=p.auth_users.uri,
-    )
-
-    session.add(tl_role_permission)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role1.id,
-        permission=p.tenants.uri,
-    )
-
-    session.add(tl_role_permission)
 
     tl_role_principal = RolePrincipal(
         role_id=tl_role1.id,
@@ -304,24 +278,11 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         id=uuid4(),
         tenant_id=tenant1.id,
         slug='zone-admin',
+        name='Zone Admin',
         description='A role for tenant zone administrators with full access.',
     )
 
     session.add(tl_role1)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role1.id,
-        permission=p.zones_azone_read.uri,
-    )
-
-    session.add(tl_role_permission)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role1.id,
-        permission=p.zones_rzone_read.uri,
-    )
-
-    session.add(tl_role_permission)
 
     tl_role_principal = RolePrincipal(
         role_id=tl_role1.id,
@@ -336,24 +297,11 @@ async def test_data(session: AsyncSession = Depends(get_db_session)) -> JSONResp
         id=uuid4(),
         tenant_id=tenant2.id,
         slug='tenant-admin',
+        name='Tenant Admin',
         description='A role for tenant system administrators with full access.',
     )
 
     session.add(tl_role2)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role2.id,
-        permission=p.auth_users.uri,
-    )
-
-    session.add(tl_role_permission)
-
-    tl_role_permission = RolePermission(
-        role_id=tl_role2.id,
-        permission=p.tenants_read.uri,
-    )
-
-    session.add(tl_role_permission)
 
     tl_role_principal = RolePrincipal(
         role_id=tl_role2.id,
@@ -416,12 +364,12 @@ async def auth_principal(principal: Principal = Depends(get_principal)) -> Princ
     description='This provides a testing circuit for the permissions system.',
 )
 async def acl_test(
-        zone_id: str,
+        zone_id: UUID,
         principal: Principal = Depends(get_principal),
         _=Depends(require_permission(
+            p.zones_azone_read,
             ResourceTypeEnum.zones_azone,
             'zone_id',
-            p.zones_azone_read,
         )),
 ) -> Principal:
     return principal

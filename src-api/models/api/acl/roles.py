@@ -2,9 +2,8 @@ from datetime import datetime
 from typing import Optional
 from uuid import UUID, uuid4
 
-from pydantic import Field, field_validator
+from pydantic import Field
 
-from lib.permissions.definitions import Permissions
 from models.api import BaseApiModel
 from models.enums import PrincipalTypeEnum
 
@@ -69,18 +68,6 @@ class RoleInSchema(BaseApiModel):
     )
     """The description of the role."""
 
-    permissions: set[str] = Field(
-        title='Role Permissions',
-        description='The permissions associated with the role.',
-        default_factory=set[str],
-        examples=[[
-            Permissions.auth_users.uri,
-            Permissions.auth_clients_read.uri,
-            Permissions.zones_azone_update.uri,
-        ]],
-    )
-    """The permissions associated with the role."""
-
     principals: Optional[list[RolePrincipalInSchema]] = Field(
         title='Role Principals',
         description='The principals associated with the role.',
@@ -94,44 +81,6 @@ class RoleInSchema(BaseApiModel):
         ]],
     )
     """The principals associated with the role."""
-
-    @field_validator('permissions')
-    @classmethod
-    def permissions_validator(cls, v: list[str]) -> list[str]:
-        """Validates that the given permissions exist."""
-        if not v:
-            raise ValueError('At least one permission is required for a role')
-
-        permissions = Permissions.scopes
-
-        for permission in v:
-            if permission not in permissions:
-                raise ValueError(f'Invalid permission "{permission}"')
-
-        return v
-
-
-class RolePermissionOutSchema(BaseApiModel):
-    """Provides an API response model for representing ACL role permissions."""
-
-    permission: str = Field(
-        title='Permission URI',
-        description='The URI of the associated permission.',
-        examples=[
-            Permissions.auth_users.uri,
-            Permissions.auth_clients_read.uri,
-            Permissions.zones_azone_update.uri,
-        ],
-    )
-    """The URI of the associated permission."""
-
-    created_at: datetime = Field(
-        title='Created At',
-        description='The timestamp representing when the association was created.',
-        default_factory=datetime.now,
-        examples=[datetime.now()],
-    )
-    """The timestamp representing when the association was created."""
 
 
 class RolePrincipalOutSchema(BaseApiModel):
@@ -225,18 +174,6 @@ class RoleOutSchema(BaseApiModel):
         examples=[datetime.now()],
     )
     """The timestamp representing when the role was last updated."""
-
-    permissions: Optional[list[RolePermissionOutSchema]] = Field(
-        title='Role Permissions',
-        description='The permissions associated with the role.',
-        default_factory=list[RolePermissionOutSchema],
-        examples=[[
-            RolePermissionOutSchema(permission=Permissions.auth_users.uri),
-            RolePermissionOutSchema(permission=Permissions.auth_clients_read.uri),
-            RolePermissionOutSchema(permission=Permissions.zones_azone_update.uri),
-        ]],
-    )
-    """The permissions associated with the role."""
 
     principals: Optional[list[RolePrincipalOutSchema]] = Field(
         title='Role Principals',

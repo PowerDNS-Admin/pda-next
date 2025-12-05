@@ -170,23 +170,44 @@ async def get_session_user(
 
 
 def require_permission(
-        resource_type: ResourceTypeEnum,
-        resource_id_param_name: str,
         permissions: Permission | list[Permission],
+        resource_type: ResourceTypeEnum,
+        resource_id_param_name: Optional[str] = None,
 ) -> Callable:
     """Enforces the given permissions against the current principal's permissions for the given resource."""
+
+    permissions = permissions if isinstance(permissions, list) else [permissions]
+    required_permissions = [p.uri for p in permissions]
 
     async def dep(
             request: Request,
             principal: Principal = Depends(get_principal),
-            db: AsyncSession = Depends(get_db_session),
+            session: AsyncSession = Depends(get_db_session),
             redis: Redis = Depends(get_redis_client),
     ):
         resource_id = request.path_params.get(resource_id_param_name)
-        if resource_id is None:
+
+        if isinstance(resource_id, str):
+            resource_id = UUID(resource_id)
+
+        if resource_id_param_name and resource_id is None:
             raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=f'Missing {resource_id_param_name}')
-        if await PermissionsManager.has_permission(db, redis, principal, resource_type, resource_id, permissions):
+
+        # FIXME: Enable caching after testing complete
+        allowed = await PermissionsManager.check_access(
+            session=session,
+            redis=redis,
+            principal_id=principal.id,
+            tenant_id=principal.tenant_id,
+            resource_type=resource_type,
+            resource_id=resource_id,
+            required_permissions=required_permissions,
+            use_cache=False,
+        )
+
+        if allowed:
             return True
+
         raise HTTPException(status_code=status.HTTP_403_FORBIDDEN, detail='Missing permissions')
 
     return dep

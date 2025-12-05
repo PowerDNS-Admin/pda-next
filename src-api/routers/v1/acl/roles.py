@@ -29,7 +29,7 @@ async def record_list(
     from models.db.acl import Role
 
     # Build a statement to retrieve the relevant records
-    stmt = select(Role).options(selectinload(Role.permissions), selectinload(Role.principals))
+    stmt = select(Role).options(selectinload(Role.principals))
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -65,19 +65,13 @@ async def record_create(
         principal: Principal = Depends(get_principal),
 ) -> RoleOutSchema:
     """Create ACL role"""
-    from models.db.acl import Role, RolePermission, RolePrincipal
+    from models.db.acl import Role, RolePrincipal
 
     # Create the record
     record = Role(
         slug=role.slug,
         description=role.description,
     )
-
-    # Add the given permissions to the role
-    for permission in role.permissions:
-        record.permissions.append(RolePermission(
-            permission=permission,
-        ))
 
     # Add the given principals to the role if any
     if role.principals:
@@ -98,7 +92,7 @@ async def record_create(
     # Commit the changes to the database
     session.add(record)
     await session.commit()
-    await session.refresh(record, attribute_names=['permissions'])
+    await session.refresh(record, attribute_names=['principals'])
 
     # Build the response
     return RoleOutSchema.model_validate(record)
@@ -123,9 +117,7 @@ async def record_read(
     from models.db.acl import Role
 
     # Build a statement to retrieve the record
-    stmt = (select(Role)
-            .options(selectinload(Role.permissions), selectinload(Role.principals))
-            .where(Role.id == role_id))
+    stmt = select(Role).options(selectinload(Role.principals)).where(Role.id == role_id)
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -159,12 +151,10 @@ async def record_update(
     from fastapi import HTTPException, status
     from sqlalchemy import select
     from sqlalchemy.orm import selectinload
-    from models.db.acl import Role, RolePermission, RolePrincipal
+    from models.db.acl import Role, RolePrincipal
 
     # Build a statement to retrieve the record
-    stmt = (select(Role)
-            .options(selectinload(Role.permissions), selectinload(Role.principals))
-            .where(Role.id == role_id))
+    stmt = select(Role).options(selectinload(Role.principals)).where(Role.id == role_id)
 
     # Enforce tenancy
     if principal.tenant_id:
@@ -180,21 +170,6 @@ async def record_update(
     # Update the record
     record.slug = role.slug
     record.description = role.description
-
-    existing_permissions = set([r.permission for r in record.permissions])
-
-    # Remove existing permissions that weren't retained
-    for permission in list(record.permissions):
-        if permission.permission not in role.permissions:
-            record.permissions.remove(permission)
-
-    # Add new permissions that don't already exist
-    for permission in role.permissions:
-        if permission in existing_permissions:
-            continue
-        record.permissions.append(RolePermission(
-            permission=permission,
-        ))
 
     # Update associated principals if defined
     if isinstance(role.principals, list):
@@ -220,7 +195,7 @@ async def record_update(
     # Commit the changes to the database
     session.add(record)
     await session.commit()
-    await session.refresh(record, attribute_names=['permissions'])
+    await session.refresh(record, attribute_names=['principals'])
 
     # Build the response
     return RoleOutSchema.model_validate(record)
