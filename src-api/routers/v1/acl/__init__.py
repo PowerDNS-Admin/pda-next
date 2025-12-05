@@ -8,5 +8,6 @@ router = APIRouter(
     responses=router_responses,
 )
 
+from .metadata import *
 from .roles import *
 from .policies import *

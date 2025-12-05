@@ -54,10 +54,17 @@ class Permission(BaseModel):
 class Permissions:
     """Defines the available permissions of the system."""
 
+    _ignored_attributes = ['scopes', 'all']
+
+    @classproperty
+    def all(cls) -> list[Permission]:
+        """Provides a list of all available permissions."""
+        return [p for k, p in cls.__dict__.items() if not k.startswith('_') and k not in cls._ignored_attributes]
+
     @classproperty
     def scopes(cls) -> dict[str, str]:
         """Provides a dictionary of available permissions in the form of OAuth API scopes."""
-        return {p.uri: p.title for k, p in cls.__dict__.items() if not k.startswith('__') and k != 'scopes'}
+        return {p.uri: p.title for k, p in cls.__dict__.items() if not k.startswith('_') and k not in cls._ignored_attributes}
 
     auth_users: Permission = Permission(
         uri="auth:users",
