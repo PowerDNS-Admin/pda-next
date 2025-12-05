@@ -1,24 +1,26 @@
 from typing import Optional
 from uuid import UUID
 
-from fastapi import APIRouter, Request, Response, Depends, Form, HTTPException, status
-from fastapi.responses import JSONResponse
+from fastapi import Depends, Form, HTTPException, status
+from fastapi.requests import Request
+from fastapi.responses import Response, JSONResponse
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from lib.api.dependencies import get_db_session, get_session_user, get_principal, authorize_oauth_client
-from models.api import ListParamsModel
-from models.api.auth import (
-    Principal,
-    UserSchema, UserAuthenticatorSchema, SessionSchema, ClientSchema,
-    UsersSchema, UserAuthenticatorsSchema, SessionsSchema, ClientsSchema,
-)
-from routers.root import router_responses
+from lib.api.dependencies import get_db_session, authorize_oauth_client, get_session_user
+from models.api import UserSchema
+from routers.v1.auth import router
 
-router = APIRouter(
-    prefix='/auth',
-    tags=['auth'],
-    responses=router_responses,
+
+@router.get(
+    '/session',
+    response_model=Optional[UserSchema],
+    summary='Current Session Data',
+    description='Provides the session data for the currently authenticated user (if any).',
 )
+async def session(
+        user: UserSchema = Depends(get_session_user),
+) -> Optional[UserSchema]:
+    return user
 
 
 @router.post('/token')
@@ -115,13 +117,6 @@ async def token_refresh(
         'expires_in': access_token_age,
         'refresh_token': str(refresh.id),
     }
-
-
-@router.get('/session', response_model=Optional[UserSchema])
-async def session(
-        user: UserSchema = Depends(get_session_user),
-) -> Optional[UserSchema]:
-    return user
 
 
 @router.post('/login', response_model=UserSchema)
@@ -234,147 +229,3 @@ async def logout(
     )
 
     return JSONResponse({'message': 'Successfully logged out.'})
-
-
-@router.post(
-    '/users',
-    response_model=UsersSchema,
-    summary='Get Users',
-    description='Get all users in the current context.',
-)
-async def list_users(
-        params: Optional[ListParamsModel] = None,
-        session: AsyncSession = Depends(get_db_session),
-        principal: Principal = Depends(get_principal),
-) -> UsersSchema:
-    """Gets all users in the current context."""
-    from sqlalchemy import select, func
-    from lib.sql import SqlQueryBuilder
-    from models.db.auth import User
-
-    stmt = select(User)
-
-    if principal.tenant_id:
-        stmt = stmt.where(User.tenant_id == principal.tenant_id)
-
-    stmt_count = select(func.count()).select_from(stmt.subquery())
-
-    if params:
-        stmt = SqlQueryBuilder.apply_params(params, stmt, User)
-
-    records = (await session.execute(stmt)).scalars().all()
-
-    result = UsersSchema(
-        records=[UserSchema.model_validate(r) for r in records],
-        total=(await session.execute(stmt_count)).scalar_one(),
-    )
-
-    return result
-
-
-@router.post(
-    '/users/authenticators',
-    response_model=UserAuthenticatorsSchema,
-    summary='Get User Authenticators',
-    description='Get all user authenticators in the current context.',
-)
-async def list_user_authenticators(
-        params: Optional[ListParamsModel] = None,
-        session: AsyncSession = Depends(get_db_session),
-        principal: Principal = Depends(get_principal),
-) -> UserAuthenticatorsSchema:
-    """Gets all user authenticators in the current context."""
-    from sqlalchemy import select, func
-    from lib.sql import SqlQueryBuilder
-    from models.db.auth import UserAuthenticator
-
-    stmt = select(UserAuthenticator)
-
-    if principal.tenant_id:
-        stmt = stmt.where(UserAuthenticator.tenant_id == principal.tenant_id)
-
-    stmt_count = select(func.count()).select_from(stmt.subquery())
-
-    if params:
-        stmt = SqlQueryBuilder.apply_params(params, stmt, UserAuthenticator)
-
-    records = (await session.execute(stmt)).scalars().all()
-
-    result = UserAuthenticatorsSchema(
-        records=[UserAuthenticatorSchema.model_validate(r) for r in records],
-        total=(await session.execute(stmt_count)).scalar_one(),
-    )
-
-    return result
-
-
-@router.post(
-    '/sessions',
-    response_model=SessionsSchema,
-    summary='Get User Sessions',
-    description='Get all user sessions in the current context.',
-)
-async def list_sessions(
-        params: Optional[ListParamsModel] = None,
-        session: AsyncSession = Depends(get_db_session),
-        principal: Principal = Depends(get_principal),
-) -> SessionsSchema:
-    """Gets all user sessions in the current context."""
-    from sqlalchemy import select, func
-    from lib.sql import SqlQueryBuilder
-    from models.db.auth import Session
-
-    stmt = select(Session)
-
-    if principal.tenant_id:
-        stmt = stmt.where(Session.tenant_id == principal.tenant_id)
-
-    stmt_count = select(func.count()).select_from(stmt.subquery())
-
-    if params:
-        stmt = SqlQueryBuilder.apply_params(params, stmt, Session)
-
-    records = (await session.execute(stmt)).scalars().all()
-
-    result = SessionsSchema(
-        records=[SessionSchema.model_validate(r) for r in records],
-        total=(await session.execute(stmt_count)).scalar_one(),
-    )
-
-    return result
-
-
-@router.post(
-    '/clients',
-    response_model=ClientsSchema,
-    summary='Get Clients',
-    description='Get all clients in the current context.',
-)
-async def list_clients(
-        params: Optional[ListParamsModel] = None,
-        session: AsyncSession = Depends(get_db_session),
-        principal: Principal = Depends(get_principal),
-) -> ClientsSchema:
-    """Gets all clients in the current context."""
-    from sqlalchemy import select, func
-    from lib.sql import SqlQueryBuilder
-    from models.db.auth import Client
-
-    stmt = select(Client)
-
-    if principal.tenant_id:
-        stmt = stmt.where(Client.tenant_id == principal.tenant_id)
-
-    stmt_count = select(func.count()).select_from(stmt.subquery())
-
-    if params:
-        stmt = SqlQueryBuilder.apply_params(params, stmt, Client)
-
-    records = (await session.execute(stmt)).scalars().all()
-
-    result = ClientsSchema(
-        records=[ClientSchema.model_validate(r) for r in records],
-        total=(await session.execute(stmt_count)).scalar_one(),
-    )
-
-    return result
