@@ -70,6 +70,9 @@ class Tenant(BaseSqlModel):
     acl_role_principals = relationship('RolePrincipal', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of ACL role principals associated with the tenant."""
 
+    acl_policies = relationship('Policy', back_populates='tenant', cascade='all, delete, delete-orphan')
+    """A list of ACL policies associated with the tenant."""
+
     servers = relationship('Server', back_populates='tenant', cascade='all, delete, delete-orphan')
     """A list of servers associated with the tenant."""
 

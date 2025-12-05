@@ -86,15 +86,18 @@ class AuthenticatorTypeEnum(str, Enum):
 
 class PrincipalTypeEnum(str, Enum):
     """Defines the principal types of PDA."""
-    client = 'client'
-    group = 'group'
-    user = 'user'
+    all = 'all'
     role = 'role'
     tenant = 'tenant'
+    group = 'group'
+    client = 'client'
+    user = 'user'
+
 
 
 class ResourceTypeEnum(str, Enum):
     """Defines the resource types of PDA."""
+    all = 'all'
     auth_user = 'auth:user'
     auth_user_authenticator = 'auth:user_authenticator'
     auth_session = 'auth:session'

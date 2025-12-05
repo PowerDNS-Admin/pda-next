@@ -7,7 +7,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from lib.api.dependencies import get_db_session, get_principal
 from models.api import Principal, ListParamsModel
 from models.api.acl.roles import RolesSchema, RoleOutSchema, RoleInSchema
-from models.db import RolePrincipal
 from routers.v1.acl import router
 
 
@@ -55,6 +54,7 @@ async def record_list(
 
 @router.post(
     '/roles/create',
+    response_model=RoleOutSchema,
     summary='Create ACL role',
     description='Creates ACL role for the current authentication context.',
     operation_id='acl:roles:create',
@@ -63,7 +63,7 @@ async def record_create(
         role: RoleInSchema,
         session: AsyncSession = Depends(get_db_session),
         principal: Principal = Depends(get_principal),
-):
+) -> RoleOutSchema:
     """Create ACL role"""
     from models.db.acl import Role, RolePermission, RolePrincipal
 
@@ -132,7 +132,7 @@ async def record_read(
         stmt = stmt.where(Role.tenant_id == principal.tenant_id)
 
     # Retrieve the record
-    record = (await session.execute(stmt)).scalar_one_or_none()
+    record: Role | None = (await session.execute(stmt)).scalar_one_or_none()
 
     # Raise an HTTP 404 exception if the record could not be found
     if not record:
@@ -159,7 +159,7 @@ async def record_update(
     from fastapi import HTTPException, status
     from sqlalchemy import select
     from sqlalchemy.orm import selectinload
-    from models.db.acl import Role, RolePermission
+    from models.db.acl import Role, RolePermission, RolePrincipal
 
     # Build a statement to retrieve the record
     stmt = (select(Role)
@@ -171,7 +171,7 @@ async def record_update(
         stmt = stmt.where(Role.tenant_id == principal.tenant_id)
 
     # Retrieve the record
-    record = (await session.execute(stmt)).scalar_one_or_none()
+    record: Role | None = (await session.execute(stmt)).scalar_one_or_none()
 
     # Raise an HTTP 404 exception if the record could not be found
     if not record:

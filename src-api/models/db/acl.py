@@ -106,12 +106,6 @@ class RolePrincipal(BaseSqlModel):
     )
     """The timestamp representing when the principal relationship was created."""
 
-    updated_at: Mapped[datetime] = mapped_column(
-        DateTime, nullable=False, default=datetime.now, onupdate=datetime.now,
-        server_default=text('CURRENT_TIMESTAMP'), server_onupdate=text('CURRENT_TIMESTAMP')
-    )
-    """The timestamp representing when the principal relationship was last updated."""
-
     role = relationship('Role', back_populates='principals', cascade='expunge, delete')
     """The role associated with the principal relationship."""
 
@@ -132,17 +126,22 @@ class Policy(BaseSqlModel):
     id: Mapped[UUID] = mapped_column(Uuid, primary_key=True, default=uuid4)
     """The unique identifier of the policy."""
 
+    tenant_id: Mapped[UUID] = mapped_column(Uuid, ForeignKey(
+        'pda_tenants.id', onupdate='CASCADE', ondelete='CASCADE'
+    ), nullable=True)
+    """The unique identifier of the associated tenant if any."""
+
     resource_type: Mapped[ResourceTypeEnum] = mapped_column(String(20), nullable=False)
     """The resource type associated with the policy."""
 
-    resource_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
-    """The unique identifier of the associated resource."""
+    resource_id: Mapped[UUID] = mapped_column(Uuid, nullable=True)
+    """The unique identifier of the associated resource if any."""
 
     principal_type: Mapped[PrincipalTypeEnum] = mapped_column(String(20), nullable=False)
     """The principal type associated with the policy."""
 
-    principal_id: Mapped[UUID] = mapped_column(Uuid, nullable=False)
-    """The unique identifier of the associated principal."""
+    principal_id: Mapped[UUID] = mapped_column(Uuid, nullable=True)
+    """The unique identifier of the associated principal if any."""
 
     permission: Mapped[str] = mapped_column(String(255), nullable=False)
     """The permission associated with the policy."""
@@ -158,8 +157,12 @@ class Policy(BaseSqlModel):
     )
     """The timestamp representing when the policy was last updated."""
 
+    tenant = relationship('Tenant', back_populates='acl_policies', cascade='expunge, delete')
+    """The tenant associated with the policy."""
+
     __table_args__ = (
         UniqueConstraint(
-            'resource_type', 'resource_id', 'principal_type', 'principal_id', 'permission', name='uix_acl'
+            'tenant_id', 'resource_type', 'resource_id', 'principal_type', 'principal_id', 'permission',
+            name='uix_acl',
         ),
     )

@@ -171,14 +171,6 @@ class RolePrincipalOutSchema(BaseApiModel):
     )
     """The timestamp representing when the association was created."""
 
-    updated_at: datetime = Field(
-        title='Updated At',
-        description='The timestamp representing when the association was last updated.',
-        default_factory=datetime.now,
-        examples=[datetime.now()],
-    )
-    """The timestamp representing when the association was last updated."""
-
 
 class RoleOutSchema(BaseApiModel):
     """Provides an API response model for representing ACL roles."""
