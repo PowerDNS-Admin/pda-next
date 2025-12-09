@@ -1,0 +1,26 @@
+####################################################################################################################
+# WARNING: Do not store sensitive information in this file, as its contents will be included in the Qodana report. #
+####################################################################################################################
+version: "1.0"
+linter: jetbrains/qodana-python:2025.2
+profile:
+  name: qodana.recommended
+bootstrap: |
+  pip install -r requirements.txt
+include:
+  - name: CheckDependencyLicenses
+  - name: OutdatedRequirementInspection
+  - name: CheckModuleLicenses
+  - name: CheckThirdPartySoftwareList
+  - name: JsCoverageInspection
+  - name: PyUnresolvedReferencesInspection
+  - name: PyUnnecessaryCastInspection
+  - name: PyArgumentEqualDefaultInspection
+  - name: PyMandatoryEncodingInspection
+  - name: PyMissingTypeHintsInspection
+  - name: PyDataclassInspection
+  - name: PyTypeCheckerInspection
+  - name: PyArgumentListInspection
+  - name: PyAugmentAssignmentInspection
+  - name: PyInterpreterInspection
+  - name: HttpUrlsUsage
