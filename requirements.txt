@@ -22,7 +22,7 @@ python-multipart==0.0.20
 pyyaml==6.0.3
 redis==5.2.1 # This lower version is currently required by dependencies
 requests==2.32.5
-sqlalchemy[asyncio]==2.0.44
+sqlalchemy[asyncio]==2.0.45
 twilio==9.8.7
 urllib3==2.5.0
 uvicorn==0.38.0
