@@ -45,8 +45,8 @@ on:
       - '!src/.babelrc'
       - src/**
       - setup.py
-  schedule:
-    - cron: '45 2 * * 2'
+#  schedule:
+#    - cron: '45 2 * * 2'
 
 jobs:
   analyze:
