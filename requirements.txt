@@ -2,7 +2,7 @@ aiosqlite==0.21.0
 asyncio==4.0.0
 asyncmy==0.2.10
 celery[redis]==5.5.3
-cryptography==46.0.3
+cryptography==50.0.0
 email-validator==2.3.0
 fastapi==0.122.0
 itsdangerous==2.2.0
